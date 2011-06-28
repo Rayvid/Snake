@@ -6,20 +6,15 @@ import inc.bezdelniki.snake.systemparameters.dto.*;
 import junit.framework.TestCase;
 
 public class TestSystemParameters extends TestCase {
-	public void setUp() 
-	{
-		SnakeInjector.configure();
-	}
-	
 	public void testResolutionChangesPersistsBetweenResolves()
 	{
 		SystemParameters systemParameters = SnakeInjector.getInstance().getInstance(ISystemParametersService.class).GetSystemParameters();
-		int oldWidth = systemParameters.Width;
-		int oldHeight = systemParameters.Height;
+		int oldWidth = systemParameters.width;
+		int oldHeight = systemParameters.height;
 		
 		SnakeInjector.getInstance().getInstance(ISystemParametersService.class).NewResolutionWereSet(oldWidth - 1, oldHeight - 1);
 		
 		systemParameters = SnakeInjector.getInstance().getInstance(ISystemParametersService.class).GetSystemParameters();
-		assertTrue(systemParameters.Width == oldWidth - 1 && systemParameters.Height == oldHeight - 1);
+		assertTrue(systemParameters.width == oldWidth - 1 && systemParameters.height == oldHeight - 1);
 	}
 }
