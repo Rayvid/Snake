@@ -1,12 +1,14 @@
 package inc.bezdelniki.snake;
 
+import inc.bezdelniki.snake.systemparameters.ISystemParametersService;
+
 import com.google.inject.*;
 
 public class GameWorld {
-	private ISystemParameters _systemParameters;
+	private ISystemParametersService _systemParameters;
 	
 	@Inject
-	GameWorld (ISystemParameters systemParameters)
+	GameWorld (ISystemParametersService systemParameters)
 	{
 		_systemParameters = systemParameters;
 	}
