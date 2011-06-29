@@ -8,6 +8,6 @@ import inc.bezdelniki.snakegame.SnakeInjector;
 public class TestGameWorld {
 	@Test
 	public void testGameWorldIsCreatedWOExceptions() {
-		SnakeInjector.getInstance().getInstance(GameWorld.class);
+		SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 	}
 }

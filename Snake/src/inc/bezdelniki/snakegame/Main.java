@@ -26,7 +26,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-    	ISystemParametersService systemParametersService = SnakeInjector.getInstance().getInstance(ISystemParametersService.class);
+    	ISystemParametersService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParametersService.class);
     	systemParametersService.NewResolutionWereSet(width, height);
     	
     	

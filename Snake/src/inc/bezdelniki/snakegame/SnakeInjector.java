@@ -10,7 +10,7 @@ public class SnakeInjector {
 		_instance = Guice.createInjector(new BindingsConfiguration());
 	}
 	
-	public static com.google.inject.Injector getInstance() {
+	public static com.google.inject.Injector getInjectorInstance() {
 		return _instance;
 	}
 }

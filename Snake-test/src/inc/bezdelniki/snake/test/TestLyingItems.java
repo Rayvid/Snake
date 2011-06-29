@@ -15,7 +15,7 @@ import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
 public class TestLyingItems {
 	@Test
 	public void testIfLyingItemIsCreatedWithSpecifiedParameters() {
-		ILyingItemService service = SnakeInjector.getInstance().getInstance(ILyingItemService.class);
+		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		
 		WorldPosition position = new WorldPosition();
 		position.tileX = 1;
@@ -31,8 +31,8 @@ public class TestLyingItems {
 	
 	@Test
 	public void testIfLyingItemHasBeenCreatedAndCleanupOfLyingItemsWorks() {
-		ILyingItemService service = SnakeInjector.getInstance().getInstance(ILyingItemService.class);
-		GameWorld world = SnakeInjector.getInstance().getInstance(GameWorld.class);
+		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
+		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
 		service.RemoveAllLyingItems(world);
 		service.CreateLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
@@ -44,8 +44,8 @@ public class TestLyingItems {
 	
 	@Test(expected=LyingItemNowhereToPlaceException.class)
 	public void testIfExceptionIsThrownIfTooManyLyingItems() {
-		ILyingItemService service = SnakeInjector.getInstance().getInstance(ILyingItemService.class);
-		GameWorld world = SnakeInjector.getInstance().getInstance(GameWorld.class);
+		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
+		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
 		for (int i = 0; i < world.getGameWorldWidth() * world.getGameWorldHeight() + 1; i++) {
 			service.CreateLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
