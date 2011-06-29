@@ -1,5 +1,7 @@
 package inc.bezdelniki.snake.lyingitem;
 
+import java.util.Random;
+
 import inc.bezdelniki.snake.GameWorld;
 import inc.bezdelniki.snake.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snake.lyingitem.enums.ItemType;
@@ -22,8 +24,10 @@ public class LyingItemService implements ILyingItemService {
 	public void CreateLyingItemSomewhereInTheWorld(
 			GameWorld world,
 			ItemType itemType) {
-		// TODO Auto-generated method stub
-		
+		Random random = new Random();
+		int generatedX = random.nextInt(world.getGameWorldWidth());
+		int generatedY = random.nextInt(world.getGameWorldHeight());
+		// TODO Cycle
 	}
 
 	@Override
