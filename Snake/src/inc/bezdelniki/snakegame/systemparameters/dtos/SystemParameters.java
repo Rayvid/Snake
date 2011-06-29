@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.systemparameters.dto;
+package inc.bezdelniki.snakegame.systemparameters.dtos;
 
 public class SystemParameters {
 	public int width;

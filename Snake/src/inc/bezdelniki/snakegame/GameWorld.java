@@ -1,11 +1,10 @@
-package inc.bezdelniki.snake;
+package inc.bezdelniki.snakegame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import inc.bezdelniki.snake.appsettings.IAppSettingsService;
-import inc.bezdelniki.snake.lyingitem.dtos.LyingItem;
-import inc.bezdelniki.snake.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 
 import com.google.inject.*;
 
@@ -29,6 +28,17 @@ public class GameWorld {
 	public int getGameWorldHeight()
 	{
 		return _appSettingsService.GetAppSettings().tilesVertically;
+	}
+	
+	public boolean isWorldTileOccupied(int posX, int posY)
+	{
+		for (LyingItem item : _lyingItems) {
+			if (item.position.tileX == posX && item.position.tileY == posY) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public List<LyingItem> getLyingItems() {

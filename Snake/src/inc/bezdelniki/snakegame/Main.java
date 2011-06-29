@@ -1,6 +1,6 @@
-package inc.bezdelniki.snake;
+package inc.bezdelniki.snakegame;
 
-import inc.bezdelniki.snake.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;

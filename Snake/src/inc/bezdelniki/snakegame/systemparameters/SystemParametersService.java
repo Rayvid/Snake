@@ -1,10 +1,10 @@
-package inc.bezdelniki.snake.systemparameters;
+package inc.bezdelniki.snakegame.systemparameters;
 
 import com.google.inject.Inject;
 
-import inc.bezdelniki.snake.appsettings.IAppSettingsService;
-import inc.bezdelniki.snake.appsettings.dto.AppSettings;
-import inc.bezdelniki.snake.systemparameters.dto.SystemParameters;
+import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 
 
 public class SystemParametersService implements ISystemParametersService {

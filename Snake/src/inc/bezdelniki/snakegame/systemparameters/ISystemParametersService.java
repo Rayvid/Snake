@@ -1,6 +1,6 @@
-package inc.bezdelniki.snake.systemparameters;
+package inc.bezdelniki.snakegame.systemparameters;
 
-import inc.bezdelniki.snake.systemparameters.dto.SystemParameters;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 
 public interface ISystemParametersService {
 	SystemParameters GetSystemParameters();

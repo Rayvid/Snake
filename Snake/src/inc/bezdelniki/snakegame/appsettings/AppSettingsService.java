@@ -1,6 +1,6 @@
-package inc.bezdelniki.snake.appsettings;
+package inc.bezdelniki.snakegame.appsettings;
 
-import inc.bezdelniki.snake.appsettings.dto.AppSettings;
+import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 
 public class AppSettingsService implements IAppSettingsService {
 

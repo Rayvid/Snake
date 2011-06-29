@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.appsettings.dto;
+package inc.bezdelniki.snakegame.appsettings.dtos;
 
 public class AppSettings {
 	public int initialWidth;

@@ -1,11 +1,14 @@
 package inc.bezdelniki.snake.test;
 
-import inc.bezdelniki.snake.SnakeInjector;
-import inc.bezdelniki.snake.systemparameters.*;
-import inc.bezdelniki.snake.systemparameters.dto.*;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class TestSystemParameters extends TestCase {
+import inc.bezdelniki.snakegame.SnakeInjector;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
+
+public class TestSystemParameters {
+	@Test
 	public void testResolutionChangesPersistsBetweenResolves() {
 		SystemParameters systemParameters = SnakeInjector.getInstance().getInstance(ISystemParametersService.class).GetSystemParameters();
 		int oldWidth = systemParameters.width;

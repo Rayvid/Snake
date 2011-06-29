@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake;
+package inc.bezdelniki.snakegame;
 
 import com.google.inject.*;
 

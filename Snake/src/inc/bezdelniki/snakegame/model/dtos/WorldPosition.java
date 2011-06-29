@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.model.dto;
+package inc.bezdelniki.snakegame.model.dtos;
 
 public class WorldPosition {
 	public int tileX;

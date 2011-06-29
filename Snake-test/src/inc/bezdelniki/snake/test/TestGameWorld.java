@@ -1,11 +1,12 @@
 package inc.bezdelniki.snake.test;
 
-import junit.framework.*;
+import org.junit.Test;
 
-import inc.bezdelniki.snake.GameWorld;
-import inc.bezdelniki.snake.SnakeInjector;
+import inc.bezdelniki.snakegame.GameWorld;
+import inc.bezdelniki.snakegame.SnakeInjector;
 
-public class TestGameWorld extends TestCase {
+public class TestGameWorld {
+	@Test
 	public void testGameWorldIsCreatedWOExceptions() {
 		SnakeInjector.getInstance().getInstance(GameWorld.class);
 	}
