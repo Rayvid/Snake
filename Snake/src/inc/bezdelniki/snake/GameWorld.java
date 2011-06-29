@@ -10,18 +10,15 @@ import inc.bezdelniki.snake.systemparameters.ISystemParametersService;
 import com.google.inject.*;
 
 public class GameWorld {
-	private ISystemParametersService _systemParameters;
 	private IAppSettingsService _appSettingsService;
 	
 	private List<LyingItem> _lyingItems = new ArrayList<LyingItem>();
 	
 	@Inject
 	GameWorld (
-			IAppSettingsService appSettingsService,
-			ISystemParametersService systemParameters)
+			IAppSettingsService appSettingsService)
 	{
 		_appSettingsService = appSettingsService;
-		_systemParameters = systemParameters;
 	}
 	
 	public int getGameWorldWidth()

@@ -8,4 +8,5 @@ import inc.bezdelniki.snake.model.dto.WorldPosition;
 public interface ILyingItemService {
 	LyingItem CreateLyingItem(ItemType itemType, WorldPosition position);
 	void CreateLyingItemSomewhereInTheWorld(GameWorld world, ItemType itemType);
+	void RemoveAllLyingItems(GameWorld world);
 }

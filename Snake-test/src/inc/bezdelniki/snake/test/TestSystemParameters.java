@@ -6,8 +6,7 @@ import inc.bezdelniki.snake.systemparameters.dto.*;
 import junit.framework.TestCase;
 
 public class TestSystemParameters extends TestCase {
-	public void testResolutionChangesPersistsBetweenResolves()
-	{
+	public void testResolutionChangesPersistsBetweenResolves() {
 		SystemParameters systemParameters = SnakeInjector.getInstance().getInstance(ISystemParametersService.class).GetSystemParameters();
 		int oldWidth = systemParameters.width;
 		int oldHeight = systemParameters.height;

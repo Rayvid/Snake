@@ -11,14 +11,23 @@ public class LyingItemService implements ILyingItemService {
 	public LyingItem CreateLyingItem(
 			ItemType itemType,
 			WorldPosition position) {
-		// TODO Auto-generated method stub
-		return null;
+		LyingItem lyingItem = new LyingItem();
+		lyingItem.itemType = itemType;
+		lyingItem.position = position;
+		
+		return lyingItem;
 	}
 
 	@Override
 	public void CreateLyingItemSomewhereInTheWorld(
 			GameWorld world,
 			ItemType itemType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void RemoveAllLyingItems(GameWorld world) {
 		// TODO Auto-generated method stub
 		
 	}
