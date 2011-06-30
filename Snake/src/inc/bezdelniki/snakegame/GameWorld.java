@@ -50,4 +50,8 @@ public class GameWorld {
 	public Snake getSnake() {
 		return _snake;
 	}
+
+	public void setSnake(Snake snake) {
+		_snake = snake;
+	}
 }

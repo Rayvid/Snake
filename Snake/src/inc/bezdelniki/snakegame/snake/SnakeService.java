@@ -4,6 +4,9 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.GameWorld;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
+import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.snake.dtos.Snake;
 
 public class SnakeService implements ISnakeService {
 	private IAppSettingsService _appSettingsService;
@@ -15,8 +18,18 @@ public class SnakeService implements ISnakeService {
 	
 	@Override
 	public void CreateSnake(GameWorld world) {
-		// TODO Auto-generated method stub
+		AppSettings settings = _appSettingsService.GetAppSettings();
 		
+		WorldPosition position = new WorldPosition();
+		position.tileX = settings.initialHeadPositionX;
+		position.tileY = settings.initialHeadPositionY;
+		
+		Snake snake = new Snake();
+		snake.currLength = 1;
+		snake.headPosition = position;
+		snake.newLength = settings.initialSnakeLength;
+		
+		world.setSnake(snake);
 	}
 	
 	@Override
@@ -27,8 +40,7 @@ public class SnakeService implements ISnakeService {
 
 	@Override
 	public void RemoveSnake(GameWorld world) {
-		// TODO Auto-generated method stub
-		
+		world.setSnake(null);
 	}
 
 }

@@ -1,4 +1,4 @@
-package inc.bezdelniki.snakegame.useraction.enums;
+package inc.bezdelniki.snakegame.model.enums;
 
 public enum Direction {
 	LEFT,

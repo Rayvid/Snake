@@ -14,11 +14,23 @@ public class TestSnake {
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
-		snakeService.RemoveSnake(world);
 		snakeService.CreateSnake(world);
 		assertTrue(world.getSnake().currLength > 0);
 		
 		snakeService.RemoveSnake(world);
 		assertTrue(world.getSnake() == null);
+	}
+	
+	@Test
+	public void testSnakeIsGrowing()
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		
+		snakeService.CreateSnake(world);
+		int length = world.getSnake().newLength;
+		snakeService.GrowSnake(world);
+		
+		assertTrue(length < world.getSnake().newLength);
 	}
 }
