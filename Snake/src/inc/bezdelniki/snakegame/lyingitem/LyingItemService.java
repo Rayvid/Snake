@@ -11,7 +11,7 @@ import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
 public class LyingItemService implements ILyingItemService {
 
 	@Override
-	public LyingItem CreateLyingItem(
+	public LyingItem createLyingItem(
 			ItemType itemType,
 			WorldPosition position) {
 		LyingItem lyingItem = new LyingItem();
@@ -22,7 +22,7 @@ public class LyingItemService implements ILyingItemService {
 	}
 
 	@Override
-	public void CreateLyingItemSomewhereInTheWorld(
+	public void createLyingItemSomewhereInTheWorld(
 			GameWorld world,
 			ItemType itemType) throws LyingItemNowhereToPlaceException {
 		Random random = new Random();
@@ -51,11 +51,11 @@ public class LyingItemService implements ILyingItemService {
 		WorldPosition position = new WorldPosition();
 		position.tileX = posX;
 		position.tileY = posY;
-		world.getLyingItems().add(CreateLyingItem(itemType, position));
+		world.getLyingItems().add(createLyingItem(itemType, position));
 	}
 
 	@Override
-	public void RemoveAllLyingItems(GameWorld world) {
+	public void removeAllLyingItems(GameWorld world) {
 		world.getLyingItems().clear();
 	}
 }

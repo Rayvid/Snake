@@ -11,6 +11,7 @@ public class BindingsConfiguration extends AbstractModule {
 	@Override
 	protected void configure()
 	{
+		bind(GameWorld.class).in(Singleton.class);
 		bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
 		bind(IAppSettingsService.class).to(AppSettingsService.class).in(Singleton.class);
 		bind(ILyingItemService.class).to(LyingItemService.class).in(Singleton.class);

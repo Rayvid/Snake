@@ -1,9 +1,14 @@
 package inc.bezdelniki.snakegame.snake;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import inc.bezdelniki.snakegame.GameWorld;
 
 public interface ISnakeService {
-	void CreateSnake(GameWorld world);
-	void GrowSnake(GameWorld world);
-	void RemoveSnake(GameWorld world);
+	void createSnake(GameWorld world);
+	void growSnake(GameWorld world);
+	boolean moveSnake(GameWorld world);
+	void removeSnake(GameWorld world);
+	void drawSnake(SpriteBatch batch, GameWorld world);
+	boolean isTileInSnakesPath(GameWorld world, int tileX, int tileY);
 }

@@ -14,10 +14,10 @@ public class TestSnake {
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
-		snakeService.CreateSnake(world);
+		snakeService.createSnake(world);
 		assertTrue(world.getSnake().currLength > 0);
 		
-		snakeService.RemoveSnake(world);
+		snakeService.removeSnake(world);
 		assertTrue(world.getSnake() == null);
 	}
 	
@@ -27,10 +27,29 @@ public class TestSnake {
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
-		snakeService.CreateSnake(world);
+		snakeService.createSnake(world);
 		int length = world.getSnake().newLength;
-		snakeService.GrowSnake(world);
+		snakeService.growSnake(world);
 		
 		assertTrue(length < world.getSnake().newLength);
+	}
+	
+	@Test
+	public void testSnakeIsMoving()
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		
+		snakeService.createSnake(world);
+		int oldPosX = world.getSnake().headPosition.tileX;
+		int oldPosY = world.getSnake().headPosition.tileY;
+		snakeService.moveSnake(world);
+		assertTrue(world.getSnake().headPosition.tileX != oldPosX || world.getSnake().headPosition.tileY != oldPosY);
+	}
+	
+	@Test
+	public void testIfEndOfGameComes()
+	{
+		fail();
 	}
 }

@@ -17,13 +17,13 @@ public class SystemParametersService implements ISystemParametersService {
 	{
 		_appSettingsService = appSettingsService;
 		
-		AppSettings appSettings = _appSettingsService.GetAppSettings();
+		AppSettings appSettings = _appSettingsService.getAppSettings();
 		_width = appSettings.initialWidth;
 		_height = appSettings.initialHeight;
 	}
 	
 	@Override
-	public SystemParameters GetSystemParameters() {
+	public SystemParameters getSystemParameters() {
 		SystemParameters systemParameters = new SystemParameters();
 		
 		systemParameters.width = _width;
@@ -33,7 +33,7 @@ public class SystemParametersService implements ISystemParametersService {
 	}
 	
 	@Override
-	public void NewResolutionWereSet(int width, int height) {
+	public void newResolutionWereSet(int width, int height) {
 		_width = width;
 		_height = height; 
 	}

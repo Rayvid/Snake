@@ -6,7 +6,7 @@ import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
 
 public interface ILyingItemService {
-	LyingItem CreateLyingItem(ItemType itemType, WorldPosition position);
-	void CreateLyingItemSomewhereInTheWorld(GameWorld world, ItemType itemType);
-	void RemoveAllLyingItems(GameWorld world);
+	LyingItem createLyingItem(ItemType itemType, WorldPosition position);
+	void createLyingItemSomewhereInTheWorld(GameWorld world, ItemType itemType);
+	void removeAllLyingItems(GameWorld world);
 }

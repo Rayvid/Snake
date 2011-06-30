@@ -6,6 +6,7 @@ import java.util.List;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import com.google.inject.*;
 
@@ -14,6 +15,7 @@ public class GameWorld {
 	
 	private List<LyingItem> _lyingItems = new ArrayList<LyingItem>();
 	private Snake _snake;
+	private List<SnakeMovementChange> _movementChangesInEffect = new ArrayList<SnakeMovementChange>();
 	
 	@Inject
 	GameWorld (
@@ -24,12 +26,12 @@ public class GameWorld {
 	
 	public int getGameWorldWidth()
 	{
-		return _appSettingsService.GetAppSettings().tilesHorizontally;
+		return _appSettingsService.getAppSettings().tilesHorizontally;
 	}
 	
 	public int getGameWorldHeight()
 	{
-		return _appSettingsService.GetAppSettings().tilesVertically;
+		return _appSettingsService.getAppSettings().tilesVertically;
 	}
 	
 	public boolean isWorldTileOccupied(int posX, int posY)
@@ -53,5 +55,9 @@ public class GameWorld {
 
 	public void setSnake(Snake snake) {
 		_snake = snake;
+	}
+
+	public List<SnakeMovementChange> getMovementChangesInEffect() {
+		return _movementChangesInEffect;
 	}
 }

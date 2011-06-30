@@ -21,7 +21,7 @@ public class TestLyingItems {
 		position.tileX = 1;
 		position.tileY = 2;
 		
-		LyingItem item = service.CreateLyingItem(ItemType.APPLE, position);
+		LyingItem item = service.createLyingItem(ItemType.APPLE, position);
 		
 		assertTrue(
 				item.itemType == ItemType.APPLE &&
@@ -34,11 +34,11 @@ public class TestLyingItems {
 		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
-		service.RemoveAllLyingItems(world);
-		service.CreateLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
+		service.removeAllLyingItems(world);
+		service.createLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
 		assertTrue(world.getLyingItems().size() == 1);
 		
-		service.RemoveAllLyingItems(world);
+		service.removeAllLyingItems(world);
 		assertTrue(world.getLyingItems().size() == 0);
 	}
 	
@@ -48,7 +48,7 @@ public class TestLyingItems {
 		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
 		
 		for (int i = 0; i < world.getGameWorldWidth() * world.getGameWorldHeight() + 1; i++) {
-			service.CreateLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
+			service.createLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
 		}
 	}
 }
