@@ -7,6 +7,7 @@ import inc.bezdelniki.snakegame.GameWorld;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 
 public class SnakeService implements ISnakeService {
@@ -15,6 +16,13 @@ public class SnakeService implements ISnakeService {
 	@Inject
 	SnakeService (IAppSettingsService appSettingsService) {
 		_appSettingsService = appSettingsService;
+	}
+	
+	@Override
+	public Direction getSnakeDirection(GameWorld world) {
+		Snake snake = world.getSnake();
+		if (snake != null && snake.direction != null) return snake.direction; 
+		return _appSettingsService.getAppSettings().initialDirection;
 	}
 	
 	@Override
@@ -42,6 +50,41 @@ public class SnakeService implements ISnakeService {
 	
 	@Override
 	public boolean moveSnake(GameWorld world) {
+		Snake snake = world.getSnake();
+		
+		switch (getSnakeDirection(world)) {
+			case RIGHT:
+				snake.headPosition.tileX++;
+				break;
+				
+			case LEFT:
+				snake.headPosition.tileX--;
+				break;
+				
+			case UP:
+				snake.headPosition.tileY--;
+				break;
+				
+			case DOWN:
+				snake.headPosition.tileY++;
+				break;
+		}
+		
+		if (snake.headPosition.tileX < 0
+				|| snake.headPosition.tileY < 0
+				|| snake.headPosition.tileX >= world.getGameWorldWidth()
+				|| snake.headPosition.tileY >= world.getGameWorldHeight()
+				|| doesTileBelongToSnake(world, snake.headPosition)) {
+			return true;
+		}
+		
+		if (snake.currLength < snake.newLength)
+		{
+			snake.currLength++;
+		}
+		
+		world.AdjustWorldAfterSnakesMovement();
+		
 		return false;
 	}
 
@@ -55,7 +98,8 @@ public class SnakeService implements ISnakeService {
 		// TODO Auto-generated method stub
 	}
 	
-	public boolean isTileInSnakesPath(GameWorld world, int tileX, int tileY) {
+	@Override
+	public boolean doesTileBelongToSnake(GameWorld world, WorldPosition tile) {
 		return false;
 	}
 }

@@ -35,6 +35,20 @@ public class TestSnake {
 	}
 	
 	@Test
+	public void testSnakesLengthChangesAfterGrowingWhenMoving()
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		
+		snakeService.createSnake(world);
+		int length = world.getSnake().currLength;
+		snakeService.growSnake(world);
+		snakeService.moveSnake(world);
+		
+		assertTrue(length < world.getSnake().currLength);
+	}
+	
+	@Test
 	public void testSnakeIsMoving()
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
@@ -50,6 +64,15 @@ public class TestSnake {
 	@Test
 	public void testIfEndOfGameComes()
 	{
-		fail();
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		
+		boolean doesEndOfGameHappened = false;
+		for (int i = 0;	i < Math.max(world.getGameWorldWidth(),	world.getGameWorldHeight()); i++) {
+			doesEndOfGameHappened = snakeService.moveSnake(world);
+			if (doesEndOfGameHappened) { break; }
+		}
+		
+		assertTrue(doesEndOfGameHappened);
 	}
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeUserAction;
 
 import com.google.inject.*;
 
@@ -15,7 +15,7 @@ public class GameWorld {
 	
 	private List<LyingItem> _lyingItems = new ArrayList<LyingItem>();
 	private Snake _snake;
-	private List<SnakeMovementChange> _movementChangesInEffect = new ArrayList<SnakeMovementChange>();
+	private List<SnakeMovementChangeUserAction> _movementChangesInEffect = new ArrayList<SnakeMovementChangeUserAction>();
 	
 	@Inject
 	GameWorld (
@@ -44,6 +44,10 @@ public class GameWorld {
 		
 		return false;
 	}
+	
+	public void AdjustWorldAfterSnakesMovement() {
+		// TODO Cleanup movement changes in effect
+	}
 
 	public List<LyingItem> getLyingItems() {
 		return _lyingItems;
@@ -57,7 +61,7 @@ public class GameWorld {
 		_snake = snake;
 	}
 
-	public List<SnakeMovementChange> getMovementChangesInEffect() {
+	public List<SnakeMovementChangeUserAction> getMovementChangesInEffect() {
 		return _movementChangesInEffect;
 	}
 }

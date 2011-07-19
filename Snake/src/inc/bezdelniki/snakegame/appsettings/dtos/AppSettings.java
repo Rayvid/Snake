@@ -10,6 +10,6 @@ public class AppSettings {
 	public int initialSnakeLength;
 	public int initialHeadPositionX;
 	public int initialHeadPositionY;
-	public Direction initialSnakeDirection;
+	public Direction initialDirection;
 	public int growSnakeBy;
 }
