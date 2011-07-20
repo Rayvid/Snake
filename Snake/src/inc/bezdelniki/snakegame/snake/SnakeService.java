@@ -1,5 +1,8 @@
 package inc.bezdelniki.snakegame.snake;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
@@ -19,13 +22,6 @@ public class SnakeService implements ISnakeService {
 	}
 	
 	@Override
-	public Direction getSnakeDirection(GameWorld world) {
-		Snake snake = world.getSnake();
-		if (snake != null && snake.direction != null) return snake.direction; 
-		return _appSettingsService.getAppSettings().initialDirection;
-	}
-	
-	@Override
 	public void createSnake(GameWorld world) {
 		AppSettings settings = _appSettingsService.getAppSettings();
 		
@@ -37,6 +33,7 @@ public class SnakeService implements ISnakeService {
 		snake.currLength = 1;
 		snake.headPosition = position;
 		snake.newLength = settings.initialSnakeLength;
+		snake.direction = settings.initialDirection;
 		
 		world.setSnake(snake);
 	}
@@ -52,7 +49,7 @@ public class SnakeService implements ISnakeService {
 	public boolean moveSnake(GameWorld world) {
 		Snake snake = world.getSnake();
 		
-		switch (getSnakeDirection(world)) {
+		switch (snake.direction) {
 			case RIGHT:
 				snake.headPosition.tileX++;
 				break;
@@ -101,5 +98,54 @@ public class SnakeService implements ISnakeService {
 	@Override
 	public boolean doesTileBelongToSnake(GameWorld world, WorldPosition tile) {
 		return false;
+	}
+	
+	private WorldPosition traverseBackTroughSnakesTrail(WorldPosition position, Direction snakesDirection)
+	{
+		WorldPosition newPosition = null;
+		
+		try {
+			newPosition = (WorldPosition)position.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+		
+		switch (snakesDirection)
+		{
+			case LEFT:
+				newPosition.tileX++;
+				break;
+				
+			case RIGHT:
+				newPosition.tileX--;
+				break;
+				
+			case UP:
+				newPosition.tileY++;
+				break;
+				
+			case DOWN:
+				newPosition.tileY--;
+				break;
+		}
+		
+		return newPosition;
+	}
+
+	@Override
+	public List<WorldPosition> generateSnakesTrail(GameWorld world) {
+		List<WorldPosition> snakesTrailList = new ArrayList<WorldPosition>();
+		Snake snake = world.getSnake();
+		
+		WorldPosition position = snake.headPosition;
+		Direction direction = snake.direction;
+		
+		snakesTrailList.add(position);
+		for (int i = 1; i < snake.currLength; i++) {
+			position = traverseBackTroughSnakesTrail(position, direction);
+			snakesTrailList.add(position);
+		}
+		
+		return snakesTrailList;
 	}
 }
