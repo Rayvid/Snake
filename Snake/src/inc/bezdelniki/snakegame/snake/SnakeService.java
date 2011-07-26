@@ -6,23 +6,24 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
-import inc.bezdelniki.snakegame.GameWorld;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
-import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public class SnakeService implements ISnakeService {
 	private IAppSettingsService _appSettingsService;
 
 	@Inject
-	SnakeService (IAppSettingsService appSettingsService) {
+	SnakeService (
+			IAppSettingsService appSettingsService) {
 		_appSettingsService = appSettingsService;
 	}
 	
 	@Override
-	public void createSnake(GameWorld world) {
+	public Snake createSnake() {
 		AppSettings settings = _appSettingsService.getAppSettings();
 		
 		WorldPosition position = new WorldPosition();
@@ -35,19 +36,19 @@ public class SnakeService implements ISnakeService {
 		snake.newLength = settings.initialSnakeLength;
 		snake.direction = settings.initialDirection;
 		
-		world.setSnake(snake);
+		return snake;
 	}
 	
 	@Override
-	public void growSnake(GameWorld world) {
+	public void growSnake(Snake snake) {
 		AppSettings settings = _appSettingsService.getAppSettings();
 		
-		world.getSnake().newLength += settings.growSnakeBy;
+		snake.newLength += settings.growSnakeBy;
 	}
 	
 	@Override
-	public boolean moveSnake(GameWorld world) {
-		Snake snake = world.getSnake();
+	public boolean moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) {
+		AppSettings settings = _appSettingsService.getAppSettings();
 		
 		switch (snake.direction) {
 			case RIGHT:
@@ -69,9 +70,9 @@ public class SnakeService implements ISnakeService {
 		
 		if (snake.headPosition.tileX < 0
 				|| snake.headPosition.tileY < 0
-				|| snake.headPosition.tileX >= world.getGameWorldWidth()
-				|| snake.headPosition.tileY >= world.getGameWorldHeight()
-				|| doesTileBelongToSnake(world, snake.headPosition)) {
+				|| snake.headPosition.tileX >= settings.tilesHorizontally 
+				|| snake.headPosition.tileY >= settings.tilesVertically
+				|| doesTileBelongToSnake(snake, snakeMovementChangesInEffect, snake.headPosition, false)) {
 			return true;
 		}
 		
@@ -80,23 +81,27 @@ public class SnakeService implements ISnakeService {
 			snake.currLength++;
 		}
 		
-		world.AdjustWorldAfterSnakesMovement();
-		
 		return false;
 	}
 
 	@Override
-	public void removeSnake(GameWorld world) {
-		world.setSnake(null);
-	}
-
-	@Override
-	public void drawSnake(SpriteBatch batch, GameWorld world) {
+	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch) {
 		// TODO Auto-generated method stub
 	}
 	
 	@Override
-	public boolean doesTileBelongToSnake(GameWorld world, WorldPosition tile) {
+	public boolean doesTileBelongToSnake(Snake snake,
+			List<SnakeMovementChange> snakeMovementChangesInEffect,
+			WorldPosition tile,
+			boolean doIncludeHead) {
+
+		List<WorldPosition> snakesTrail = getSnakesTrail(snake, snakeMovementChangesInEffect);
+		for (int i = (doIncludeHead) ? 0 : 1; i < snakesTrail.size(); i++) {
+			if (snakesTrail.get(i).equals(tile)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
@@ -133,18 +138,33 @@ public class SnakeService implements ISnakeService {
 	}
 
 	@Override
-	public List<WorldPosition> generateSnakesTrail(GameWorld world) {
+	public List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) {
 		List<WorldPosition> snakesTrailList = new ArrayList<WorldPosition>();
-		Snake snake = world.getSnake();
 		
 		WorldPosition position = snake.headPosition;
 		Direction direction = snake.direction;
+		int currentMovementChange = snakeMovementChangesInEffect.size() - 1;
 		
 		snakesTrailList.add(position);
 		for (int i = 1; i < snake.currLength; i++) {
 			position = traverseBackTroughSnakesTrail(position, direction);
 			snakesTrailList.add(position);
+			
+			if (i + 1 != snake.currLength
+					&& currentMovementChange >= 0
+					&& snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position)) {
+				direction = snakeMovementChangesInEffect.get(currentMovementChange).previousDirection;
+				currentMovementChange--;
+			}
 		}
+		
+		// Garbage collection :)
+		for (int i = 0; i <= currentMovementChange; i++) {
+			if (!snakeMovementChangesInEffect.get(0).headPositionWhenChangeWereMade.equals(position)) {
+				snakeMovementChangesInEffect.remove(0);
+			}
+		}
+		//
 		
 		return snakesTrailList;
 	}

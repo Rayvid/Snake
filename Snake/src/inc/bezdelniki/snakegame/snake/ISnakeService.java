@@ -4,16 +4,15 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import inc.bezdelniki.snakegame.GameWorld;
-import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
-import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public interface ISnakeService {
-	void createSnake(GameWorld world);
-	void growSnake(GameWorld world);
-	boolean moveSnake(GameWorld world);
-	void removeSnake(GameWorld world);
-	void drawSnake(SpriteBatch batch, GameWorld world);
-	boolean doesTileBelongToSnake(GameWorld world, WorldPosition tile);
-	List<WorldPosition> generateSnakesTrail(GameWorld world);
+	Snake createSnake();
+	void growSnake(Snake snake);
+	boolean moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect);
+	void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch);
+	boolean doesTileBelongToSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, WorldPosition tile, boolean doIncludeHead);
+	List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect);
 }

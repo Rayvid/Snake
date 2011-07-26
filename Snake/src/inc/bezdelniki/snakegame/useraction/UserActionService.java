@@ -1,19 +1,24 @@
 package inc.bezdelniki.snakegame.useraction;
 
-import inc.bezdelniki.snakegame.GameWorld;
+import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeUserAction;
+import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public class UserActionService implements IUserActionService {
 
 	@Override
-	public void applyUserActionChangingSnakeMovement(Direction direction,
-			GameWorld world) {
-		SnakeMovementChangeUserAction userAction = new SnakeMovementChangeUserAction();
-		userAction.direction = direction;
-		userAction.headPositionWhenChangeWereMade = world.getSnake().headPosition;
+	public SnakeMovementChange createSnakeMovementChange(Snake snake, Direction direction) {
+		SnakeMovementChange userAction = new SnakeMovementChange();
+		userAction.previousDirection = snake.direction;
+		userAction.newDirection = direction;
+		try {
+			userAction.headPositionWhenChangeWereMade = (WorldPosition)snake.headPosition.clone();
+		} catch (CloneNotSupportedException e) {
+			userAction.headPositionWhenChangeWereMade = null;
+		}
 		
-		world.getMovementChangesInEffect().add(userAction);
+		return userAction;
 	}
 
 }

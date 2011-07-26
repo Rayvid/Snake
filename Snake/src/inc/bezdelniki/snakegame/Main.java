@@ -25,11 +25,10 @@ public class Main implements ApplicationListener {
     @Override
     public void render() {
     	ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-    	GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
     	
     	Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     	batch.begin();
-    	snakeService.drawSnake(batch, world);
+    	//snakeService.drawSnake(batch);
     	batch.end();    	
     }
 

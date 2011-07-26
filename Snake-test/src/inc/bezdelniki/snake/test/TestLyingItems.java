@@ -4,13 +4,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import inc.bezdelniki.snakegame.GameWorld;
 import inc.bezdelniki.snakegame.SnakeInjector;
+import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
+import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
+import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.lyingitem.exceptions.LyingItemNowhereToPlaceException;
-import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
 
 public class TestLyingItems {
 	@Test
@@ -30,25 +32,27 @@ public class TestLyingItems {
 	}
 	
 	@Test
-	public void testIfLyingItemHasBeenCreatedAndCleanupOfLyingItemsWorks() {
-		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
-		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+	public void testIfLyingItemHasBeenCreatedSomewhere() {
+		ILyingItemService lyingItemsService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		
-		service.removeAllLyingItems(world);
-		service.createLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
-		assertTrue(world.getLyingItems().size() == 1);
+		gameWorldService.initGameWorld();
 		
-		service.removeAllLyingItems(world);
-		assertTrue(world.getLyingItems().size() == 0);
+		LyingItem item = lyingItemsService.createLyingItemSomewhere(ItemType.APPLE, gameWorldService.getGameWorld());
+		assertTrue(item != null);
 	}
 	
 	@Test(expected=LyingItemNowhereToPlaceException.class)
 	public void testIfExceptionIsThrownIfTooManyLyingItems() {
-		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
-		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		ILyingItemService lyingItemsService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
+		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		
-		for (int i = 0; i < world.getGameWorldWidth() * world.getGameWorldHeight() + 1; i++) {
-			service.createLyingItemSomewhereInTheWorld(world, ItemType.APPLE);
+		gameWorldService.initGameWorld();
+		AppSettings appSettings = appSettingsService.getAppSettings();
+		
+		for (int i = 0; i < appSettings.tilesVertically * appSettings.tilesHorizontally + 1; i++) {
+			gameWorldService.applyLyingItem(lyingItemsService.createLyingItemSomewhere(ItemType.APPLE, gameWorldService.getGameWorld()));
 		}
 	}
 }

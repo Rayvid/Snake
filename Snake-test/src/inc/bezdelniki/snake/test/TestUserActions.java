@@ -2,12 +2,11 @@ package inc.bezdelniki.snake.test;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import inc.bezdelniki.snakegame.GameWorld;
 import inc.bezdelniki.snakegame.SnakeInjector;
-import inc.bezdelniki.snakegame.model.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
+import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -21,25 +20,25 @@ public class TestUserActions {
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		
-		snakeService.createSnake(world);
-		Snake snake = world.getSnake();
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
 		
 		int snakeHeadPositionX = snake.headPosition.tileX;
 		int snakeHeadPositionY = snake.headPosition.tileY;
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.RIGHT, world);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		assertTrue(snake.direction == Direction.RIGHT);
 		
-		snakeService.moveSnake(world);
-		assertTrue(snakeHeadPositionX + 1 == snakeHeadPositionX);
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		assertTrue(snakeHeadPositionX + 1 == snake.headPosition.tileX);
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.DOWN, world);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		assertTrue(snake.direction == Direction.DOWN);
 		
-		snakeService.moveSnake(world);
-		assertTrue(snakeHeadPositionY + 1 == snakeHeadPositionY);
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		assertTrue(snakeHeadPositionY + 1 == snake.headPosition.tileY);
 	}
 	
 	@Test
@@ -47,22 +46,26 @@ public class TestUserActions {
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		
-		snakeService.createSnake(world);
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.RIGHT, world);
-		for (int i = 0; i < world.getSnake().newLength / 2 + 1; i++)
-			snakeService.moveSnake(world);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		for (int i = 0; i < snake.newLength / 2 + 1; i++)
+			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.DOWN, world);
-		snakeService.moveSnake(world);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.LEFT, world);
-		for (int i = 0; i < world.getSnake().newLength - 1; i++)
-			snakeService.moveSnake(world);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		for (int i = 0; i < snake.newLength; i++)
+			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		
-		assertTrue(world.getMovementChangesInEffect().size() == 0);
+		// this one triggers cleanup when needed
+		snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		
+		assertTrue(gameWorldService.getGameWorld().movementChangesInEffect.size() == 0);
 	}
 	
 	@Test
@@ -70,19 +73,20 @@ public class TestUserActions {
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		
-		snakeService.createSnake(world);
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.RIGHT, world);
-		snakeService.moveSnake(world);
-		userActionService.applyUserActionChangingSnakeMovement(Direction.DOWN, world);
-		snakeService.moveSnake(world);
-		userActionService.applyUserActionChangingSnakeMovement(Direction.LEFT, world);
-		snakeService.moveSnake(world);
-		userActionService.applyUserActionChangingSnakeMovement(Direction.UP, world);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.UP));
 		
-		assertTrue(snakeService.moveSnake(world));
+		assertTrue(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
 	}
 	
 	@Test
@@ -90,19 +94,20 @@ public class TestUserActions {
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		GameWorld world = SnakeInjector.getInjectorInstance().getInstance(GameWorld.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		
-		snakeService.createSnake(world);
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		userActionService.applyUserActionChangingSnakeMovement(Direction.RIGHT, world);
-		snakeService.moveSnake(world);
-		userActionService.applyUserActionChangingSnakeMovement(Direction.DOWN, world);
-		snakeService.moveSnake(world);
-		userActionService.applyUserActionChangingSnakeMovement(Direction.LEFT, world);
-		snakeService.moveSnake(world);
-		
-		List<WorldPosition> trail = snakeService.generateSnakesTrail(world);
-		assertTrue(trail.get(0).tileX == trail.get(2).tileX
-				&& trail.get(0).tileY != trail.get(2).tileY);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+				
+		List<WorldPosition> trail = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		assertTrue(trail.get(0).tileX == trail.get(3).tileX
+				&& trail.get(0).tileY != trail.get(3).tileY);
 	}
 }
