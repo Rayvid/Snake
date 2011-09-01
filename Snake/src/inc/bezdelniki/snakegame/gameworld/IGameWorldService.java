@@ -11,4 +11,5 @@ public interface IGameWorldService {
 	void applySnakeMovementChange(SnakeMovementChange movementChange);
 	void applyLyingItem(LyingItem lyingItem);
 	LyingItem getLyingItemInTile(WorldPosition position);
+	void moveSnakeAndPostProcess();
 }

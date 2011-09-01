@@ -3,6 +3,7 @@
 	<name>Snake-test</name>
 	<comment></comment>
 	<projects>
+		<project>Snake</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

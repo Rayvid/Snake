@@ -3,6 +3,7 @@
 	<name>Snake-desktop</name>
 	<comment></comment>
 	<projects>
+		<project>Snake</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -14,4 +15,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>resources/assets</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Snake-android/assets</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

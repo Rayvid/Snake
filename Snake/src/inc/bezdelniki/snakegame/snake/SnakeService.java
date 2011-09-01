@@ -3,6 +3,8 @@ package inc.bezdelniki.snakegame.snake;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
@@ -68,6 +70,11 @@ public class SnakeService implements ISnakeService {
 				break;
 		}
 		
+		if (snake.currLength < snake.newLength)
+		{
+			snake.currLength++;
+		}
+		
 		if (snake.headPosition.tileX < 0
 				|| snake.headPosition.tileY < 0
 				|| snake.headPosition.tileX >= settings.tilesHorizontally 
@@ -76,21 +83,18 @@ public class SnakeService implements ISnakeService {
 			return true;
 		}
 		
-		if (snake.currLength < snake.newLength)
-		{
-			snake.currLength++;
-		}
-		
 		return false;
 	}
 
 	@Override
 	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch) {
-		// TODO Auto-generated method stub
+		Texture texture = new Texture(Gdx.files.internal("assets/SnakeSkin.png"));
+		batch.draw(texture, 0, 0);
 	}
 	
 	@Override
-	public boolean doesTileBelongToSnake(Snake snake,
+	public boolean doesTileBelongToSnake(
+			Snake snake,
 			List<SnakeMovementChange> snakeMovementChangesInEffect,
 			WorldPosition tile,
 			boolean doIncludeHead) {

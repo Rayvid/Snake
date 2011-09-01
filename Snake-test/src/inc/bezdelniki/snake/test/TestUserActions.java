@@ -79,13 +79,15 @@ public class TestUserActions {
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
-		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
-		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
-		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.UP));
+		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
 		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
+		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
+
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.UP));
 		assertTrue(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
 	}
 	
