@@ -3,8 +3,6 @@ package inc.bezdelniki.snakegame.snake;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
@@ -12,16 +10,20 @@ import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public class SnakeService implements ISnakeService {
 	private IAppSettingsService _appSettingsService;
+	private IPresentationService _presentationService;
 
 	@Inject
 	SnakeService (
-			IAppSettingsService appSettingsService) {
+			IAppSettingsService appSettingsService,
+			IPresentationService presentationService) {
 		_appSettingsService = appSettingsService;
+		_presentationService = presentationService;
 	}
 	
 	@Override
@@ -46,6 +48,12 @@ public class SnakeService implements ISnakeService {
 		AppSettings settings = _appSettingsService.getAppSettings();
 		
 		snake.newLength += settings.growSnakeBy;
+	}
+	
+	@Override
+	public void changeSnakesMovementDirection(Snake snake, Direction newDirection)
+	{
+		snake.direction = newDirection;
 	}
 	
 	@Override
@@ -88,8 +96,7 @@ public class SnakeService implements ISnakeService {
 
 	@Override
 	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch) {
-		Texture texture = new Texture(Gdx.files.internal("assets/SnakeSkin.png"));
-		batch.draw(texture, 0, 0);
+		_presentationService.presentSnakesHead(batch, snake.headPosition);
 	}
 	
 	@Override

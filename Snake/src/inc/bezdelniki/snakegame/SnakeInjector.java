@@ -3,14 +3,13 @@ package inc.bezdelniki.snakegame;
 import com.google.inject.*;
 
 public class SnakeInjector {
-	private static com.google.inject.Injector _instance = null;
+	private static Injector _instance = null;
 	
-	static
-	{	
+	static {	
 		_instance = Guice.createInjector(new BindingsConfiguration());
 	}
 	
-	public static com.google.inject.Injector getInjectorInstance() {
+	public static Injector getInjectorInstance() {
 		return _instance;
 	}
 }

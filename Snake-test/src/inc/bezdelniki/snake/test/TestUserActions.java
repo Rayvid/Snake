@@ -28,7 +28,6 @@ public class TestUserActions {
 		int snakeHeadPositionX = snake.headPosition.tileX;
 		int snakeHeadPositionY = snake.headPosition.tileY;
 		
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		assertTrue(snake.direction == Direction.RIGHT);
 		
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
@@ -51,7 +50,6 @@ public class TestUserActions {
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		for (int i = 0; i < snake.newLength / 2 + 1; i++)
 			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		
@@ -78,7 +76,6 @@ public class TestUserActions {
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
 		
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
@@ -101,7 +98,6 @@ public class TestUserActions {
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);

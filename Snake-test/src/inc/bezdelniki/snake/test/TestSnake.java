@@ -8,6 +8,7 @@ import inc.bezdelniki.snakegame.SnakeInjector;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
@@ -34,6 +35,20 @@ public class TestSnake {
 		snakeService.growSnake(snake);
 		
 		assertTrue(length < snake.newLength);
+	}
+	
+	@Test
+	public void testIfSnakeChangesDirection()
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		
+		Snake snake = snakeService.createSnake();
+
+		snakeService.changeSnakesMovementDirection(snake, Direction.DOWN);
+		assertTrue(snake.direction == Direction.DOWN);
+		
+		snakeService.changeSnakesMovementDirection(snake, Direction.LEFT);
+		assertTrue(snake.direction == Direction.LEFT);
 	}
 	
 	@Test
