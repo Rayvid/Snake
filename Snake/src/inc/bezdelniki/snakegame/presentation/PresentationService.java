@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
 
 public class PresentationService implements IPresentationService {
@@ -26,5 +27,12 @@ public class PresentationService implements IPresentationService {
 		//sprite.setPosition(0, 0);
 		//sprite.setRotation(90);
 		//sprite.draw(batch);
+	}
+
+	@Override
+	public PresenterCoords WorldCoordsToPresenterCoords(
+			WorldPosition headPosition) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

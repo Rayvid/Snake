@@ -1,6 +1,8 @@
 package inc.bezdelniki.snake.test;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 
@@ -8,7 +10,10 @@ import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
+import inc.bezdelniki.snakegame.presentation.PresentationService;
+import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -56,5 +61,40 @@ public class TestPresentationIsolated {
 		
 		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch);
 		verify(_mockedPresentationService);
+	}
+	
+	@Test
+	public void testIfWorldPositionTransformationReturnsMeaningfullResults() throws CloneNotSupportedException
+	{
+		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
+		IPresentationService presentationService =
+			new PresentationService(
+					_testInjectorInstance.getInstance(ISystemParametersService.class),
+					_testInjectorInstance.getInstance(IAppSettingsService.class));
+		Snake snake = snakeService.createSnake();
+		
+		PresenterCoords headCoords = presentationService.WorldCoordsToPresenterCoords(snake.headPosition);
+		
+		WorldPosition toTheRight = (WorldPosition)snake.headPosition.clone();
+		toTheRight.tileX++;
+		PresenterCoords toTheRightCoords = presentationService.WorldCoordsToPresenterCoords(toTheRight);
+		
+		WorldPosition toTheLeft = (WorldPosition)snake.headPosition.clone();
+		toTheRight.tileX--;
+		PresenterCoords toTheLeftCoords = presentationService.WorldCoordsToPresenterCoords(toTheLeft);
+
+		WorldPosition up = (WorldPosition)snake.headPosition.clone();
+		toTheRight.tileY--;
+		PresenterCoords upCoords = presentationService.WorldCoordsToPresenterCoords(up);
+
+		WorldPosition down = (WorldPosition)snake.headPosition.clone();
+		toTheRight.tileY++;
+		PresenterCoords downCoords = presentationService.WorldCoordsToPresenterCoords(down);
+		
+		assertTrue(toTheRightCoords.x > headCoords.x && headCoords.x > toTheLeftCoords.x ||
+				   toTheRightCoords.x < headCoords.x && headCoords.x < toTheLeftCoords.x);
+		assertTrue(upCoords.y > headCoords.y && headCoords.y > downCoords.y ||
+				   upCoords.y < headCoords.y && headCoords.y < downCoords.y);
+
 	}
 }
