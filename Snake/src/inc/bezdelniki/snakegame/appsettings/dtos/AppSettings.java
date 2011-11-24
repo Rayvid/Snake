@@ -1,6 +1,7 @@
 package inc.bezdelniki.snakegame.appsettings.dtos;
 
 import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
 
 public class AppSettings {
 	public int initialWidth;
@@ -16,4 +17,6 @@ public class AppSettings {
 	public int textureSize;
 	
 	public int growSnakeBy;
+	
+	PresenterCoords topLeft;
 }

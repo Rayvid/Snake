@@ -14,6 +14,7 @@ import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
+import inc.bezdelniki.snakegame.presentation.dtos.PresenterDeltas;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -96,5 +97,27 @@ public class TestPresentationIsolated {
 		assertTrue(upCoords.y > headCoords.y && headCoords.y > downCoords.y ||
 				   upCoords.y < headCoords.y && headCoords.y < downCoords.y);
 
+	}
+	
+	@Test
+	public void testIfBiggerDimensionHasBeenChoosenAsHorizontal()
+	{
+		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		IPresentationService presentationService =
+			new PresentationService(
+					_testInjectorInstance.getInstance(ISystemParametersService.class),
+					_testInjectorInstance.getInstance(IAppSettingsService.class));
+		
+		int oldWidth = systemParametersService.getSystemParameters().width;
+		int oldHeight = systemParametersService.getSystemParameters().height;
+		
+		fail();
+		
+		systemParametersService.newResolutionWereSet(480, 320);
+		//PresenterDeltas deltas = 
+		
+		systemParametersService.newResolutionWereSet(320, 480);
+		
+		systemParametersService.newResolutionWereSet(oldWidth, oldHeight);
 	}
 }
