@@ -2,6 +2,7 @@ package inc.bezdelniki.snakegame.appsettings;
 
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
 
 public class AppSettingsService implements IAppSettingsService {
 
@@ -20,6 +21,10 @@ public class AppSettingsService implements IAppSettingsService {
 		settings.tilesVertically = 20;
 		settings.textureSize = 16;
 		settings.growSnakeBy = 2;
+		
+		settings.topLeft = new PresenterCoords();
+		settings.topLeft.x = 0;
+		settings.topLeft.y = 0;
 		
 		return settings;
 	}

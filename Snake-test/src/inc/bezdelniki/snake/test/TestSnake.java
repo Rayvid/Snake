@@ -11,6 +11,7 @@ import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class TestSnake {
 	}
 	
 	@Test
-	public void testSnakesLengthChangesAfterGrowingWhenMoving()
+	public void testSnakesLengthChangesAfterGrowingWhenMoving() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		
@@ -65,7 +66,7 @@ public class TestSnake {
 	}
 	
 	@Test
-	public void testSnakeIsMoving()
+	public void testSnakeIsMoving() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		
@@ -80,8 +81,8 @@ public class TestSnake {
 		assertTrue(!snake.headPosition.equals(oldPos));
 	}
 	
-	@Test
-	public void testIfEndOfGameComesWhenMovingSnakeIntoWall()
+	@Test(expected=SnakeMovementResultedEndOfGameException.class)
+	public void testIfEndOfGameComesWhenMovingSnakeIntoWall() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
@@ -91,8 +92,7 @@ public class TestSnake {
 		
 		boolean doesEndOfGameHappened = false;
 		for (int i = 0;	i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++) {
-			doesEndOfGameHappened = snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
-			if (doesEndOfGameHappened) { break; }
+			snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
 		}
 		
 		assertTrue(doesEndOfGameHappened);
@@ -107,13 +107,12 @@ public class TestSnake {
 		Snake snake = snakeService.createSnake();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 		
-		boolean doesEndOfGameHappened = false;
-		for (int i = 0;	i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++) {
-			doesEndOfGameHappened = snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
-			
-			assertTrue(snake.currLength == snakeService.getSnakesTrail(snake, new ArrayList<SnakeMovementChange>()).size());
-			
-			if (doesEndOfGameHappened) { break; }
-		}
+		try {
+			for (int i = 0;	i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++) {
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+				assertTrue(snake.currLength == snakeService.getSnakesTrail(snake, new ArrayList<SnakeMovementChange>()).size());
+			}
+		} catch (SnakeMovementResultedEndOfGameException e) {
+		}	
 	}
 }

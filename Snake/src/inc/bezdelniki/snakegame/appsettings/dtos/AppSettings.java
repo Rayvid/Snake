@@ -18,5 +18,5 @@ public class AppSettings {
 	
 	public int growSnakeBy;
 	
-	PresenterCoords topLeft;
+	public PresenterCoords topLeft;
 }

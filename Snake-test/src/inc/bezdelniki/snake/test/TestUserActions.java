@@ -10,13 +10,14 @@ import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 
 import org.junit.Test;
 
 public class TestUserActions {
 	@Test
-	public void testIfSnakeChangesMovingDirectionOnUserAction()
+	public void testIfSnakeChangesMovingDirectionOnUserAction() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -41,7 +42,7 @@ public class TestUserActions {
 	}
 	
 	@Test
-	public void testIfSnakeMovementChangesAreCleanupedProperly()
+	public void testIfSnakeMovementChangesAreCleanupedProperly() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -66,8 +67,8 @@ public class TestUserActions {
 		assertTrue(gameWorldService.getGameWorld().movementChangesInEffect.size() == 0);
 	}
 	
-	@Test
-	public void testIfEndOfGameComesWhenMovingSnakeIntoItself()
+	@Test(expected=SnakeMovementResultedEndOfGameException.class)
+	public void testIfEndOfGameComesWhenMovingSnakeIntoItself() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -76,20 +77,32 @@ public class TestUserActions {
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
-		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
+		try	{
+			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		} catch (SnakeMovementResultedEndOfGameException e) {
+			fail();
+		}
 		
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
-		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
+		try {
+			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		} catch (SnakeMovementResultedEndOfGameException e) {
+			fail();
+		}
 		
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
-		assertFalse(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
+		try {
+			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		} catch (SnakeMovementResultedEndOfGameException e) {
+			fail();
+		}
 
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.UP));
-		assertTrue(snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 	}
 	
 	@Test
-	public void testIfSnakesTrailReflectsUserActions()
+	public void testIfSnakesTrailReflectsUserActions() throws SnakeMovementResultedEndOfGameException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -107,5 +120,17 @@ public class TestUserActions {
 		List<WorldPosition> trail = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		assertTrue(trail.get(0).tileX == trail.get(3).tileX
 				&& trail.get(0).tileY != trail.get(3).tileY);
+	}
+	
+	@Test
+	public void testIfUserActionOppositeSnakesDirectionIsIgnored()
+	{
+		fail();
+	}
+	
+	@Test
+	public void testIfMultipleUserActionsBetweenMovementsAreProcessedAndCleanupedProperly()
+	{
+		fail();
 	}
 }

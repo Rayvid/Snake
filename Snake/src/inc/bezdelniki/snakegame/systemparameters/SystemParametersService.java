@@ -6,7 +6,6 @@ import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 
-
 public class SystemParametersService implements ISystemParametersService {
 	private int _width;
 	private int _height;

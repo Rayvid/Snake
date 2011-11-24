@@ -12,6 +12,7 @@ import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public class SnakeService implements ISnakeService {
@@ -57,7 +58,7 @@ public class SnakeService implements ISnakeService {
 	}
 	
 	@Override
-	public boolean moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) {
+	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException {
 		AppSettings settings = _appSettingsService.getAppSettings();
 		
 		switch (snake.direction) {
@@ -88,10 +89,8 @@ public class SnakeService implements ISnakeService {
 				|| snake.headPosition.tileX >= settings.tilesHorizontally 
 				|| snake.headPosition.tileY >= settings.tilesVertically
 				|| doesTileBelongToSnake(snake, snakeMovementChangesInEffect, snake.headPosition, false)) {
-			return true;
+			throw new SnakeMovementResultedEndOfGameException();
 		}
-		
-		return false;
 	}
 
 	@Override

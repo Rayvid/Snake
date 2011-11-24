@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
@@ -20,13 +21,13 @@ import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
 import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 
 public class TestPresentationIsolated {
 	private Injector _testInjectorInstance;
@@ -36,9 +37,9 @@ public class TestPresentationIsolated {
 		@Override
 		protected void configure()
 		{
-			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
-			bind(IAppSettingsService.class).to(AppSettingsService.class).in(Singleton.class);
-			bind(ISnakeService.class).to(SnakeService.class).in(Singleton.class);
+			bind(ISystemParametersService.class).to(SystemParametersService.class);
+			bind(IAppSettingsService.class).to(AppSettingsService.class);
+			bind(ISnakeService.class).to(SnakeService.class);
 			bind(IPresentationService.class).toInstance(_mockedPresentationService);
 		}
 	}
@@ -72,6 +73,7 @@ public class TestPresentationIsolated {
 			new PresentationService(
 					_testInjectorInstance.getInstance(ISystemParametersService.class),
 					_testInjectorInstance.getInstance(IAppSettingsService.class));
+		
 		Snake snake = snakeService.createSnake();
 		
 		PresenterCoords headCoords = presentationService.WorldCoordsToPresenterCoords(snake.headPosition);
@@ -81,21 +83,23 @@ public class TestPresentationIsolated {
 		PresenterCoords toTheRightCoords = presentationService.WorldCoordsToPresenterCoords(toTheRight);
 		
 		WorldPosition toTheLeft = (WorldPosition)snake.headPosition.clone();
-		toTheRight.tileX--;
+		toTheLeft.tileX--;
 		PresenterCoords toTheLeftCoords = presentationService.WorldCoordsToPresenterCoords(toTheLeft);
 
 		WorldPosition up = (WorldPosition)snake.headPosition.clone();
-		toTheRight.tileY--;
+		up.tileY--;
 		PresenterCoords upCoords = presentationService.WorldCoordsToPresenterCoords(up);
 
 		WorldPosition down = (WorldPosition)snake.headPosition.clone();
-		toTheRight.tileY++;
+		down.tileY++;
 		PresenterCoords downCoords = presentationService.WorldCoordsToPresenterCoords(down);
 		
-		assertTrue(toTheRightCoords.x > headCoords.x && headCoords.x > toTheLeftCoords.x ||
-				   toTheRightCoords.x < headCoords.x && headCoords.x < toTheLeftCoords.x);
-		assertTrue(upCoords.y > headCoords.y && headCoords.y > downCoords.y ||
-				   upCoords.y < headCoords.y && headCoords.y < downCoords.y);
+		int tileSize = presentationService.getTileSize();
+		
+		assertTrue(toTheRightCoords.x - headCoords.x == tileSize && headCoords.x - toTheLeftCoords.x == tileSize ||
+				   toTheRightCoords.x - headCoords.x == -tileSize && headCoords.x - toTheLeftCoords.x == -tileSize);
+		assertTrue(upCoords.y - headCoords.y == tileSize && headCoords.y - downCoords.y == tileSize ||
+				   upCoords.y - headCoords.y == -tileSize && headCoords.y - downCoords.y == -tileSize);
 
 	}
 	
@@ -105,19 +109,86 @@ public class TestPresentationIsolated {
 		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
 		IPresentationService presentationService =
 			new PresentationService(
-					_testInjectorInstance.getInstance(ISystemParametersService.class),
+					systemParametersService,
 					_testInjectorInstance.getInstance(IAppSettingsService.class));
 		
-		int oldWidth = systemParametersService.getSystemParameters().width;
-		int oldHeight = systemParametersService.getSystemParameters().height;
-		
-		fail();
-		
 		systemParametersService.newResolutionWereSet(480, 320);
-		//PresenterDeltas deltas = 
+		PresenterDeltas deltas = presentationService.getMovementDeltas();
+		assertTrue(
+				deltas.deltaYForRightMovement == 0 && deltas.deltaXForRightMovement != 0 &&
+				deltas.deltaXForDownMovement == 0 && deltas.deltaYForDownMovement != 0);
 		
 		systemParametersService.newResolutionWereSet(320, 480);
+		deltas = presentationService.getMovementDeltas();
+		assertTrue(
+				deltas.deltaYForRightMovement != 0 && deltas.deltaXForRightMovement == 0 &&
+				deltas.deltaXForDownMovement != 0 && deltas.deltaYForDownMovement == 0);
+	}
+	
+	@Test
+	public void testIfTileSizeIsOptimal()
+	{
+		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
+		IPresentationService presentationService =
+			new PresentationService(
+					systemParametersService,
+					appSettingsService);
 		
-		systemParametersService.newResolutionWereSet(oldWidth, oldHeight);
+		int tileSize = presentationService.getTileSize();
+		SystemParameters systemParameters = systemParametersService.getSystemParameters();
+		AppSettings appSettings = appSettingsService.getAppSettings();
+		
+		assertTrue(
+				systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize &&
+				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0 &&
+				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 ||
+				systemParameters.width - tileSize * appSettings.tilesHorizontally < tileSize &&
+				systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0 &&
+				systemParameters.height - tileSize * appSettings.tilesVertically >= 0 ||
+				systemParameters.height - tileSize * appSettings.tilesVertically < tileSize &&
+				systemParameters.height - tileSize * appSettings.tilesVertically >= 0 &&
+				systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0 ||
+				systemParameters.width - tileSize * appSettings.tilesVertically < tileSize &&
+				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 &&
+				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
+		
+		systemParametersService.newResolutionWereSet(200, 100);
+		tileSize = presentationService.getTileSize();
+		systemParameters = systemParametersService.getSystemParameters();
+		appSettings = appSettingsService.getAppSettings();
+
+		assertTrue(
+				systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize &&
+				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0 &&
+				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 ||
+				systemParameters.width - tileSize * appSettings.tilesHorizontally < tileSize &&
+				systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0 &&
+				systemParameters.height - tileSize * appSettings.tilesVertically >= 0 ||
+				systemParameters.height - tileSize * appSettings.tilesVertically < tileSize &&
+				systemParameters.height - tileSize * appSettings.tilesVertically >= 0 &&
+				systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0 ||
+				systemParameters.width - tileSize * appSettings.tilesVertically < tileSize &&
+				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 &&
+				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
+		
+		systemParametersService.newResolutionWereSet(1000, 2000);
+		tileSize = presentationService.getTileSize();
+		systemParameters = systemParametersService.getSystemParameters();
+		appSettings = appSettingsService.getAppSettings();
+
+		assertTrue(
+				systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize &&
+				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0 &&
+				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 ||
+				systemParameters.width - tileSize * appSettings.tilesHorizontally < tileSize &&
+				systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0 &&
+				systemParameters.height - tileSize * appSettings.tilesVertically >= 0 ||
+				systemParameters.height - tileSize * appSettings.tilesVertically < tileSize &&
+				systemParameters.height - tileSize * appSettings.tilesVertically >= 0 &&
+				systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0 ||
+				systemParameters.width - tileSize * appSettings.tilesVertically < tileSize &&
+				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 &&
+				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
 	}
 }
