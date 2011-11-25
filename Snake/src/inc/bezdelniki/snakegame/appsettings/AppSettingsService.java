@@ -26,6 +26,8 @@ public class AppSettingsService implements IAppSettingsService {
 		settings.topLeft.x = 0;
 		settings.topLeft.y = 0;
 		
+		settings.snakesMovementNanoInterval = 1000000000; // 1s
+		
 		return settings;
 	}
 

@@ -40,6 +40,7 @@ public class TestPresentationIsolated {
 			bind(ISystemParametersService.class).to(SystemParametersService.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
+			
 			bind(IPresentationService.class).toInstance(_mockedPresentationService);
 		}
 	}

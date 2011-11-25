@@ -9,20 +9,25 @@ import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
+import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
+import inc.bezdelniki.snakegame.time.ITimeService;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public class GameWorldService implements IGameWorldService {
 
 	private IAppSettingsService _appSettingsService;
 	private ISnakeService _snakeService;
+	private ITimeService _timeService;
 	private GameWorld _gameWorld = null;
 	
 	@Inject
 	public GameWorldService (
 			IAppSettingsService appSettingsService,
-			ISnakeService snakeService) {
+			ISnakeService snakeService,
+			ITimeService timeService) {
 		_appSettingsService = appSettingsService;
 		_snakeService = snakeService;
+		_timeService = timeService;
 	}
 	
 	@Override
@@ -33,6 +38,7 @@ public class GameWorldService implements IGameWorldService {
 		_gameWorld.lyingItems = new ArrayList<LyingItem>();
 		_gameWorld.snake = _snakeService.createSnake();
 		_gameWorld.movementChangesInEffect = new ArrayList<SnakeMovementChange>();
+		_gameWorld.lastMoveNanoTimestamp = _timeService.getNanoStamp();
 	}
 	
 	@Override
@@ -61,5 +67,13 @@ public class GameWorldService implements IGameWorldService {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException {
+		if (_timeService.getNanoStamp() - _gameWorld.lastMoveNanoTimestamp >= _appSettingsService.getAppSettings().snakesMovementNanoInterval) {
+			_snakeService.moveSnake(_gameWorld.snake, _gameWorld.movementChangesInEffect);
+		}
+		
 	}
 }

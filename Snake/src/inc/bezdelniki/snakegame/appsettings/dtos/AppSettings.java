@@ -4,6 +4,8 @@ import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
 
 public class AppSettings {
+	// TODO Move stuff from there to RuntimeParameters as soon as it becomes dynamic
+	
 	public int initialWidth;
 	public int initialHeight;
 	
@@ -19,4 +21,5 @@ public class AppSettings {
 	public int growSnakeBy;
 	
 	public PresenterCoords topLeft;
+	public long snakesMovementNanoInterval;
 }
