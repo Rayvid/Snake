@@ -7,6 +7,8 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.snake.*;
 import inc.bezdelniki.snakegame.systemparameters.*;
+import inc.bezdelniki.snakegame.time.ITimeService;
+import inc.bezdelniki.snakegame.time.TimeService;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.UserActionService;
 
@@ -23,6 +25,7 @@ public class BindingsConfiguration extends AbstractModule {
 		bind(IUserActionService.class).to(UserActionService.class).in(Singleton.class);
 		bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 		bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
+		bind(ITimeService.class).to(TimeService.class).in(Singleton.class);
 	}
 }
 

@@ -70,7 +70,7 @@ public class TestGameWorld {
 		applePosition.tileX++;
 		gameWorld.lyingItems.add(lyingItemService.createLyingItem(ItemType.APPLE, applePosition));
 		
-		gameWorldService.moveSnakeAndPostProcess();
+		//gameWorldService.moveSnakeAndPostProcess();
 		assertTrue(gameWorld.lyingItems.size() == 0);
 	}
 }

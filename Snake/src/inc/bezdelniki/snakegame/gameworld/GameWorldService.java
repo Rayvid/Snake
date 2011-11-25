@@ -62,10 +62,4 @@ public class GameWorldService implements IGameWorldService {
 		
 		return null;
 	}
-
-	@Override
-	public void moveSnakeAndPostProcess() {
-		// TODO Auto-generated method stub
-		
-	}
 }
