@@ -1,5 +1,8 @@
 package inc.bezdelniki.snakegame.presentation;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
@@ -25,40 +28,41 @@ public class PresentationService implements IPresentationService {
 
 	@Override
 	public void presentSnakesHead(SpriteBatch batch, WorldPosition position) {
-		//Texture texture = new Texture(Gdx.files.internal("assets/SnakeSkin.png"));
-		//Sprite sprite = new Sprite(texture, 0, 0, 32, 32);
-		//sprite.setPosition(0, 0);
-		//sprite.setRotation(90);
-		//sprite.draw(batch);
+		Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
+		Sprite sprite = new Sprite(texture, 0, 0, 16, 16);
+		PresenterCoords headCoords = WorldCoordsToPresenterCoords(position);
+		sprite.setPosition(headCoords.x, headCoords.y);
+		sprite.draw(batch);
 	}
 
 	@Override
 	public PresenterCoords WorldCoordsToPresenterCoords(
 			WorldPosition position) {
-		AppSettings appSettings = _appSettingsService.getAppSettings();
+		PresenterDeltas deltas = getDeltas();
+		
 		PresenterCoords presenterCoords = new PresenterCoords();
 		
-		presenterCoords.x = appSettings.topLeft.x + position.tileX * getTileSize();
-		presenterCoords.y = appSettings.topLeft.y + position.tileY * getTileSize();
+		presenterCoords.x = position.tileX * deltas.deltaXForWorldX * getTileSize() + position.tileY * deltas.deltaXForWorldY * getTileSize();
+		presenterCoords.y = position.tileX * deltas.deltaYForWorldX * getTileSize() + position.tileY * deltas.deltaYForWorldY * getTileSize();
 		
 		return presenterCoords;
 	}
 
 	@Override
-	public PresenterDeltas getMovementDeltas() {
+	public PresenterDeltas getDeltas() {
 		SystemParameters systemParameters = _systemParametersService.getSystemParameters();
 		PresenterDeltas deltas = new PresenterDeltas();
 		
 		if (systemParameters.width >= systemParameters.height) {
-			deltas.deltaXForRightMovement = 1;
-			deltas.deltaYForRightMovement = 0;
-			deltas.deltaXForDownMovement = 0;
-			deltas.deltaYForDownMovement = 1;
+			deltas.deltaXForWorldX = 1;
+			deltas.deltaYForWorldX = 0;
+			deltas.deltaXForWorldY = 0;
+			deltas.deltaYForWorldY = 1;
 		} else {
-			deltas.deltaXForRightMovement = 0;
-			deltas.deltaYForRightMovement = 1;
-			deltas.deltaXForDownMovement = 1;
-			deltas.deltaYForDownMovement = 0;
+			deltas.deltaXForWorldX = 0;
+			deltas.deltaYForWorldX = 1;
+			deltas.deltaXForWorldY = 1;
+			deltas.deltaYForWorldY = 0;
 		}
 		
 		return deltas;

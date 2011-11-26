@@ -9,6 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public interface IPresentationService {
 	void presentSnakesHead(SpriteBatch batch, WorldPosition position);
 	PresenterCoords WorldCoordsToPresenterCoords(WorldPosition position);
-	PresenterDeltas getMovementDeltas();
+	PresenterDeltas getDeltas();
 	int getTileSize();
 }

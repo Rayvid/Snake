@@ -13,4 +13,5 @@ public interface IGameWorldService {
 	void applyLyingItem(LyingItem lyingItem);
 	LyingItem getLyingItemInTile(WorldPosition position);
 	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException;
+	void moveSnake() throws SnakeMovementResultedEndOfGameException;
 }

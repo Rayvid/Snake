@@ -70,38 +70,77 @@ public class TestPresentationIsolated {
 	public void testIfWorldPositionTransformationReturnsMeaningfullResults() throws CloneNotSupportedException
 	{
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
+		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
 		IPresentationService presentationService =
 			new PresentationService(
-					_testInjectorInstance.getInstance(ISystemParametersService.class),
+					systemParametersService,
 					_testInjectorInstance.getInstance(IAppSettingsService.class));
 		
 		Snake snake = snakeService.createSnake();
-		
-		PresenterCoords headCoords = presentationService.WorldCoordsToPresenterCoords(snake.headPosition);
-		
 		WorldPosition toTheRight = (WorldPosition)snake.headPosition.clone();
 		toTheRight.tileX++;
-		PresenterCoords toTheRightCoords = presentationService.WorldCoordsToPresenterCoords(toTheRight);
-		
 		WorldPosition toTheLeft = (WorldPosition)snake.headPosition.clone();
 		toTheLeft.tileX--;
-		PresenterCoords toTheLeftCoords = presentationService.WorldCoordsToPresenterCoords(toTheLeft);
-
 		WorldPosition up = (WorldPosition)snake.headPosition.clone();
 		up.tileY--;
-		PresenterCoords upCoords = presentationService.WorldCoordsToPresenterCoords(up);
-
 		WorldPosition down = (WorldPosition)snake.headPosition.clone();
 		down.tileY++;
+
+		systemParametersService.newResolutionWereSet(400, 200);
+		SystemParameters systemParameters = systemParametersService.getSystemParameters();
+		
+		PresenterCoords headCoords = presentationService.WorldCoordsToPresenterCoords(snake.headPosition);
+		PresenterCoords toTheRightCoords = presentationService.WorldCoordsToPresenterCoords(toTheRight);		
+		PresenterCoords toTheLeftCoords = presentationService.WorldCoordsToPresenterCoords(toTheLeft);
+		PresenterCoords upCoords = presentationService.WorldCoordsToPresenterCoords(up);
 		PresenterCoords downCoords = presentationService.WorldCoordsToPresenterCoords(down);
 		
 		int tileSize = presentationService.getTileSize();
 		
-		assertTrue(toTheRightCoords.x - headCoords.x == tileSize && headCoords.x - toTheLeftCoords.x == tileSize ||
-				   toTheRightCoords.x - headCoords.x == -tileSize && headCoords.x - toTheLeftCoords.x == -tileSize);
-		assertTrue(upCoords.y - headCoords.y == tileSize && headCoords.y - downCoords.y == tileSize ||
-				   upCoords.y - headCoords.y == -tileSize && headCoords.y - downCoords.y == -tileSize);
-
+		assertTrue(toTheRightCoords.x > -systemParameters.width && toTheRightCoords.x < systemParameters.width &&
+				   headCoords.x > -systemParameters.width && headCoords.x < systemParameters.width &&
+				   toTheLeftCoords.x > -systemParameters.width && toTheLeftCoords.x < systemParameters.width &&
+				   toTheRightCoords.y > -systemParameters.height && toTheRightCoords.y < systemParameters.height &&
+				   headCoords.y > -systemParameters.height && headCoords.y < systemParameters.height &&
+				   toTheLeftCoords.y > -systemParameters.height && toTheLeftCoords.y < systemParameters.height &&
+				   (Math.abs(toTheRightCoords.x - headCoords.x) == tileSize && Math.abs(headCoords.x - toTheLeftCoords.x) == tileSize ||
+				    Math.abs(toTheRightCoords.y - headCoords.y) == tileSize && Math.abs(headCoords.y - toTheLeftCoords.y) == tileSize));
+		assertTrue(upCoords.x > -systemParameters.width && upCoords.x < systemParameters.width &&
+				   headCoords.x > -systemParameters.width && headCoords.x < systemParameters.width &&
+				   downCoords.x > -systemParameters.width && downCoords.x < systemParameters.width &&
+				   upCoords.y > -systemParameters.height && upCoords.y < systemParameters.height &&
+				   headCoords.y > -systemParameters.height && headCoords.y < systemParameters.height &&
+				   downCoords.y > -systemParameters.height && downCoords.y < systemParameters.height &&
+				   (Math.abs(upCoords.x - headCoords.x) == tileSize && Math.abs(headCoords.x - downCoords.x) == tileSize ||
+				    Math.abs(upCoords.y - headCoords.y) == tileSize && Math.abs(headCoords.y - downCoords.y) == tileSize));
+		
+		systemParametersService.newResolutionWereSet(200, 400);
+		systemParameters = systemParametersService.getSystemParameters();
+		
+		headCoords = presentationService.WorldCoordsToPresenterCoords(snake.headPosition);
+		toTheRightCoords = presentationService.WorldCoordsToPresenterCoords(toTheRight);		
+		toTheLeftCoords = presentationService.WorldCoordsToPresenterCoords(toTheLeft);
+		upCoords = presentationService.WorldCoordsToPresenterCoords(up);
+		downCoords = presentationService.WorldCoordsToPresenterCoords(down);
+		
+		tileSize = presentationService.getTileSize();
+		
+		assertTrue(toTheRightCoords.x > -systemParameters.width && toTheRightCoords.x < systemParameters.width &&
+				   headCoords.x > -systemParameters.width && headCoords.x < systemParameters.width &&
+				   toTheLeftCoords.x > -systemParameters.width && toTheLeftCoords.x < systemParameters.width &&
+				   toTheRightCoords.y > -systemParameters.height && toTheRightCoords.y < systemParameters.height &&
+				   headCoords.y > -systemParameters.height && headCoords.y < systemParameters.height &&
+				   toTheLeftCoords.y > -systemParameters.height && toTheLeftCoords.y < systemParameters.height &&
+				   (Math.abs(toTheRightCoords.x - headCoords.x) == tileSize && Math.abs(headCoords.x - toTheLeftCoords.x) == tileSize ||
+				    Math.abs(toTheRightCoords.y - headCoords.y) == tileSize && Math.abs(headCoords.y - toTheLeftCoords.y) == tileSize));
+		assertTrue(upCoords.x > -systemParameters.width && upCoords.x < systemParameters.width &&
+				   headCoords.x > -systemParameters.width && headCoords.x < systemParameters.width &&
+				   downCoords.x > -systemParameters.width && downCoords.x < systemParameters.width &&
+				   upCoords.y > -systemParameters.height && upCoords.y < systemParameters.height &&
+				   headCoords.y > -systemParameters.height && headCoords.y < systemParameters.height &&
+				   downCoords.y > -systemParameters.height && downCoords.y < systemParameters.height &&
+				   (Math.abs(upCoords.x - headCoords.x) == tileSize && Math.abs(headCoords.x - downCoords.x) == tileSize ||
+				    Math.abs(upCoords.y - headCoords.y) == tileSize && Math.abs(headCoords.y - downCoords.y) == tileSize));
 	}
 	
 	@Test
@@ -114,16 +153,16 @@ public class TestPresentationIsolated {
 					_testInjectorInstance.getInstance(IAppSettingsService.class));
 		
 		systemParametersService.newResolutionWereSet(480, 320);
-		PresenterDeltas deltas = presentationService.getMovementDeltas();
+		PresenterDeltas deltas = presentationService.getDeltas();
 		assertTrue(
-				deltas.deltaYForRightMovement == 0 && deltas.deltaXForRightMovement != 0 &&
-				deltas.deltaXForDownMovement == 0 && deltas.deltaYForDownMovement != 0);
+				deltas.deltaYForWorldX == 0 && deltas.deltaXForWorldX != 0 &&
+				deltas.deltaXForWorldY == 0 && deltas.deltaYForWorldY != 0);
 		
 		systemParametersService.newResolutionWereSet(320, 480);
-		deltas = presentationService.getMovementDeltas();
+		deltas = presentationService.getDeltas();
 		assertTrue(
-				deltas.deltaYForRightMovement != 0 && deltas.deltaXForRightMovement == 0 &&
-				deltas.deltaXForDownMovement != 0 && deltas.deltaYForDownMovement == 0);
+				deltas.deltaYForWorldX != 0 && deltas.deltaXForWorldX == 0 &&
+				deltas.deltaXForWorldY != 0 && deltas.deltaYForWorldY == 0);
 	}
 	
 	@Test

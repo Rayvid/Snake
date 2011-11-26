@@ -20,6 +20,5 @@ public class AppSettings {
 	
 	public int growSnakeBy;
 	
-	public PresenterCoords topLeft;
 	public long snakesMovementNanoInterval;
 }

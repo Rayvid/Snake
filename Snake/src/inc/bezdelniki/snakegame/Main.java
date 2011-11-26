@@ -4,6 +4,7 @@ import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -32,6 +33,11 @@ public class Main implements ApplicationListener {
     public void render() {
     	ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
     	IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+    	
+    	try {
+			gameWorldService.moveSnakeIfItsTime();
+		} catch (SnakeMovementResultedEndOfGameException e) {
+		}
     	
     	GameWorld gameWorld = gameWorldService.getGameWorld();
     	Snake snake = gameWorld.snake;

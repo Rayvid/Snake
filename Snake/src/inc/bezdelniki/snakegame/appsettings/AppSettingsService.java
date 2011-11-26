@@ -22,10 +22,6 @@ public class AppSettingsService implements IAppSettingsService {
 		settings.textureSize = 16;
 		settings.growSnakeBy = 2;
 		
-		settings.topLeft = new PresenterCoords();
-		settings.topLeft.x = 0;
-		settings.topLeft.y = 0;
-		
 		settings.snakesMovementNanoInterval = 1000000000; // 1s
 		
 		return settings;

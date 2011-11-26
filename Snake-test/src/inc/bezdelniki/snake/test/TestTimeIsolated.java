@@ -68,10 +68,12 @@ public class TestTimeIsolated {
 	}
 	
 	@Test
-	public void testIfMovementOccursWhenEnoughTimePassed() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException
+	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException
 	{
 		expect(_mockedTimeService.getNanoStamp()).andReturn((long)0);
 		expect(_mockedTimeService.getNanoStamp()).andReturn(_testInjectorInstance.getInstance(IAppSettingsService.class).getAppSettings().snakesMovementNanoInterval);
+		expect(_mockedTimeService.getNanoStamp()).andReturn(_testInjectorInstance.getInstance(IAppSettingsService.class).getAppSettings().snakesMovementNanoInterval);
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long)(_testInjectorInstance.getInstance(IAppSettingsService.class).getAppSettings().snakesMovementNanoInterval * 1.5));
 		replay(_mockedTimeService);
 		
 		IGameWorldService worldService = _testInjectorInstance.getInstance(IGameWorldService.class);
@@ -80,6 +82,9 @@ public class TestTimeIsolated {
 		
 		worldService.moveSnakeIfItsTime();
 		assertTrue(!headPosition.equals(worldService.getGameWorld().snake.headPosition));
+		headPosition = (WorldPosition)worldService.getGameWorld().snake.headPosition.clone();
+		worldService.moveSnakeIfItsTime();
+		assertTrue(headPosition.equals(worldService.getGameWorld().snake.headPosition));
 		verify(_mockedTimeService);
 	}
 }

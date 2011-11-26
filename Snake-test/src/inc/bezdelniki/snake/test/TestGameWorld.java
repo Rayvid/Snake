@@ -18,6 +18,7 @@ import inc.bezdelniki.snakegame.lyingitem.exceptions.LyingItemNowhereToPlaceExce
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 
 public class TestGameWorld {
@@ -49,7 +50,7 @@ public class TestGameWorld {
 	}
 	
 	@Test
-	public void testIfSnakeEatsLyingItems()
+	public void testIfSnakeEatsLyingItems() throws SnakeMovementResultedEndOfGameException
 	{
 		ILyingItemService lyingItemService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
@@ -70,7 +71,7 @@ public class TestGameWorld {
 		applePosition.tileX++;
 		gameWorld.lyingItems.add(lyingItemService.createLyingItem(ItemType.APPLE, applePosition));
 		
-		//gameWorldService.moveSnakeAndPostProcess();
+		gameWorldService.moveSnake();
 		assertTrue(gameWorld.lyingItems.size() == 0);
 	}
 }

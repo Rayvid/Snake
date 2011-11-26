@@ -72,8 +72,14 @@ public class GameWorldService implements IGameWorldService {
 	@Override
 	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException {
 		if (_timeService.getNanoStamp() - _gameWorld.lastMoveNanoTimestamp >= _appSettingsService.getAppSettings().snakesMovementNanoInterval) {
-			_snakeService.moveSnake(_gameWorld.snake, _gameWorld.movementChangesInEffect);
+			moveSnake();
 		}
 		
+	}
+
+	@Override
+	public void moveSnake() throws SnakeMovementResultedEndOfGameException {
+		_snakeService.moveSnake(_gameWorld.snake, _gameWorld.movementChangesInEffect);
+		_gameWorld.lastMoveNanoTimestamp = _timeService.getNanoStamp();
 	}
 }
