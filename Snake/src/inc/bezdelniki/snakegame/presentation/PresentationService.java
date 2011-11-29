@@ -32,6 +32,7 @@ public class PresentationService implements IPresentationService {
 		Sprite sprite = new Sprite(texture, 0, 0, 16, 16);
 		PresenterCoords headCoords = WorldCoordsToPresenterCoords(position);
 		sprite.setPosition(headCoords.x, headCoords.y);
+		sprite.setSize(getTileSize(), getTileSize());
 		sprite.draw(batch);
 	}
 
@@ -43,7 +44,7 @@ public class PresentationService implements IPresentationService {
 		PresenterCoords presenterCoords = new PresenterCoords();
 		
 		presenterCoords.x = position.tileX * deltas.deltaXForWorldX * getTileSize() + position.tileY * deltas.deltaXForWorldY * getTileSize();
-		presenterCoords.y = position.tileX * deltas.deltaYForWorldX * getTileSize() + position.tileY * deltas.deltaYForWorldY * getTileSize();
+		presenterCoords.y = _systemParametersService.getSystemParameters().height - (position.tileX * deltas.deltaYForWorldX * getTileSize() + position.tileY * deltas.deltaYForWorldY * getTileSize());
 		
 		return presenterCoords;
 	}

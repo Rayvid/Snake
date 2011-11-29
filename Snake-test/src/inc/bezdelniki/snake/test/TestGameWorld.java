@@ -50,7 +50,7 @@ public class TestGameWorld {
 	}
 	
 	@Test
-	public void testIfSnakeEatsLyingItems() throws SnakeMovementResultedEndOfGameException
+	public void testIfSnakeEatsLyingItems() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ILyingItemService lyingItemService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);

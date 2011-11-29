@@ -12,6 +12,6 @@ public interface IGameWorldService {
 	void applySnakeMovementChange(SnakeMovementChange movementChange);
 	void applyLyingItem(LyingItem lyingItem);
 	LyingItem getLyingItemInTile(WorldPosition position);
-	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException;
-	void moveSnake() throws SnakeMovementResultedEndOfGameException;
+	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException;
+	void moveSnake() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException;
 }

@@ -53,7 +53,7 @@ public class TestSnake {
 	}
 	
 	@Test
-	public void testSnakesLengthChangesAfterGrowingWhenMoving() throws SnakeMovementResultedEndOfGameException
+	public void testSnakesLengthChangesAfterGrowingWhenMoving() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		
@@ -66,7 +66,7 @@ public class TestSnake {
 	}
 	
 	@Test
-	public void testSnakeIsMoving() throws SnakeMovementResultedEndOfGameException
+	public void testSnakeIsMoving() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		
@@ -82,7 +82,7 @@ public class TestSnake {
 	}
 	
 	@Test(expected=SnakeMovementResultedEndOfGameException.class)
-	public void testIfEndOfGameComesWhenMovingSnakeIntoWall() throws SnakeMovementResultedEndOfGameException
+	public void testIfEndOfGameComesWhenMovingSnakeIntoWall() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
@@ -90,16 +90,15 @@ public class TestSnake {
 		Snake snake = snakeService.createSnake();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 		
-		boolean doesEndOfGameHappened = false;
 		for (int i = 0;	i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++) {
 			snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
 		}
 		
-		assertTrue(doesEndOfGameHappened);
+		fail("Should not happen");
 	}
 	
 	@Test
-	public void testIfSnakesTrailCoordListContainsSameCountAsSnakeLength()
+	public void testIfSnakesTrailCoordListContainsSameCountAsSnakeLength() throws CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
@@ -114,5 +113,35 @@ public class TestSnake {
 			}
 		} catch (SnakeMovementResultedEndOfGameException e) {
 		}	
+	}
+	
+	@Test
+	public void testIfAfterEndOfGameSnakeDoesNotMove() throws CloneNotSupportedException
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
+		
+		Snake snake = snakeService.createSnake();
+		AppSettings appSettings = appSettingsService.getAppSettings();
+		
+		try
+		{
+			for (int i = 0;	i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++) {
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+			}
+		}
+		catch (SnakeMovementResultedEndOfGameException e)
+		{
+			WorldPosition headPosition = (WorldPosition)snake.headPosition.clone();
+			
+			try
+			{
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+			}
+			catch (SnakeMovementResultedEndOfGameException ex)
+			{
+				assertTrue(headPosition.equals(snake.headPosition));
+			}
+		}
 	}
 }

@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class TestUserActions {
 	@Test
-	public void testIfSnakeChangesMovingDirectionOnUserAction() throws SnakeMovementResultedEndOfGameException
+	public void testIfSnakeChangesMovingDirectionOnUserAction() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -42,7 +42,7 @@ public class TestUserActions {
 	}
 	
 	@Test
-	public void testIfSnakeMovementChangesAreCleanupedProperly() throws SnakeMovementResultedEndOfGameException
+	public void testIfSnakeMovementChangesAreCleanupedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -68,7 +68,7 @@ public class TestUserActions {
 	}
 	
 	@Test(expected=SnakeMovementResultedEndOfGameException.class)
-	public void testIfEndOfGameComesWhenMovingSnakeIntoItself() throws SnakeMovementResultedEndOfGameException
+	public void testIfEndOfGameComesWhenMovingSnakeIntoItself() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
@@ -102,7 +102,7 @@ public class TestUserActions {
 	}
 	
 	@Test
-	public void testIfSnakesTrailReflectsUserActions() throws SnakeMovementResultedEndOfGameException
+	public void testIfSnakesTrailReflectsUserActions() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);

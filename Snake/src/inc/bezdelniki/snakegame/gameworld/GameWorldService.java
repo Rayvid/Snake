@@ -70,7 +70,7 @@ public class GameWorldService implements IGameWorldService {
 	}
 
 	@Override
-	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException {
+	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException {
 		if (_timeService.getNanoStamp() - _gameWorld.lastMoveNanoTimestamp >= _appSettingsService.getAppSettings().snakesMovementNanoInterval) {
 			moveSnake();
 		}
@@ -78,7 +78,7 @@ public class GameWorldService implements IGameWorldService {
 	}
 
 	@Override
-	public void moveSnake() throws SnakeMovementResultedEndOfGameException {
+	public void moveSnake() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException {
 		_snakeService.moveSnake(_gameWorld.snake, _gameWorld.movementChangesInEffect);
 		_gameWorld.lastMoveNanoTimestamp = _timeService.getNanoStamp();
 	}

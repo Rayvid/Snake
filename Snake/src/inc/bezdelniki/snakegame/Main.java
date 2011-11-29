@@ -20,7 +20,9 @@ public class Main implements ApplicationListener {
     	batch = new SpriteBatch();
     	
     	IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-    	gameWorldService.initGameWorld();
+    	if (gameWorldService.getGameWorld() == null) {
+    		gameWorldService.initGameWorld();
+    	}
     }
 
     @Override
@@ -37,6 +39,7 @@ public class Main implements ApplicationListener {
     	try {
 			gameWorldService.moveSnakeIfItsTime();
 		} catch (SnakeMovementResultedEndOfGameException e) {
+		} catch (CloneNotSupportedException e) {
 		}
     	
     	GameWorld gameWorld = gameWorldService.getGameWorld();
