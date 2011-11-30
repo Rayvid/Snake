@@ -4,7 +4,7 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class TestPresentationIsolated {
 	
 	public TestPresentationIsolated()
 	{
-		_mockedPresentationService = createMock(IPresentationService.class);
+		_mockedPresentationService = createNiceMock(IPresentationService.class);
 		_testInjectorInstance = Guice.createInjector(new TestPresentationBindingsConfiguration());
 	}
 	
@@ -230,5 +230,21 @@ public class TestPresentationIsolated {
 				systemParameters.width - tileSize * appSettings.tilesVertically < tileSize &&
 				systemParameters.width - tileSize * appSettings.tilesVertically >= 0 &&
 				systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testIfDrawSnakeCallsDrawBodyMethod()
+	{
+		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
+		Snake snake = snakeService.createSnake();
+		
+		SpriteBatch batch = null;
+
+        _mockedPresentationService.presentSnakesBody(eq(batch), isA(List.class), eq(snake.headPosition));
+		replay(_mockedPresentationService);
+		
+		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch);
+		verify(_mockedPresentationService);
 	}
 }

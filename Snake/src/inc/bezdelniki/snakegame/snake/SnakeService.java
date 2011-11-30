@@ -98,6 +98,7 @@ public class SnakeService implements ISnakeService {
 	@Override
 	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch) {
 		_presentationService.presentSnakesHead(batch, snake.headPosition);
+		_presentationService.presentSnakesBody(batch, getSnakesTrail(snake, snakeMovementChangesInEffect), snake.headPosition);
 	}
 	
 	@Override
