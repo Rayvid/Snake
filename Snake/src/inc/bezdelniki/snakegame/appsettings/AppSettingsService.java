@@ -2,7 +2,6 @@ package inc.bezdelniki.snakegame.appsettings;
 
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.model.enums.Direction;
-import inc.bezdelniki.snakegame.presentation.dtos.PresenterCoords;
 
 public class AppSettingsService implements IAppSettingsService {
 

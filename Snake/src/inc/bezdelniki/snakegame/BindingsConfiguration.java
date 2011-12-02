@@ -1,6 +1,8 @@
 package inc.bezdelniki.snakegame;
 
 import inc.bezdelniki.snakegame.appsettings.*;
+import inc.bezdelniki.snakegame.device.DeviceService;
+import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.*;
 import inc.bezdelniki.snakegame.lyingitem.*;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
@@ -20,6 +22,7 @@ public class BindingsConfiguration extends AbstractModule {
 	{
 		bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
 		bind(IAppSettingsService.class).to(AppSettingsService.class).in(Singleton.class);
+		bind(IDeviceService.class).to(DeviceService.class).in(Singleton.class);
 		bind(ILyingItemService.class).to(LyingItemService.class).in(Singleton.class);
 		bind(ISnakeService.class).to(SnakeService.class).in(Singleton.class);
 		bind(IUserActionService.class).to(UserActionService.class).in(Singleton.class);

@@ -1,6 +1,6 @@
-package inc.bezdelniki.snakegame.presentation.dtos;
+package inc.bezdelniki.snakegame.device.dtos;
 
-public class PresenterDeltas {
+public class DeviceDeltas {
 	public int deltaXForWorldX;
 	public int deltaYForWorldX;
 	public int deltaXForWorldY;

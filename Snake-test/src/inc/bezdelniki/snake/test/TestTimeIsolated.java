@@ -4,6 +4,8 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.device.DeviceService;
+import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
@@ -33,6 +35,7 @@ public class TestTimeIsolated {
 		{
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(ISystemParametersService.class).to(SystemParametersService.class);
+			bind(IDeviceService.class).to(DeviceService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class);
