@@ -13,8 +13,8 @@ public class AppSettingsService implements IAppSettingsService {
 
 		settings.initialDirection = Direction.RIGHT;
 		settings.initialSnakeLength = 5;
-		settings.initialHeadPositionX = 20;
-		settings.initialHeadPositionY = 12;
+		settings.initialHeadPositionX = 15;
+		settings.initialHeadPositionY = 10;
 		
 		settings.tilesHorizontally = 30;
 		settings.tilesVertically = 20;

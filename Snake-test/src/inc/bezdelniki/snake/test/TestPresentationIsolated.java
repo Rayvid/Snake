@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
 public class TestPresentationIsolated {
 	private Injector _testInjectorInstance;
@@ -32,7 +33,7 @@ public class TestPresentationIsolated {
 		@Override
 		protected void configure()
 		{
-			bind(ISystemParametersService.class).to(SystemParametersService.class);
+			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(ISnakeService.class).to(SnakeService.class);

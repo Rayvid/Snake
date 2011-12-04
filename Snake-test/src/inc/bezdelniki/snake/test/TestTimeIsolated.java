@@ -19,22 +19,24 @@ import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
 import inc.bezdelniki.snakegame.time.ITimeService;
 import inc.bezdelniki.snakegame.time.TimeService;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
 public class TestTimeIsolated {
 	private Injector _testInjectorInstance;
 	private ITimeService _mockedTimeService;
 	
-	private class TestPresentationBindingsConfiguration extends AbstractModule {
+	private class TestTimeBindingsConfiguration extends AbstractModule {
 		@Override
 		protected void configure()
 		{
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
-			bind(ISystemParametersService.class).to(SystemParametersService.class);
+			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
@@ -47,10 +49,11 @@ public class TestTimeIsolated {
 	public TestTimeIsolated()
 	{
 		_mockedTimeService = createMock(ITimeService.class);
-		_testInjectorInstance = Guice.createInjector(new TestPresentationBindingsConfiguration());
+		_testInjectorInstance = Guice.createInjector(new TestTimeBindingsConfiguration());
 	}
 	
 	@Test
+	@Ignore("Not deterministic")
 	public void testIfTimerIsAccurateEnough() throws InterruptedException
 	{
 		ITimeService service = new TimeService();
