@@ -24,7 +24,7 @@ public class PresentationService implements IPresentationService {
 	public void presentSnakesHead(SpriteBatch batch, WorldPosition position) {
 		Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 		Sprite sprite = new Sprite(texture, 0, 0, 16, 16);
-		DeviceCoords headCoords = _deviceService.WorldCoordsToDeviceCoords(position);
+		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
 		sprite.setPosition(headCoords.x, headCoords.y);
 		sprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		sprite.draw(batch);
@@ -36,7 +36,7 @@ public class PresentationService implements IPresentationService {
 			if (!position.equals(headPosition)) {
 				Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 				Sprite sprite = new Sprite(texture, 16, 0, 16, 16);
-				DeviceCoords headCoords = _deviceService.WorldCoordsToDeviceCoords(position);
+				DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
 				sprite.setPosition(headCoords.x, headCoords.y);
 				sprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 				sprite.draw(batch);

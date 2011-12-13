@@ -1,6 +1,12 @@
 package inc.bezdelniki.snakegame.gameworld.dtos;
 
 public class WorldPosition implements Cloneable {
+	public WorldPosition(int tileX, int tileY)
+	{
+		this.tileX = tileX;
+		this.tileY = tileY;
+	}
+	
 	public int tileX;
 	public int tileY;
 	

@@ -31,9 +31,7 @@ public class SnakeService implements ISnakeService {
 	public Snake createSnake() {
 		AppSettings settings = _appSettingsService.getAppSettings();
 		
-		WorldPosition position = new WorldPosition();
-		position.tileX = settings.initialHeadPositionX;
-		position.tileY = settings.initialHeadPositionY;
+		WorldPosition position = new WorldPosition(settings.initialHeadPositionX, settings.initialHeadPositionY);
 		
 		Snake snake = new Snake();
 		snake.currLength = 1;

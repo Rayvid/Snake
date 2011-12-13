@@ -1,5 +1,8 @@
 package inc.bezdelniki.snakegame.input;
 
-public interface IInputService {
+import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 
+public interface IInputService {
+	boolean isThereTouchInEffect();
+	DeviceCoords GetTouchCoords();
 }

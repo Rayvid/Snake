@@ -1,7 +1,7 @@
 package inc.bezdelniki.snake.test;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -50,7 +50,7 @@ public class TestDeviceServiceIsolated {
 	}
 
 	@Test
-	public void testIfWorldPositionTransformationReturnsMeaningfullResults()
+	public void testIfWorldPositionToDevicePositionReturnsMeaningfullResults()
 			throws CloneNotSupportedException {
 		ISnakeService snakeService = _testInjectorInstance
 				.getInstance(ISnakeService.class);
@@ -76,13 +76,13 @@ public class TestDeviceServiceIsolated {
 				.getSystemParameters();
 
 		DeviceCoords headCoords = deviceService
-				.WorldCoordsToDeviceCoords(snake.headPosition);
+				.WorldPositionToDeviceCoords(snake.headPosition);
 		DeviceCoords toTheRightCoords = deviceService
-				.WorldCoordsToDeviceCoords(toTheRight);
+				.WorldPositionToDeviceCoords(toTheRight);
 		DeviceCoords toTheLeftCoords = deviceService
-				.WorldCoordsToDeviceCoords(toTheLeft);
-		DeviceCoords upCoords = deviceService.WorldCoordsToDeviceCoords(up);
-		DeviceCoords downCoords = deviceService.WorldCoordsToDeviceCoords(down);
+				.WorldPositionToDeviceCoords(toTheLeft);
+		DeviceCoords upCoords = deviceService.WorldPositionToDeviceCoords(up);
+		DeviceCoords downCoords = deviceService.WorldPositionToDeviceCoords(down);
 
 		int tileSize = deviceService.getTileSize();
 
@@ -123,11 +123,11 @@ public class TestDeviceServiceIsolated {
 		systemParameters = systemParametersService.getSystemParameters();
 
 		headCoords = deviceService
-				.WorldCoordsToDeviceCoords(snake.headPosition);
-		toTheRightCoords = deviceService.WorldCoordsToDeviceCoords(toTheRight);
-		toTheLeftCoords = deviceService.WorldCoordsToDeviceCoords(toTheLeft);
-		upCoords = deviceService.WorldCoordsToDeviceCoords(up);
-		downCoords = deviceService.WorldCoordsToDeviceCoords(down);
+				.WorldPositionToDeviceCoords(snake.headPosition);
+		toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight);
+		toTheLeftCoords = deviceService.WorldPositionToDeviceCoords(toTheLeft);
+		upCoords = deviceService.WorldPositionToDeviceCoords(up);
+		downCoords = deviceService.WorldPositionToDeviceCoords(down);
 
 		tileSize = deviceService.getTileSize();
 
@@ -164,6 +164,30 @@ public class TestDeviceServiceIsolated {
 						.abs(upCoords.y - headCoords.y) == tileSize
 						&& Math.abs(headCoords.y - downCoords.y) == tileSize));
 	}
+	
+	@Test
+	public void testIfWorldPositionToDevicePositionAndBackReturnsSameResults() throws CloneNotSupportedException
+	{
+		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
+		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
+		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
+		
+		Snake snake = snakeService.createSnake();
+		WorldPosition toTheRight = (WorldPosition) snake.headPosition.clone();
+		toTheRight.tileX++;
+		WorldPosition toTheLeft = (WorldPosition) snake.headPosition.clone();
+		toTheLeft.tileX--;
+		WorldPosition up = (WorldPosition) snake.headPosition.clone();
+		up.tileY--;
+		WorldPosition down = (WorldPosition) snake.headPosition.clone();
+		down.tileY++;
+		
+		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
+		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
+		assertTrue(up.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(up))));
+		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down))));
+	}
 
 	@Test
 	public void testIfBiggerDimensionHasBeenChoosenAsHorizontal() {
@@ -176,13 +200,13 @@ public class TestDeviceServiceIsolated {
 
 		systemParametersService.newResolutionWereSet(480, 320);
 		DeviceDeltas deltas = deviceService.getDeltas();
-		assertTrue(deltas.deltaYForWorldX == 0 && deltas.deltaXForWorldX != 0
-				&& deltas.deltaXForWorldY == 0 && deltas.deltaYForWorldY != 0);
+		assertTrue(deltas.deltaDeviceYForWorldX == 0 && deltas.deltaDeviceXForWorldX != 0
+				&& deltas.deltaDeviceXForWorldY == 0 && deltas.deltaDeviceYForWorldY != 0);
 
 		systemParametersService.newResolutionWereSet(320, 480);
 		deltas = deviceService.getDeltas();
-		assertTrue(deltas.deltaYForWorldX != 0 && deltas.deltaXForWorldX == 0
-				&& deltas.deltaXForWorldY != 0 && deltas.deltaYForWorldY == 0);
+		assertTrue(deltas.deltaDeviceYForWorldX != 0 && deltas.deltaDeviceXForWorldX == 0
+				&& deltas.deltaDeviceXForWorldY != 0 && deltas.deltaDeviceYForWorldY == 0);
 	}
 
 	@Test

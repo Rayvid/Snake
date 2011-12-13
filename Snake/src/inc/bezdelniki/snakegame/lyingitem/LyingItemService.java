@@ -71,9 +71,7 @@ public class LyingItemService implements ILyingItemService {
 		int generatedX = random.nextInt(appSettings.tilesHorizontally);
 		int generatedY = random.nextInt(appSettings.tilesVertically);
 
-		WorldPosition position = new WorldPosition();
-		position.tileX = generatedX;
-		position.tileY = generatedY;
+		WorldPosition position = new WorldPosition(generatedX, generatedY);
 		
 		while (isWorldTileOccupied(position, gameWorld)) {
 			position.tileX++;

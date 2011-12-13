@@ -23,10 +23,7 @@ public class TestLyingItems {
 	public void testIfLyingItemIsCreatedWithSpecifiedParameters() {
 		ILyingItemService service = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		
-		WorldPosition position = new WorldPosition();
-		position.tileX = 1;
-		position.tileY = 2;
-		
+		WorldPosition position = new WorldPosition(1, 2);
 		LyingItem item = service.createLyingItem(ItemType.APPLE, position);
 		
 		assertTrue(

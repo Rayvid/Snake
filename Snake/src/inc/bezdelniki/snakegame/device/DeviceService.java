@@ -24,19 +24,42 @@ public class DeviceService implements IDeviceService {
 	}
 	
 	@Override
-	public DeviceCoords WorldCoordsToDeviceCoords(WorldPosition position) {
+	public DeviceCoords WorldPositionToDeviceCoords(WorldPosition position) {
 		DeviceDeltas deltas = getDeltas();
 
-		DeviceCoords presenterCoords = new DeviceCoords();
-
-		presenterCoords.x = position.tileX * deltas.deltaXForWorldX
-				* getTileSize() + position.tileY * deltas.deltaXForWorldY
-				* getTileSize();
-		presenterCoords.y = _systemParametersService.getSystemParameters().height
-				- (position.tileX * deltas.deltaYForWorldX * getTileSize() + position.tileY
-				* deltas.deltaYForWorldY * getTileSize());
+		DeviceCoords presenterCoords = new DeviceCoords(
+					position.tileX * deltas.deltaDeviceXForWorldX
+						* getTileSize() + position.tileY * deltas.deltaDeviceXForWorldY
+						* getTileSize(),
+					_systemParametersService.getSystemParameters().height
+						- (position.tileX * deltas.deltaDeviceYForWorldX * getTileSize() + position.tileY
+						* deltas.deltaDeviceYForWorldY * getTileSize())
+				);
 
 		return presenterCoords;
+	}
+	
+
+	@Override
+	public WorldPosition DeviceCoordsToWorldPosition(
+			DeviceCoords coords) {
+		AppSettings appSettings = _appSettingsService.getAppSettings();
+			
+		for (int x = 0; x < appSettings.tilesHorizontally; x++) {	
+			for (int y = 0; y < appSettings.tilesVertically; y++) {
+				WorldPosition currWorldPosition = new WorldPosition(x, y);
+				
+				DeviceCoords currCoords = WorldPositionToDeviceCoords(currWorldPosition);
+				DeviceCoords rightBottomCoords = WorldPositionToDeviceCoords(new WorldPosition(x + 1 , y + 1));
+				
+				if (coords.x >= Math.min(currCoords.x, rightBottomCoords.x) && coords.x < Math.max(currCoords.x, rightBottomCoords.x) &&
+					coords.y > Math.min(currCoords.y, rightBottomCoords.y) && coords.y <= Math.max(currCoords.y, rightBottomCoords.y)){
+					return currWorldPosition;
+				}
+			}
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -45,15 +68,15 @@ public class DeviceService implements IDeviceService {
 		DeviceDeltas deltas = new DeviceDeltas();
 		
 		if (systemParameters.width >= systemParameters.height) {
-			deltas.deltaXForWorldX = 1;
-			deltas.deltaYForWorldX = 0;
-			deltas.deltaXForWorldY = 0;
-			deltas.deltaYForWorldY = 1;
+			deltas.deltaDeviceXForWorldX = 1;
+			deltas.deltaDeviceYForWorldX = 0;
+			deltas.deltaDeviceXForWorldY = 0;
+			deltas.deltaDeviceYForWorldY = 1;
 		} else {
-			deltas.deltaXForWorldX = 0;
-			deltas.deltaYForWorldX = 1;
-			deltas.deltaXForWorldY = 1;
-			deltas.deltaYForWorldY = 0;
+			deltas.deltaDeviceXForWorldX = 0;
+			deltas.deltaDeviceYForWorldX = 1;
+			deltas.deltaDeviceXForWorldY = 1;
+			deltas.deltaDeviceYForWorldY = 0;
 		}
 		
 		return deltas;
