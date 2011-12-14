@@ -2,10 +2,13 @@ package inc.bezdelniki.snakegame;
 
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
+import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.useraction.IUserActionService;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -35,16 +38,26 @@ public class Main implements ApplicationListener {
     public void render() {
     	ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
     	IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+    	IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
+    	IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+    	
+    	GameWorld gameWorld = gameWorldService.getGameWorld();
+    	Snake snake = gameWorld.snake;
+    	
+    	if (inputService.isThereTouchInEffect()) {
+    		SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
+    		
+    		if (movementChange != null) {
+    			gameWorldService.applySnakeMovementChange(movementChange);
+    		}
+    	}
     	
     	try {
 			gameWorldService.moveSnakeIfItsTime();
 		} catch (SnakeMovementResultedEndOfGameException e) {
 		} catch (CloneNotSupportedException e) {
 		}
-    	
-    	GameWorld gameWorld = gameWorldService.getGameWorld();
-    	Snake snake = gameWorld.snake;
-    	
+    
     	Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
     	batch.begin();
     	snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, batch);

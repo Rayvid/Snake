@@ -38,7 +38,7 @@ public class TestUserActions {
 		assertTrue(snake.direction == Direction.DOWN);
 		
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
-		assertTrue(snakeHeadPositionY + 1 == snake.headPosition.tileY);
+		assertTrue(snakeHeadPositionY - 1 == snake.headPosition.tileY);
 	}
 	
 	@Test
@@ -77,13 +77,14 @@ public class TestUserActions {
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		try	{
 			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		} catch (SnakeMovementResultedEndOfGameException e) {
 			fail();
 		}
 		
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.UP));
 		try {
 			snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		} catch (SnakeMovementResultedEndOfGameException e) {
@@ -97,7 +98,7 @@ public class TestUserActions {
 			fail();
 		}
 
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.UP));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 	}
 	
@@ -111,6 +112,7 @@ public class TestUserActions {
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
@@ -123,14 +125,101 @@ public class TestUserActions {
 	}
 	
 	@Test
+	public void testIfSnakesTrailStaysTheSameAfterMultipleCalls() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
+		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+				
+		List<WorldPosition> trail1 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		List<WorldPosition> trail2 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		for (int i = 0; i < trail1.size(); i++) {
+			assertTrue(trail1.get(i).equals(trail2.get(i)));
+		}
+		trail2 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		for (int i = 0; i < trail1.size(); i++) {
+			assertTrue(trail1.get(i).equals(trail2.get(i)));
+		}
+	}
+	
+	@Test
+	public void testIfAppliedUserActionBeforeMovementDoesntImpactTrail() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
+		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		
+		List<WorldPosition> trail1 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		List<WorldPosition> trail2 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		for (int i = 0; i < trail1.size(); i++) {
+			assertTrue(trail1.get(i).equals(trail2.get(i)));
+		}
+	}
+	
+	@Test
 	public void testIfUserActionOppositeSnakesDirectionIsIgnored()
 	{
 		fail();
 	}
 	
 	@Test
-	public void testIfMultipleUserActionsBetweenMovementsAreProcessedAndCleanupedProperly()
+	public void testIfMultipleUserActionsBetweenMovementsAreProcessedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		fail();
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
+		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		
+		List<WorldPosition> trail1 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		
+		List<WorldPosition> trail2 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		for (int i = 0; i < trail1.size(); i++) {
+			assertTrue(trail1.get(i).equals(trail2.get(i + 1)));
+		}
+		
+		trail1 = trail2;
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		snakeService.moveSnake(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		
+		trail2 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
+		for (int i = 0; i < trail1.size(); i++) {
+			assertTrue(trail1.get(i).equals(trail2.get(i + 1)));
+		}
 	}
 }

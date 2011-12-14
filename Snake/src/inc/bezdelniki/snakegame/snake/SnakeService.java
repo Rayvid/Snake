@@ -70,11 +70,11 @@ public class SnakeService implements ISnakeService {
 				break;
 				
 			case UP:
-				snake.headPosition.tileY--;
+				snake.headPosition.tileY++;
 				break;
 				
 			case DOWN:
-				snake.headPosition.tileY++;
+				snake.headPosition.tileY--;
 				break;
 		}
 		
@@ -137,11 +137,11 @@ public class SnakeService implements ISnakeService {
 				break;
 				
 			case UP:
-				newPosition.tileY++;
+				newPosition.tileY--;
 				break;
 				
 			case DOWN:
-				newPosition.tileY--;
+				newPosition.tileY++;
 				break;
 		}
 		
@@ -152,9 +152,24 @@ public class SnakeService implements ISnakeService {
 	public List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) {
 		List<WorldPosition> snakesTrailList = new ArrayList<WorldPosition>();
 		
-		WorldPosition position = snake.headPosition;
+		WorldPosition position;
+		try {
+			position = (WorldPosition) snake.headPosition.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+		
 		Direction direction = snake.direction;
 		int currentMovementChange = snakeMovementChangesInEffect.size() - 1;
+		while (
+			currentMovementChange >= 0 &&
+			snakeMovementChangesInEffect
+				.get(currentMovementChange)
+				.headPositionWhenChangeWereMade
+				.equals(position)) {
+			direction = snakeMovementChangesInEffect.get(currentMovementChange).previousDirection;
+			currentMovementChange--;
+		}
 		
 		snakesTrailList.add(position);
 		for (int i = 1; i < snake.currLength; i++) {
@@ -164,8 +179,10 @@ public class SnakeService implements ISnakeService {
 			if (i + 1 != snake.currLength
 					&& currentMovementChange >= 0
 					&& snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position)) {
-				direction = snakeMovementChangesInEffect.get(currentMovementChange).previousDirection;
-				currentMovementChange--;
+				do {
+					direction = snakeMovementChangesInEffect.get(currentMovementChange).previousDirection;
+					currentMovementChange--;
+				} while (currentMovementChange >= 0 && snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position));
 			}
 		}
 		

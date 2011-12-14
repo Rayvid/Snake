@@ -4,6 +4,8 @@ import inc.bezdelniki.snakegame.appsettings.*;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.*;
+import inc.bezdelniki.snakegame.input.IInputService;
+import inc.bezdelniki.snakegame.input.InputService;
 import inc.bezdelniki.snakegame.lyingitem.*;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
@@ -29,6 +31,7 @@ public class BindingsConfiguration extends AbstractModule {
 		bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 		bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
 		bind(ITimeService.class).to(TimeService.class).in(Singleton.class);
+		bind(IInputService.class).to(InputService.class).in(Singleton.class);
 	}
 }
 

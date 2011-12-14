@@ -34,8 +34,8 @@ public class UserActionService implements IUserActionService {
 	@Override
 	public SnakeMovementChange createSnakeMovementChangeAccordingTouch(
 			Snake snake,
-			DeviceCoords getTouchCoords) {
-		WorldPosition touchPosition = _deviceService.DeviceCoordsToWorldPosition(getTouchCoords);
+			DeviceCoords touchCoords) {
+		WorldPosition touchPosition = _deviceService.DeviceCoordsToWorldPosition(touchCoords);
 		
 		if (Math.abs(touchPosition.tileY - snake.headPosition.tileY) > Math.abs(touchPosition.tileX - snake.headPosition.tileX)) {
 			if (touchPosition.tileY - snake.headPosition.tileY > 0) {

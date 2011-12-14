@@ -8,6 +8,6 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 public interface IUserActionService {
 
 	SnakeMovementChange createSnakeMovementChange(Snake snake, Direction direction);
-	SnakeMovementChange createSnakeMovementChangeAccordingTouch(Snake snake, DeviceCoords getTouchCoords);
+	SnakeMovementChange createSnakeMovementChangeAccordingTouch(Snake snake, DeviceCoords touchCoords);
 
 }
