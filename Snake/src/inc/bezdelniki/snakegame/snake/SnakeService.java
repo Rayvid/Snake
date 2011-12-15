@@ -50,14 +50,12 @@ public class SnakeService implements ISnakeService {
 	}
 	
 	@Override
-	public void changeSnakesMovementDirection(Snake snake, Direction newDirection)
-	{
-		snake.direction = newDirection;
-	}
-	
-	@Override
 	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException {
 		AppSettings settings = _appSettingsService.getAppSettings();
+		
+		if (snakeMovementChangesInEffect.size() > 0 && snakeMovementChangesInEffect.get(snakeMovementChangesInEffect.size() - 1).headPositionWhenChangeWereMade.equals(snake.headPosition)) {
+			snake.direction = snakeMovementChangesInEffect.get(snakeMovementChangesInEffect.size() - 1).newDirection;
+		}
 		
 		WorldPosition oldPosition = (WorldPosition)snake.headPosition.clone();
 		switch (snake.direction) {
@@ -70,11 +68,11 @@ public class SnakeService implements ISnakeService {
 				break;
 				
 			case UP:
-				snake.headPosition.tileY++;
+				snake.headPosition.tileY--;
 				break;
 				
 			case DOWN:
-				snake.headPosition.tileY--;
+				snake.headPosition.tileY++;
 				break;
 		}
 		
@@ -137,11 +135,11 @@ public class SnakeService implements ISnakeService {
 				break;
 				
 			case UP:
-				newPosition.tileY--;
+				newPosition.tileY++;
 				break;
 				
 			case DOWN:
-				newPosition.tileY++;
+				newPosition.tileY--;
 				break;
 		}
 		

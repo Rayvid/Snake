@@ -30,30 +30,45 @@ public class UserActionService implements IUserActionService {
 		
 		return userAction;
 	}
-
+	
 	@Override
 	public SnakeMovementChange createSnakeMovementChangeAccordingTouch(
 			Snake snake,
 			DeviceCoords touchCoords) {
 		WorldPosition touchPosition = _deviceService.DeviceCoordsToWorldPosition(touchCoords);
 		
-		if (Math.abs(touchPosition.tileY - snake.headPosition.tileY) > Math.abs(touchPosition.tileX - snake.headPosition.tileX)) {
-			if (touchPosition.tileY - snake.headPosition.tileY > 0) {
-				return createSnakeMovementChange(snake, Direction.DOWN);
-			} else {
-				return createSnakeMovementChange(snake, Direction.UP);
+		if (Math.abs(touchPosition.tileX - snake.headPosition.tileX) != 0 ||
+		    Math.abs(touchPosition.tileY - snake.headPosition.tileY) != 0) {
+			if (snake.direction == Direction.LEFT || snake.direction == Direction.RIGHT) {
+				if (Math.abs(touchPosition.tileY - snake.headPosition.tileY) != 0) {
+					return generateVerticalChange(snake, touchPosition);
+				}
 			}
-		}
-		else if (Math.abs(touchPosition.tileX - snake.headPosition.tileX) != 0)
-		{
-			if (touchPosition.tileX - snake.headPosition.tileX > 0) {
-				return createSnakeMovementChange(snake, Direction.RIGHT);
-			} else {
-				return createSnakeMovementChange(snake, Direction.LEFT);
+			else if (Math.abs(touchPosition.tileX - snake.headPosition.tileX) != 0)
+			{
+				return generateHorizontalChange(snake, touchPosition);
 			}
 		}
 		
 		return null;
+	}
+
+	private SnakeMovementChange generateHorizontalChange(Snake snake,
+			WorldPosition touchPosition) {
+		if (touchPosition.tileX - snake.headPosition.tileX > 0) {
+			return createSnakeMovementChange(snake, Direction.RIGHT);
+		} else {
+			return createSnakeMovementChange(snake, Direction.LEFT);
+		}
+	}
+
+	private SnakeMovementChange generateVerticalChange(Snake snake,
+			WorldPosition touchPosition) {
+		if (touchPosition.tileY - snake.headPosition.tileY > 0) {
+			return createSnakeMovementChange(snake, Direction.DOWN);
+		} else {
+			return createSnakeMovementChange(snake, Direction.UP);
+		}
 	}
 
 }

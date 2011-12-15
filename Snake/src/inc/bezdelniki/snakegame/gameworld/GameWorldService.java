@@ -55,7 +55,6 @@ public class GameWorldService implements IGameWorldService {
 	@Override
 	public void applySnakeMovementChange(SnakeMovementChange movementChange) {
 		_gameWorld.movementChangesInEffect.add(movementChange);
-		_snakeService.changeSnakesMovementDirection(_gameWorld.snake, movementChange.newDirection);
 	}
 
 	@Override

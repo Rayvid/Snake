@@ -27,7 +27,7 @@ public class DeviceService implements IDeviceService {
 	public DeviceCoords WorldPositionToDeviceCoords(WorldPosition position) {
 		DeviceDeltas deltas = getDeltas();
 
-		DeviceCoords presenterCoords = new DeviceCoords(
+		DeviceCoords deviceCoords = new DeviceCoords(
 					position.tileX * deltas.deltaDeviceXForWorldX
 						* getTileSize() + position.tileY * deltas.deltaDeviceXForWorldY
 						* getTileSize(),
@@ -36,7 +36,7 @@ public class DeviceService implements IDeviceService {
 						* deltas.deltaDeviceYForWorldY * getTileSize())
 				);
 
-		return presenterCoords;
+		return deviceCoords;
 	}
 	
 
