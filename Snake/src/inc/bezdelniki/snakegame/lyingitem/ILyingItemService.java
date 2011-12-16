@@ -6,7 +6,9 @@ import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.lyingitem.exceptions.LyingItemNowhereToPlaceException;
 
-public interface ILyingItemService {
+public interface ILyingItemService
+{
 	LyingItem createLyingItem(ItemType itemType, WorldPosition position);
+
 	LyingItem createLyingItemSomewhere(ItemType itemType, GameWorld gameWorld) throws LyingItemNowhereToPlaceException;
 }

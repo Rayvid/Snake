@@ -1,5 +1,6 @@
 package inc.bezdelniki.snakegame.lyingitem.enums;
 
-public enum ItemType {
+public enum ItemType
+{
 	APPLE
 }

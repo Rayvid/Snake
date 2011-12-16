@@ -1,8 +1,8 @@
 package inc.bezdelniki.snakegame.device.dtos;
 
-public class DeviceCoords
+public class TouchCoords
 {
-	public DeviceCoords(int x, int y)
+	public TouchCoords(int x, int y)
 	{
 		this.x = x;
 		this.y = y;

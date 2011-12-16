@@ -6,7 +6,9 @@ import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public interface IPresentationService {
+public interface IPresentationService
+{
 	void presentSnakesHead(SpriteBatch batch, WorldPosition position);
+
 	void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition);
 }

@@ -1,9 +1,11 @@
 package inc.bezdelniki.snakegame.time;
 
-public class TimeService implements ITimeService {
+public class TimeService implements ITimeService
+{
 
 	@Override
-	public long getNanoStamp() {
+	public long getNanoStamp()
+	{
 		return System.nanoTime();
 	}
 

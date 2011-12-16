@@ -15,183 +15,197 @@ import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
-public class SnakeService implements ISnakeService {
+public class SnakeService implements ISnakeService
+{
 	private IAppSettingsService _appSettingsService;
 	private IPresentationService _presentationService;
 
 	@Inject
-	SnakeService (
-			IAppSettingsService appSettingsService,
-			IPresentationService presentationService) {
+	SnakeService(IAppSettingsService appSettingsService, IPresentationService presentationService)
+	{
 		_appSettingsService = appSettingsService;
 		_presentationService = presentationService;
 	}
-	
+
 	@Override
-	public Snake createSnake() {
+	public Snake createSnake()
+	{
 		AppSettings settings = _appSettingsService.getAppSettings();
-		
+
 		WorldPosition position = new WorldPosition(settings.initialHeadPositionX, settings.initialHeadPositionY);
-		
+
 		Snake snake = new Snake();
 		snake.currLength = 1;
 		snake.headPosition = position;
 		snake.newLength = settings.initialSnakeLength;
 		snake.direction = settings.initialDirection;
-		
+
 		return snake;
 	}
-	
+
 	@Override
-	public void growSnake(Snake snake) {
+	public void growSnake(Snake snake)
+	{
 		AppSettings settings = _appSettingsService.getAppSettings();
-		
+
 		snake.newLength += settings.growSnakeBy;
 	}
-	
+
 	@Override
-	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException {
+	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException,
+			CloneNotSupportedException
+	{
 		AppSettings settings = _appSettingsService.getAppSettings();
-		
-		if (snakeMovementChangesInEffect.size() > 0 && snakeMovementChangesInEffect.get(snakeMovementChangesInEffect.size() - 1).headPositionWhenChangeWereMade.equals(snake.headPosition)) {
+
+		if (snakeMovementChangesInEffect.size() > 0
+				&& snakeMovementChangesInEffect.get(snakeMovementChangesInEffect.size() - 1).headPositionWhenChangeWereMade.equals(snake.headPosition))
+		{
 			snake.direction = snakeMovementChangesInEffect.get(snakeMovementChangesInEffect.size() - 1).newDirection;
 		}
-		
-		WorldPosition oldPosition = (WorldPosition)snake.headPosition.clone();
-		switch (snake.direction) {
-			case RIGHT:
-				snake.headPosition.tileX++;
-				break;
-				
-			case LEFT:
-				snake.headPosition.tileX--;
-				break;
-				
-			case UP:
-				snake.headPosition.tileY--;
-				break;
-				
-			case DOWN:
-				snake.headPosition.tileY++;
-				break;
+
+		WorldPosition oldPosition = (WorldPosition) snake.headPosition.clone();
+		switch (snake.direction)
+		{
+		case RIGHT:
+			snake.headPosition.tileX++;
+			break;
+
+		case LEFT:
+			snake.headPosition.tileX--;
+			break;
+
+		case UP:
+			snake.headPosition.tileY--;
+			break;
+
+		case DOWN:
+			snake.headPosition.tileY++;
+			break;
 		}
-		
+
 		if (snake.currLength < snake.newLength)
 		{
 			snake.currLength++;
 		}
-		
-		if (snake.headPosition.tileX < 0
-				|| snake.headPosition.tileY < 0
-				|| snake.headPosition.tileX >= settings.tilesHorizontally 
+
+		if (snake.headPosition.tileX < 0 || snake.headPosition.tileY < 0 || snake.headPosition.tileX >= settings.tilesHorizontally
 				|| snake.headPosition.tileY >= settings.tilesVertically
-				|| doesTileBelongToSnake(snake, snakeMovementChangesInEffect, snake.headPosition, false)) {
+				|| doesTileBelongToSnake(snake, snakeMovementChangesInEffect, snake.headPosition, false))
+		{
 			snake.headPosition = oldPosition;
 			throw new SnakeMovementResultedEndOfGameException();
 		}
 	}
 
 	@Override
-	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch) {
+	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch)
+	{
 		_presentationService.presentSnakesHead(batch, snake.headPosition);
 		_presentationService.presentSnakesBody(batch, getSnakesTrail(snake, snakeMovementChangesInEffect), snake.headPosition);
 	}
-	
+
 	@Override
-	public boolean doesTileBelongToSnake(
-			Snake snake,
-			List<SnakeMovementChange> snakeMovementChangesInEffect,
-			WorldPosition tile,
-			boolean doIncludeHead) {
+	public boolean doesTileBelongToSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, WorldPosition tile, boolean doIncludeHead)
+	{
 
 		List<WorldPosition> snakesTrail = getSnakesTrail(snake, snakeMovementChangesInEffect);
-		for (int i = (doIncludeHead) ? 0 : 1; i < snakesTrail.size(); i++) {
-			if (snakesTrail.get(i).equals(tile)) {
+		for (int i = (doIncludeHead) ? 0 : 1; i < snakesTrail.size(); i++)
+		{
+			if (snakesTrail.get(i).equals(tile))
+			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private WorldPosition traverseBackTroughSnakesTrail(WorldPosition position, Direction snakesDirection)
 	{
 		WorldPosition newPosition = null;
-		
-		try {
-			newPosition = (WorldPosition)position.clone();
-		} catch (CloneNotSupportedException e) {
+
+		try
+		{
+			newPosition = (WorldPosition) position.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
 			return null;
 		}
-		
+
 		switch (snakesDirection)
 		{
-			case LEFT:
-				newPosition.tileX++;
-				break;
-				
-			case RIGHT:
-				newPosition.tileX--;
-				break;
-				
-			case UP:
-				newPosition.tileY++;
-				break;
-				
-			case DOWN:
-				newPosition.tileY--;
-				break;
+		case LEFT:
+			newPosition.tileX++;
+			break;
+
+		case RIGHT:
+			newPosition.tileX--;
+			break;
+
+		case UP:
+			newPosition.tileY++;
+			break;
+
+		case DOWN:
+			newPosition.tileY--;
+			break;
 		}
-		
+
 		return newPosition;
 	}
 
 	@Override
-	public List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) {
+	public List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect)
+	{
 		List<WorldPosition> snakesTrailList = new ArrayList<WorldPosition>();
-		
+
 		WorldPosition position;
-		try {
+		try
+		{
 			position = (WorldPosition) snake.headPosition.clone();
-		} catch (CloneNotSupportedException e) {
+		}
+		catch (CloneNotSupportedException e)
+		{
 			return null;
 		}
-		
+
 		Direction direction = snake.direction;
 		int currentMovementChange = snakeMovementChangesInEffect.size() - 1;
-		while (
-			currentMovementChange >= 0 &&
-			snakeMovementChangesInEffect
-				.get(currentMovementChange)
-				.headPositionWhenChangeWereMade
-				.equals(position)) {
+		while (currentMovementChange >= 0 && snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position))
+		{
 			direction = snakeMovementChangesInEffect.get(currentMovementChange).previousDirection;
 			currentMovementChange--;
 		}
-		
+
 		snakesTrailList.add(position);
-		for (int i = 1; i < snake.currLength; i++) {
+		for (int i = 1; i < snake.currLength; i++)
+		{
 			position = traverseBackTroughSnakesTrail(position, direction);
 			snakesTrailList.add(position);
-			
-			if (i + 1 != snake.currLength
-					&& currentMovementChange >= 0
-					&& snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position)) {
-				do {
+
+			if (i + 1 != snake.currLength && currentMovementChange >= 0
+					&& snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position))
+			{
+				do
+				{
 					direction = snakeMovementChangesInEffect.get(currentMovementChange).previousDirection;
 					currentMovementChange--;
-				} while (currentMovementChange >= 0 && snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position));
+				}
+				while (currentMovementChange >= 0 && snakeMovementChangesInEffect.get(currentMovementChange).headPositionWhenChangeWereMade.equals(position));
 			}
 		}
-		
+
 		// Garbage collection :)
-		for (int i = 0; i <= currentMovementChange; i++) {
-			if (!snakeMovementChangesInEffect.get(0).headPositionWhenChangeWereMade.equals(position)) {
+		for (int i = 0; i <= currentMovementChange; i++)
+		{
+			if (!snakeMovementChangesInEffect.get(0).headPositionWhenChangeWereMade.equals(position))
+			{
 				snakeMovementChangesInEffect.remove(0);
 			}
 		}
 		//
-		
+
 		return snakesTrailList;
 	}
 }

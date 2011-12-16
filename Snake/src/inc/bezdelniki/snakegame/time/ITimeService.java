@@ -1,6 +1,7 @@
 package inc.bezdelniki.snakegame.time;
 
-public interface ITimeService {
+public interface ITimeService
+{
 
 	long getNanoStamp();
 

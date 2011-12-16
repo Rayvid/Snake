@@ -2,18 +2,21 @@ package inc.bezdelniki.snakegame.input;
 
 import com.badlogic.gdx.Gdx;
 
-import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
+import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 
-public class InputService implements IInputService {
+public class InputService implements IInputService
+{
 
 	@Override
-	public boolean isThereTouchInEffect() {
+	public boolean isThereTouchInEffect()
+	{
 		return Gdx.input.isTouched();
 	}
 
 	@Override
-	public DeviceCoords GetTouchCoords() {
-		return new DeviceCoords(Gdx.input.getX(), Gdx.input.getY());
+	public TouchCoords GetTouchCoords()
+	{
+		return new TouchCoords(Gdx.input.getX(), Gdx.input.getY());
 	}
 
 }

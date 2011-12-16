@@ -6,34 +6,37 @@ import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 
-public class SystemParametersService implements ISystemParametersService {
+public class SystemParametersService implements ISystemParametersService
+{
 	private int _width;
 	private int _height;
 	private IAppSettingsService _appSettingsService;
-	
+
 	@Inject
 	public SystemParametersService(IAppSettingsService appSettingsService)
 	{
 		_appSettingsService = appSettingsService;
-		
+
 		AppSettings appSettings = _appSettingsService.getAppSettings();
 		_width = appSettings.initialWidth;
 		_height = appSettings.initialHeight;
 	}
-	
+
 	@Override
-	public SystemParameters getSystemParameters() {
+	public SystemParameters getSystemParameters()
+	{
 		SystemParameters systemParameters = new SystemParameters();
-		
+
 		systemParameters.width = _width;
 		systemParameters.height = _height;
-		
+
 		return systemParameters;
 	}
-	
+
 	@Override
-	public void newResolutionWereSet(int width, int height) {
+	public void newResolutionWereSet(int width, int height)
+	{
 		_width = width;
-		_height = height; 
+		_height = height;
 	}
 }

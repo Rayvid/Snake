@@ -15,61 +15,79 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Main implements ApplicationListener {
+public class Main implements ApplicationListener
+{
 	SpriteBatch batch;
-	
-    @Override
-    public void create() {
-    	batch = new SpriteBatch();
-    	
-    	IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-    	if (gameWorldService.getGameWorld() == null) {
-    		gameWorldService.initGameWorld();
-    	}
-    }
 
-    @Override
-    public void dispose() { }
+	@Override
+	public void create()
+	{
+		batch = new SpriteBatch();
 
-    @Override
-    public void pause() { }
-
-    @Override
-    public void render() {
-    	ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-    	IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-    	IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
-    	IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-    	
-    	GameWorld gameWorld = gameWorldService.getGameWorld();
-    	Snake snake = gameWorld.snake;
-    	
-    	if (inputService.isThereTouchInEffect()) {
-    		SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
-    		
-    		if (movementChange != null) {
-    			gameWorldService.applySnakeMovementChange(movementChange);
-    		}
-    	}
-    	
-    	try {
-			gameWorldService.moveSnakeIfItsTime();
-		} catch (SnakeMovementResultedEndOfGameException e) {
-		} catch (CloneNotSupportedException e) {
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		if (gameWorldService.getGameWorld() == null)
+		{
+			gameWorldService.initGameWorld();
 		}
-    
-    	Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-    	batch.begin();
-    	snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, batch);
-    	batch.end();    	
-    }
+	}
 
-    @Override
-    public void resize(int width, int height) {
-    	ISystemParametersService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParametersService.class);
-    	systemParametersService.newResolutionWereSet(width, height);
-    }
+	@Override
+	public void dispose()
+	{
+	}
 
-    @Override
-    public void resume() { }
+	@Override
+	public void pause()
+	{
+	}
+
+	@Override
+	public void render()
+	{
+		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
+		IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+
+		GameWorld gameWorld = gameWorldService.getGameWorld();
+		Snake snake = gameWorld.snake;
+
+		if (inputService.isThereTouchInEffect())
+		{
+			SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
+
+			if (movementChange != null)
+			{
+				gameWorldService.applySnakeMovementChange(movementChange);
+			}
+		}
+
+		try
+		{
+			gameWorldService.moveSnakeIfItsTime();
+		}
+		catch (SnakeMovementResultedEndOfGameException e)
+		{
+		}
+		catch (CloneNotSupportedException e)
+		{
+		}
+
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, batch);
+		batch.end();
+	}
+
+	@Override
+	public void resize(int width, int height)
+	{
+		ISystemParametersService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParametersService.class);
+		systemParametersService.newResolutionWereSet(width, height);
+	}
+
+	@Override
+	public void resume()
+	{
+	}
 }

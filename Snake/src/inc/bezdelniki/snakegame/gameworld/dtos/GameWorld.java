@@ -6,7 +6,8 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import java.util.List;
 
-public class GameWorld {
+public class GameWorld
+{
 	public List<LyingItem> lyingItems;
 	public Snake snake;
 	public List<SnakeMovementChange> movementChangesInEffect;

@@ -12,16 +12,19 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 
-public class PresentationService implements IPresentationService {
+public class PresentationService implements IPresentationService
+{
 	private IDeviceService _deviceService;
-	
+
 	@Inject
-	public PresentationService(IDeviceService deviceService) {
+	public PresentationService(IDeviceService deviceService)
+	{
 		_deviceService = deviceService;
 	}
 
 	@Override
-	public void presentSnakesHead(SpriteBatch batch, WorldPosition position) {
+	public void presentSnakesHead(SpriteBatch batch, WorldPosition position)
+	{
 		Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 		Sprite sprite = new Sprite(texture, 0, 0, 16, 16);
 		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
@@ -31,9 +34,12 @@ public class PresentationService implements IPresentationService {
 	}
 
 	@Override
-	public void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition) {
-		for (WorldPosition position : snakesTrail) {
-			if (!position.equals(headPosition)) {
+	public void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition)
+	{
+		for (WorldPosition position : snakesTrail)
+		{
+			if (!position.equals(headPosition))
+			{
 				Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 				Sprite sprite = new Sprite(texture, 16, 0, 16, 16);
 				DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);

@@ -18,7 +18,8 @@ import inc.bezdelniki.snakegame.useraction.UserActionService;
 
 import com.google.inject.*;
 
-public class BindingsConfiguration extends AbstractModule {
+public class BindingsConfiguration extends AbstractModule
+{
 	@Override
 	protected void configure()
 	{
@@ -34,4 +35,3 @@ public class BindingsConfiguration extends AbstractModule {
 		bind(IInputService.class).to(InputService.class).in(Singleton.class);
 	}
 }
-
