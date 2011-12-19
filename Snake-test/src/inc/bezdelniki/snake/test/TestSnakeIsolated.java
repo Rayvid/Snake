@@ -39,7 +39,7 @@ public class TestSnakeIsolated
 	private Injector _testInjectorInstance;
 	private ISnakeService _mockedSnakeService;
 
-	private class TestPresentationBindingsConfiguration extends AbstractModule
+	private class TestSnakeBindingsConfiguration extends AbstractModule
 	{
 		@Override
 		protected void configure()
@@ -58,7 +58,7 @@ public class TestSnakeIsolated
 	public TestSnakeIsolated()
 	{
 		_mockedSnakeService = createNiceMock(ISnakeService.class);
-		_testInjectorInstance = Guice.createInjector(new TestPresentationBindingsConfiguration());
+		_testInjectorInstance = Guice.createInjector(new TestSnakeBindingsConfiguration());
 	}
 
 	@Test

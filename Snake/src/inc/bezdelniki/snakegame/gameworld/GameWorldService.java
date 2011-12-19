@@ -8,6 +8,7 @@ import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
+import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.time.ITimeService;
@@ -55,7 +56,15 @@ public class GameWorldService implements IGameWorldService
 	@Override
 	public void applySnakeMovementChange(SnakeMovementChange movementChange)
 	{
-		_gameWorld.movementChangesInEffect.add(movementChange);
+		if ((movementChange.previousDirection == Direction.LEFT
+				|| movementChange.previousDirection == Direction.RIGHT
+				&& movementChange.newDirection == Direction.UP
+				|| movementChange.newDirection == Direction.DOWN)
+				|| (movementChange.previousDirection == Direction.UP
+						|| movementChange.previousDirection == Direction.DOWN
+						&& movementChange.newDirection == Direction.LEFT
+						|| movementChange.newDirection == Direction.RIGHT))
+			_gameWorld.movementChangesInEffect.add(movementChange);
 	}
 
 	@Override

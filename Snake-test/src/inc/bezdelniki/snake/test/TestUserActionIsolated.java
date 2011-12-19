@@ -1,52 +1,96 @@
 package inc.bezdelniki.snake.test;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.List;
 
-import inc.bezdelniki.snakegame.SnakeInjector;
+import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
+import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.device.DeviceService;
+import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.presentation.IPresentationService;
+import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
+import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
+import inc.bezdelniki.snakegame.time.ITimeService;
+import inc.bezdelniki.snakegame.time.TimeService;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
+import inc.bezdelniki.snakegame.useraction.UserActionService;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import org.junit.Test;
 
-public class TestUserActions
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+
+public class TestUserActionIsolated
 {
+	private Injector _testInjectorInstance;
+	private IUserActionService _mockedUserActionService;
+
+	private class TestUserActionBindingsConfiguration extends AbstractModule
+	{
+		@Override
+		protected void configure()
+		{
+			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
+			bind(IAppSettingsService.class).to(AppSettingsService.class);
+			bind(IPresentationService.class).to(PresentationService.class);
+			bind(IDeviceService.class).to(DeviceService.class);
+			bind(ITimeService.class).to(TimeService.class);
+			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
+			bind(ISnakeService.class).to(SnakeService.class);
+
+			bind(IUserActionService.class).toInstance(_mockedUserActionService);
+		}
+	}
+
+	public TestUserActionIsolated()
+	{
+		_mockedUserActionService = createMock(IUserActionService.class);
+		_testInjectorInstance = Guice.createInjector(new TestUserActionBindingsConfiguration());
+	}
+
 	@Test
 	public void testIfSnakeChangesMovingDirectionOnUserAction() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 
-		int snakeHeadPositionX = snake.headPosition.tileX;
-		int snakeHeadPositionY = snake.headPosition.tileY;
-
-		assertTrue(snake.direction == Direction.RIGHT);
+		WorldPosition snakeHeadPosition = (WorldPosition) snake.headPosition.clone();
 
 		gameWorldService.moveSnake();
-		assertTrue(snakeHeadPositionX + 1 == snake.headPosition.tileX);
+		assertTrue(snakeHeadPosition.tileX + 1 == snake.headPosition.tileX);
 
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		gameWorldService.moveSnake();
 
 		assertTrue(snake.direction == Direction.DOWN);
-		assertTrue(snakeHeadPositionY + 1 == snake.headPosition.tileY);
+		assertTrue(snakeHeadPosition.tileY + 1 == snake.headPosition.tileY);
 	}
 
 	@Test
 	public void testIfSnakeMovementChangesAreCleanupedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -61,17 +105,19 @@ public class TestUserActions
 		for (int i = 0; i < snake.newLength; i++)
 			gameWorldService.moveSnake();
 
-		// this one triggers cleanup when needed
-		snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
-
-		assertTrue(gameWorldService.getGameWorld().movementChangesInEffect.size() == 0);
+		List<SnakeMovementChange> movementChangesInEffect = gameWorldService.getGameWorld().movementChangesInEffect;
+		// this triggers cleanup when needed
+		snakeService.getSnakesTrail(snake, movementChangesInEffect);
+		//
+		assertTrue(movementChangesInEffect.size() == 0);
 	}
 
 	@Test(expected = SnakeMovementResultedEndOfGameException.class)
 	public void testIfEndOfGameComesWhenMovingSnakeIntoItself() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -113,9 +159,10 @@ public class TestUserActions
 	@Test
 	public void testIfSnakesTrailReflectsUserActions() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -134,9 +181,10 @@ public class TestUserActions
 	@Test
 	public void testIfSnakesTrailStaysTheSameAfterMultipleCalls() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -164,8 +212,9 @@ public class TestUserActions
 	@Test
 	public void testIfDirectionIsChangedOnlyAfterMovement() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -183,11 +232,12 @@ public class TestUserActions
 	}
 
 	@Test
-	public void testIfAppliedUserActionBeforeMovementDoesntImpactTrail() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfAppliedUserActionDoesntImpactTrailUntilMoved() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -207,30 +257,40 @@ public class TestUserActions
 	}
 
 	@Test
-	public void testIfUserActionOppositeSnakesDirectionIsIgnored()
+	public void testIfUserActionOppositeSnakesDirectionIsIgnored() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		fail();
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
+		
+		gameWorldService.initGameWorld();
+		Snake snake = gameWorldService.getGameWorld().snake;
+		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		WorldPosition prevHeadPosition = (WorldPosition) snake.headPosition.clone();
+		gameWorldService.moveSnake();
+		
+		assertTrue(prevHeadPosition.tileX + 1 == snake.headPosition.tileX);
+		assertTrue(snake.direction == Direction.RIGHT);
 	}
 
 	@Test
 	public void testIfMultipleUserActionsBetweenMovementsAreProcessedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
 	{
-		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
+		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
+		IUserActionService userActionService = new UserActionService(deviceService);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
 
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
-		gameWorldService.moveSnake();
-
 		List<WorldPosition> trail1 = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		gameWorldService.moveSnake();
 
@@ -239,13 +299,14 @@ public class TestUserActions
 		{
 			assertTrue(trail1.get(i).equals(trail2.get(i + 1)));
 		}
+		assertTrue(trail2.get(0).tileY == trail1.get(0).tileY + 1);
 
 		trail1 = trail2;
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
-		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.DOWN));
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
 		gameWorldService.moveSnake();
 
@@ -254,5 +315,6 @@ public class TestUserActions
 		{
 			assertTrue(trail1.get(i).equals(trail2.get(i + 1)));
 		}
+		assertTrue(trail2.get(0).tileX == trail1.get(0).tileX - 1);
 	}
 }
