@@ -42,7 +42,7 @@ public class TestTimeIsolated
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
-			bind(IGameWorldService.class).to(GameWorldService.class);
+			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 
 			bind(ITimeService.class).toInstance(_mockedTimeService);
 		}

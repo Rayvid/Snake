@@ -68,6 +68,7 @@ public class Main implements ApplicationListener
 		}
 		catch (SnakeMovementResultedEndOfGameException e)
 		{
+			int a = 1;
 		}
 		catch (CloneNotSupportedException e)
 		{

@@ -57,8 +57,8 @@ public class TestPresentationIsolated
 		Snake snake = snakeService.createSnake();
 
 		SpriteBatch batch = null;
-
 		_mockedPresentationService.presentSnakesHead(batch, snake.headPosition);
+		
 		replay(_mockedPresentationService);
 
 		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch);

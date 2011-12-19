@@ -21,7 +21,7 @@ public class SnakeService implements ISnakeService
 	private IPresentationService _presentationService;
 
 	@Inject
-	SnakeService(IAppSettingsService appSettingsService, IPresentationService presentationService)
+	public SnakeService(IAppSettingsService appSettingsService, IPresentationService presentationService)
 	{
 		_appSettingsService = appSettingsService;
 		_presentationService = presentationService;

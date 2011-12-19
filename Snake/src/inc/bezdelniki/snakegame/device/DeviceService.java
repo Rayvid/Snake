@@ -31,7 +31,7 @@ public class DeviceService implements IDeviceService
 		DeviceCoords deviceCoords =
 				new DeviceCoords(
 						position.tileX * deltas.deltaDeviceXForWorldX * getTileSize() + position.tileY * deltas.deltaDeviceXForWorldY * getTileSize(),
-						_systemParametersService.getSystemParameters().height
+						_systemParametersService.getSystemParameters().height - getTileSize()
 								- (position.tileX * deltas.deltaDeviceYForWorldX * getTileSize()
 										+ position.tileY * deltas.deltaDeviceYForWorldY * getTileSize()));
 
