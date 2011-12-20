@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
@@ -16,7 +17,6 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public class GameWorldService implements IGameWorldService
 {
-
 	private IAppSettingsService _appSettingsService;
 	private ISnakeService _snakeService;
 	private ITimeService _timeService;
@@ -81,8 +81,20 @@ public class GameWorldService implements IGameWorldService
 		return null;
 	}
 
+	private void eatLyingItemInTile(WorldPosition position)
+	{
+		for (int i = 0; i < _gameWorld.lyingItems.size(); i++)
+		{
+			if (_gameWorld.lyingItems.get(i).position.equals(position))
+			{
+				_gameWorld.lyingItems.remove(i);
+				return;
+			}
+		}
+	}
+
 	@Override
-	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		if (_timeService.getNanoStamp() - _gameWorld.lastMoveNanoTimestamp >= _appSettingsService.getAppSettings().snakesMovementNanoInterval)
 		{
@@ -92,9 +104,24 @@ public class GameWorldService implements IGameWorldService
 	}
 
 	@Override
-	public void moveSnake() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void moveSnake() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		_snakeService.moveSnake(_gameWorld.snake, _gameWorld.movementChangesInEffect);
 		_gameWorld.lastMoveNanoTimestamp = _timeService.getNanoStamp();
+
+		LyingItem lyingItem = getLyingItemInTile(_gameWorld.snake.headPosition);
+		if (lyingItem != null)
+		{
+			switch (lyingItem.itemType)
+			{
+			case APPLE:
+				eatLyingItemInTile(_gameWorld.snake.headPosition);
+				_snakeService.growSnake(_gameWorld.snake);
+				break;
+
+			default:
+				throw new UnknownLyingItemTypeException();
+			}
+		}
 	}
 }

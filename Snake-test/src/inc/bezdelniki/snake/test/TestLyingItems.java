@@ -2,6 +2,8 @@ package inc.bezdelniki.snake.test;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.SnakeInjector;
@@ -16,7 +18,6 @@ import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.lyingitem.exceptions.LyingItemNowhereToPlaceException;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
-import inc.bezdelniki.snakegame.useraction.IUserActionService;
 
 public class TestLyingItems
 {
@@ -49,7 +50,6 @@ public class TestLyingItems
 		ILyingItemService lyingItemsService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 
 		gameWorldService.initGameWorld();
@@ -57,13 +57,26 @@ public class TestLyingItems
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
 
-		fail(); // TODO check if no item in path
-
 		try
 		{
 			for (int i = 0; i < appSettings.tilesVertically * appSettings.tilesHorizontally + 1; i++)
 			{
-				gameWorldService.applyLyingItem(lyingItemsService.createLyingItemSomewhere(ItemType.APPLE, gameWorldService.getGameWorld()));
+				LyingItem lyingItem = lyingItemsService.createLyingItemSomewhere(ItemType.APPLE, gameWorldService.getGameWorld());
+				gameWorldService.applyLyingItem(lyingItem);
+				List<WorldPosition> trail = snakeService.getSnakesTrail(snake, gameWorld.movementChangesInEffect);
+				
+				for (WorldPosition piece : trail)
+				{
+					if (piece.equals(lyingItem.position))
+					{
+						fail("Item created on the snake");
+					}
+				}
+				
+				if (snake.headPosition.tileY == lyingItem.position.tileY && snake.headPosition.tileX < lyingItem.position.tileX)
+				{
+					fail("Item created on the snakes path");
+				}
 			}
 		}
 		catch (LyingItemNowhereToPlaceException e)

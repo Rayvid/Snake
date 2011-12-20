@@ -57,6 +57,37 @@ public class LyingItemService implements ILyingItemService
 			}
 		}
 
+		switch (gameWorld.snake.direction)
+		{
+		case RIGHT:
+			if (gameWorld.snake.headPosition.tileY == position.tileY && gameWorld.snake.headPosition.tileX < position.tileX)
+			{
+				return true;
+			}
+			break;
+			
+		case LEFT:
+			if (gameWorld.snake.headPosition.tileY == position.tileY && gameWorld.snake.headPosition.tileX > position.tileX)
+			{
+				return true;
+			}
+			break;
+			
+		case UP:
+			if (gameWorld.snake.headPosition.tileX == position.tileX && gameWorld.snake.headPosition.tileY > position.tileY)
+			{
+				return true;
+			}
+			break;
+			
+		case DOWN:
+			if (gameWorld.snake.headPosition.tileX == position.tileX && gameWorld.snake.headPosition.tileY < position.tileY)
+			{
+				return true;
+			}
+			break;
+		}
+
 		return false;
 	}
 

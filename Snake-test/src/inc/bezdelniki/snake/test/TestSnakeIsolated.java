@@ -14,6 +14,7 @@ import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
@@ -127,9 +128,13 @@ public class TestSnakeIsolated
 	}
 
 	@Test
-	public void testIfGameWorldSnakeMoveCallsSnakeMoveUnderTheHood() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfGameWorldSnakeMoveCallsSnakeMoveUnderTheHood() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
+		Snake snake = new Snake();
+		snake.headPosition = new WorldPosition(0, 0);
+		expect(_mockedSnakeService.createSnake()).andReturn(snake);	
 		replay(_mockedSnakeService);
+		
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 		gameWorldService.initGameWorld();
 		GameWorld gameWorld = gameWorldService.getGameWorld();

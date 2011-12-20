@@ -9,6 +9,7 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
@@ -78,7 +79,7 @@ public class TestTimeIsolated
 	}
 
 	@Test
-	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException
+	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		expect(_mockedTimeService.getNanoStamp()).andReturn((long) 0);
 		expect(_mockedTimeService.getNanoStamp()).andReturn(

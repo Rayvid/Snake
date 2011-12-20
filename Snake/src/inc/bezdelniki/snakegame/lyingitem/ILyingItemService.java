@@ -9,6 +9,5 @@ import inc.bezdelniki.snakegame.lyingitem.exceptions.LyingItemNowhereToPlaceExce
 public interface ILyingItemService
 {
 	LyingItem createLyingItem(ItemType itemType, WorldPosition position);
-
 	LyingItem createLyingItemSomewhere(ItemType itemType, GameWorld gameWorld) throws LyingItemNowhereToPlaceException;
 }

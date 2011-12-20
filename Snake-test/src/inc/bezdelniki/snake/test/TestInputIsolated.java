@@ -5,13 +5,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import inc.bezdelniki.snakegame.SnakeInjector;
 import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
@@ -22,6 +23,8 @@ import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
 import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
+import inc.bezdelniki.snakegame.time.ITimeService;
+import inc.bezdelniki.snakegame.time.TimeService;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.UserActionService;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
@@ -41,10 +44,12 @@ public class TestInputIsolated
 		@Override
 		protected void configure()
 		{
-			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
-			bind(IDeviceService.class).to(DeviceService.class);
+			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
+			bind(IDeviceService.class).to(DeviceService.class);
+			bind(ITimeService.class).to(TimeService.class);
+			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(IUserActionService.class).to(UserActionService.class);
 
@@ -59,9 +64,9 @@ public class TestInputIsolated
 	}
 
 	@Test
-	public void testIfCorrectUserActionIsCreatedAccordingTouch() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException
+	public void testIfCorrectUserActionIsCreatedAccordingTouch() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
@@ -91,7 +96,7 @@ public class TestInputIsolated
 		WorldPosition toTheLeft = (WorldPosition) toTheDownLeft.clone();
 		toTheLeft.tileX--;
 
-		IDeviceService deviceService = SnakeInjector.getInjectorInstance().getInstance(IDeviceService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
 
 		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUp)));
 		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUpLeft)));
@@ -103,7 +108,7 @@ public class TestInputIsolated
 		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheLeft)));
 		replay(_mockedInputService);
 
-		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+		IUserActionService userActionService = _testInjectorInstance.getInstance(IUserActionService.class);
 		SnakeMovementChange movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
 		assertTrue(movementChange.newDirection == Direction.UP);
 		gameWorldService.applySnakeMovementChange(movementChange);

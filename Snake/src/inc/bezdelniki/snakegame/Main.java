@@ -2,7 +2,11 @@ package inc.bezdelniki.snakegame;
 
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
+import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.input.IInputService;
+import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
+import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
+import inc.bezdelniki.snakegame.lyingitem.exceptions.LyingItemNowhereToPlaceException;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
@@ -48,6 +52,7 @@ public class Main implements ApplicationListener
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
 		IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+		ILyingItemService lyingItemService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
@@ -59,6 +64,13 @@ public class Main implements ApplicationListener
 			if (movementChange != null)
 			{
 				gameWorldService.applySnakeMovementChange(movementChange);
+				try
+				{
+					gameWorldService.applyLyingItem(lyingItemService.createLyingItemSomewhere(ItemType.APPLE, gameWorld));
+				}
+				catch (LyingItemNowhereToPlaceException e)
+				{
+				}
 			}
 		}
 
@@ -70,6 +82,9 @@ public class Main implements ApplicationListener
 		{
 		}
 		catch (CloneNotSupportedException e)
+		{
+		}
+		catch (UnknownLyingItemTypeException e)
 		{
 		}
 

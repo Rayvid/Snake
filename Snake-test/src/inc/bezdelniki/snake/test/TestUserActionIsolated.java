@@ -12,6 +12,7 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
@@ -63,7 +64,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfSnakeChangesMovingDirectionOnUserAction() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfSnakeChangesMovingDirectionOnUserAction() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
@@ -85,7 +86,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfSnakeMovementChangesAreCleanupedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfSnakeMovementChangesAreCleanupedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
@@ -113,7 +114,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test(expected = SnakeMovementResultedEndOfGameException.class)
-	public void testIfEndOfGameComesWhenMovingSnakeIntoItself() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfEndOfGameComesWhenMovingSnakeIntoItself() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
@@ -157,7 +158,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfSnakesTrailReflectsUserActions() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfSnakesTrailReflectsUserActions() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
@@ -179,7 +180,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfSnakesTrailStaysTheSameAfterMultipleCalls() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfSnakesTrailStaysTheSameAfterMultipleCalls() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
@@ -210,7 +211,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfDirectionIsChangedOnlyAfterMovement() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfDirectionIsChangedOnlyAfterMovement() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
@@ -232,7 +233,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfAppliedUserActionDoesntImpactTrailUntilMoved() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfAppliedUserActionDoesntImpactTrailUntilMoved() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
@@ -257,7 +258,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfUserActionOppositeSnakesDirectionIsIgnored() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfUserActionOppositeSnakesDirectionIsIgnored() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
@@ -275,7 +276,7 @@ public class TestUserActionIsolated
 	}
 
 	@Test
-	public void testIfMultipleUserActionsBetweenMovementsAreProcessedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfMultipleUserActionsBetweenMovementsAreProcessedProperly() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(SnakeService.class);
