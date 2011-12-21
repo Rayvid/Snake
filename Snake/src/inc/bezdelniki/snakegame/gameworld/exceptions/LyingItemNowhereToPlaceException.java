@@ -1,4 +1,4 @@
-package inc.bezdelniki.snakegame.lyingitem.exceptions;
+package inc.bezdelniki.snakegame.gameworld.exceptions;
 
 public class LyingItemNowhereToPlaceException extends Exception
 {

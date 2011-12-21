@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 
 public class PresentationService implements IPresentationService
 {
@@ -42,11 +43,22 @@ public class PresentationService implements IPresentationService
 			{
 				Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 				Sprite sprite = new Sprite(texture, 16, 0, 16, 16);
-				DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
-				sprite.setPosition(headCoords.x, headCoords.y);
+				DeviceCoords bodyItemCoords = _deviceService.WorldPositionToDeviceCoords(position);
+				sprite.setPosition(bodyItemCoords.x, bodyItemCoords.y);
 				sprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 				sprite.draw(batch);
 			}
 		}
+	}
+
+	@Override
+	public void presentLyingItem(SpriteBatch batch, LyingItem item)
+	{
+		Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
+		Sprite sprite = new Sprite(texture, 32, 0, 16, 16);
+		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position);
+		sprite.setPosition(itemCoords.x, itemCoords.y);
+		sprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+		sprite.draw(batch);
 	}
 }

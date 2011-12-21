@@ -10,6 +10,8 @@ import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
+import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
+import inc.bezdelniki.snakegame.lyingitem.LyingItemService;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
@@ -43,6 +45,7 @@ public class TestTimeIsolated
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
+			bind(ILyingItemService.class).to(LyingItemService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 
 			bind(ITimeService.class).toInstance(_mockedTimeService);

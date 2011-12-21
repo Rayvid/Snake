@@ -1,15 +1,23 @@
 package inc.bezdelniki.snakegame.gameworld;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceException;
 import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
+import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
+import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.time.ITimeService;
@@ -19,15 +27,24 @@ public class GameWorldService implements IGameWorldService
 {
 	private IAppSettingsService _appSettingsService;
 	private ISnakeService _snakeService;
+	private ILyingItemService _lyingItemsService;
 	private ITimeService _timeService;
+	private IPresentationService _presentationService;
 	private GameWorld _gameWorld = null;
 
 	@Inject
-	public GameWorldService(IAppSettingsService appSettingsService, ISnakeService snakeService, ITimeService timeService)
+	public GameWorldService(
+			IAppSettingsService appSettingsService,
+			ISnakeService snakeService,
+			ITimeService timeService,
+			ILyingItemService lyingItemsService,
+			IPresentationService presentationService)
 	{
 		_appSettingsService = appSettingsService;
 		_snakeService = snakeService;
 		_timeService = timeService;
+		_lyingItemsService = lyingItemsService;
+		_presentationService = presentationService;
 	}
 
 	@Override
@@ -51,6 +68,44 @@ public class GameWorldService implements IGameWorldService
 	public void applyLyingItem(LyingItem lyingItem)
 	{
 		_gameWorld.lyingItems.add(lyingItem);
+	}
+
+	@Override
+	public LyingItem createAndApplyLyingItemSomewhere(ItemType itemType) throws LyingItemNowhereToPlaceException
+	{
+		Random random = new Random();
+
+		AppSettings appSettings = _appSettingsService.getAppSettings();
+
+		int generatedX = random.nextInt(appSettings.tilesHorizontally);
+		int generatedY = random.nextInt(appSettings.tilesVertically);
+
+		WorldPosition position = new WorldPosition(generatedX, generatedY);
+
+		while (isWorldTileOccupied(position))
+		{
+			position.tileX++;
+			if (position.tileX == appSettings.tilesHorizontally)
+			{
+				position.tileX = 0;
+
+				position.tileY++;
+				if (position.tileY == appSettings.tilesVertically)
+				{
+					position.tileY = 0;
+				}
+			}
+
+			if (position.tileX == generatedX && position.tileY == generatedY)
+			{
+				throw new LyingItemNowhereToPlaceException();
+			}
+		}
+
+		LyingItem result = _lyingItemsService.createLyingItem(itemType, position);
+		applyLyingItem(result);
+
+		return result;
 	}
 
 	@Override
@@ -122,6 +177,68 @@ public class GameWorldService implements IGameWorldService
 			default:
 				throw new UnknownLyingItemTypeException();
 			}
+		}
+	}
+
+	private boolean isWorldTileOccupied(WorldPosition position)
+	{
+		for (LyingItem item : _gameWorld.lyingItems)
+		{
+			if (item.position.equals(position))
+			{
+				return true;
+			}
+		}
+
+		List<WorldPosition> snakesTrail = _snakeService.getSnakesTrail(_gameWorld.snake, _gameWorld.movementChangesInEffect);
+		for (WorldPosition snakePiece : snakesTrail)
+		{
+			if (snakePiece.equals(position))
+			{
+				return true;
+			}
+		}
+
+		switch (_gameWorld.snake.direction)
+		{
+		case RIGHT:
+			if (_gameWorld.snake.headPosition.tileY == position.tileY && _gameWorld.snake.headPosition.tileX < position.tileX)
+			{
+				return true;
+			}
+			break;
+
+		case LEFT:
+			if (_gameWorld.snake.headPosition.tileY == position.tileY && _gameWorld.snake.headPosition.tileX > position.tileX)
+			{
+				return true;
+			}
+			break;
+
+		case UP:
+			if (_gameWorld.snake.headPosition.tileX == position.tileX && _gameWorld.snake.headPosition.tileY > position.tileY)
+			{
+				return true;
+			}
+			break;
+
+		case DOWN:
+			if (_gameWorld.snake.headPosition.tileX == position.tileX && _gameWorld.snake.headPosition.tileY < position.tileY)
+			{
+				return true;
+			}
+			break;
+		}
+
+		return false;
+	}
+
+	@Override
+	public void drawAllLyingItems(SpriteBatch batch)
+	{
+		for (LyingItem item : _gameWorld.lyingItems)
+		{
+			_presentationService.presentLyingItem(batch, item);
 		}
 	}
 }
