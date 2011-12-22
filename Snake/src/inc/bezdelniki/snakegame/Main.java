@@ -21,13 +21,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Main implements ApplicationListener
 {
-	SpriteBatch batch;
+	SpriteBatch _batch;
 
 	@Override
 	public void create()
 	{
-		batch = new SpriteBatch();
-
+		if (_batch == null)
+		{
+			_batch = new SpriteBatch();
+		}
+		
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		if (gameWorldService.getGameWorld() == null)
 		{
@@ -88,12 +91,12 @@ public class Main implements ApplicationListener
 		}
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, batch);
-		gameWorldService.drawAllLyingItems(batch);
+		_batch.begin();
+		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, _batch);
+		gameWorldService.drawAllLyingItems(_batch);
 		BitmapFont font = new BitmapFont();
-		font.draw(batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
-		batch.end();
+		font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
+		_batch.end();
 	}
 
 	@Override
