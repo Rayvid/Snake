@@ -63,7 +63,7 @@ public class SnakeService implements ISnakeService
 			snake.direction = snakeMovementChangesInEffect.get(snakeMovementChangesInEffect.size() - 1).newDirection;
 		}
 
-		WorldPosition oldPosition = (WorldPosition) snake.headPosition.clone();
+		Snake oldSnake = (Snake) snake.clone();
 		switch (snake.direction)
 		{
 		case RIGHT:
@@ -92,7 +92,8 @@ public class SnakeService implements ISnakeService
 				|| snake.headPosition.tileY >= settings.tilesVertically
 				|| doesTileBelongToSnake(snake, snakeMovementChangesInEffect, snake.headPosition, false))
 		{
-			snake.headPosition = oldPosition;
+			snake.headPosition = oldSnake.headPosition;
+			snake.currLength = oldSnake.currLength;
 			throw new SnakeMovementResultedEndOfGameException();
 		}
 	}

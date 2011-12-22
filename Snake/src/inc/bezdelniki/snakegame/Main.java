@@ -16,6 +16,7 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Main implements ApplicationListener
@@ -90,6 +91,8 @@ public class Main implements ApplicationListener
 		batch.begin();
 		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, batch);
 		gameWorldService.drawAllLyingItems(batch);
+		BitmapFont font = new BitmapFont();
+		font.draw(batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
 		batch.end();
 	}
 

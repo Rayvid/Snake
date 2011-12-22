@@ -225,6 +225,42 @@ public class TestSnakeIsolated
 
 		fail("Should not happen");
 	}
+	
+	@Test
+	public void testIfAfterEndOfGameSnakeDoesNotResize() throws CloneNotSupportedException
+	{
+		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
+		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
+		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
+
+		Snake snake = snakeService.createSnake();
+		AppSettings appSettings = appSettingsService.getAppSettings();
+
+		try
+		{
+			for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
+			{
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+			}
+		}
+		catch (SnakeMovementResultedEndOfGameException e)
+		{
+			int length = snake.currLength;
+
+			try
+			{
+				snakeService.growSnake(snake);
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+			}
+			catch (SnakeMovementResultedEndOfGameException ex)
+			{
+				assertTrue(length == snake.currLength);
+				return;
+			}
+		}
+
+		fail("Should not happen");
+	}
 
 	@Test
 	public void testIfSnakeStopsAtTheTop() throws CloneNotSupportedException
