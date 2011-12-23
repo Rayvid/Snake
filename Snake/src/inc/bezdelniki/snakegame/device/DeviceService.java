@@ -28,12 +28,13 @@ public class DeviceService implements IDeviceService
 	{
 		DeviceDeltas deltas = getDeltas();
 
+		int tileSize = getTileSize();
 		DeviceCoords deviceCoords =
 				new DeviceCoords(
-						position.tileX * deltas.deltaDeviceXForWorldX * getTileSize() + position.tileY * deltas.deltaDeviceXForWorldY * getTileSize(),
-						_systemParametersService.getSystemParameters().height - getTileSize()
-								- (position.tileX * deltas.deltaDeviceYForWorldX * getTileSize()
-										+ position.tileY * deltas.deltaDeviceYForWorldY * getTileSize()));
+						position.tileX * deltas.deltaDeviceXForWorldX * tileSize
+							+ (_systemParametersService.getSystemParameters().width - tileSize - position.tileY * deltas.deltaDeviceXForWorldY * tileSize) * deltas.deltaDeviceXForWorldY,
+						_systemParametersService.getSystemParameters().height - tileSize
+							- (position.tileY * deltas.deltaDeviceYForWorldY * tileSize + position.tileX * deltas.deltaDeviceYForWorldX * tileSize));
 
 		return deviceCoords;
 	}

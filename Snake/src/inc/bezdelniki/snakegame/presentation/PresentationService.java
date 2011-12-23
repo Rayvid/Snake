@@ -26,9 +26,8 @@ public class PresentationService implements IPresentationService
 	{
 		_deviceService = deviceService;
 	}
-
-	@Override
-	public void presentSnakesHead(SpriteBatch batch, WorldPosition position)
+	
+	private void initGdxResources()
 	{
 		if (_mainObjectsTexture == null) _mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 		if (_snakesHeadSprite == null)
@@ -36,6 +35,22 @@ public class PresentationService implements IPresentationService
 			_snakesHeadSprite = new Sprite(_mainObjectsTexture, 0, 0, 16, 16);
 			_snakesHeadSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
+		if (_snakesBodySprite == null)
+		{
+			_snakesBodySprite = new Sprite(_mainObjectsTexture, 16, 0, 16, 16);
+			_snakesBodySprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+		}
+		if (_appleSprite == null)
+		{
+			_appleSprite = new Sprite(_mainObjectsTexture, 32, 0, 16, 16);
+			_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+		}
+	}
+
+	@Override
+	public void presentSnakesHead(SpriteBatch batch, WorldPosition position)
+	{
+		initGdxResources();
 		
 		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
 		_snakesHeadSprite.setPosition(headCoords.x, headCoords.y);
@@ -45,12 +60,7 @@ public class PresentationService implements IPresentationService
 	@Override
 	public void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition)
 	{
-		if (_mainObjectsTexture == null) _mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
-		if (_snakesBodySprite == null)
-		{
-			_snakesBodySprite = new Sprite(_mainObjectsTexture, 16, 0, 16, 16);
-			_snakesBodySprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
-		}
+		initGdxResources();
 		
 		for (WorldPosition position : snakesTrail)
 		{
@@ -66,15 +76,19 @@ public class PresentationService implements IPresentationService
 	@Override
 	public void presentLyingItem(SpriteBatch batch, LyingItem item)
 	{
-		if (_mainObjectsTexture == null) _mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
-		if (_appleSprite == null)
-		{
-			_appleSprite = new Sprite(_mainObjectsTexture, 32, 0, 16, 16);
-			_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
-		}
+		initGdxResources();
 		
 		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position);
 		_appleSprite.setPosition(itemCoords.x, itemCoords.y);
 		_appleSprite.draw(batch);
+	}
+
+	@Override
+	public void graphicContextCanBeLost()
+	{
+		_mainObjectsTexture = null;
+		_snakesHeadSprite = null;
+		_snakesBodySprite = null;
+		_appleSprite = null;
 	}
 }

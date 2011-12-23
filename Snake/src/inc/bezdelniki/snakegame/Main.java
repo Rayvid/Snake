@@ -6,6 +6,7 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceExce
 import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeException;
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
+import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
@@ -104,6 +105,9 @@ public class Main implements ApplicationListener
 	{
 		ISystemParametersService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParametersService.class);
 		systemParametersService.newResolutionWereSet(width, height);
+		
+		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
+		presentationService.graphicContextCanBeLost();
 	}
 
 	@Override
