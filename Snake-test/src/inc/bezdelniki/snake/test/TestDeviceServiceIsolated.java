@@ -19,8 +19,8 @@ import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
-import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.SystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 
 import com.google.inject.AbstractModule;
@@ -38,8 +38,7 @@ public class TestDeviceServiceIsolated
 		@Override
 		protected void configure()
 		{
-			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
-			bind(IAppSettingsService.class).to(AppSettingsService.class);
+			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
@@ -58,7 +57,7 @@ public class TestDeviceServiceIsolated
 	{
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 
 		Snake snake = snakeService.createSnake();
@@ -71,7 +70,7 @@ public class TestDeviceServiceIsolated
 		WorldPosition down = (WorldPosition) snake.headPosition.clone();
 		down.tileY++;
 
-		systemParametersService.newResolutionWereSet(400, 200);
+		systemParametersService.newResolutionWereSet(480, 315);
 		SystemParameters systemParameters = systemParametersService.getSystemParameters();
 
 		DeviceCoords headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition);
@@ -111,7 +110,7 @@ public class TestDeviceServiceIsolated
 				&& (Math.abs(upCoords.x - headCoords.x) == tileSize && Math.abs(headCoords.x - downCoords.x) == tileSize || Math.abs(upCoords.y - headCoords.y) == tileSize
 						&& Math.abs(headCoords.y - downCoords.y) == tileSize));
 
-		systemParametersService.newResolutionWereSet(200, 400);
+		systemParametersService.newResolutionWereSet(315, 480);
 		systemParameters = systemParametersService.getSystemParameters();
 
 		headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition);
@@ -157,7 +156,7 @@ public class TestDeviceServiceIsolated
 	{
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 
 		Snake snake = snakeService.createSnake();
@@ -169,6 +168,15 @@ public class TestDeviceServiceIsolated
 		up.tileY--;
 		WorldPosition down = (WorldPosition) snake.headPosition.clone();
 		down.tileY++;
+		
+		systemParametersService.newResolutionWereSet(480, 315);
+
+		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
+		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
+		assertTrue(up.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(up))));
+		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down))));
+		
+		systemParametersService.newResolutionWereSet(315, 480);
 
 		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
 		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
@@ -180,15 +188,15 @@ public class TestDeviceServiceIsolated
 	public void testIfBiggerDimensionHasBeenChoosenAsHorizontal()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 
-		systemParametersService.newResolutionWereSet(480, 320);
+		systemParametersService.newResolutionWereSet(480, 315);
 		DeviceDeltas deltas = deviceService.getDeltas();
 		assertTrue(deltas.deltaDeviceYForWorldX == 0 && deltas.deltaDeviceXForWorldX != 0 && deltas.deltaDeviceXForWorldY == 0
 				&& deltas.deltaDeviceYForWorldY != 0);
 
-		systemParametersService.newResolutionWereSet(320, 480);
+		systemParametersService.newResolutionWereSet(315, 480);
 		deltas = deviceService.getDeltas();
 		assertTrue(deltas.deltaDeviceYForWorldX != 0 && deltas.deltaDeviceXForWorldX == 0 && deltas.deltaDeviceXForWorldY != 0
 				&& deltas.deltaDeviceYForWorldY == 0);
@@ -198,7 +206,7 @@ public class TestDeviceServiceIsolated
 	public void testIfTileSizeIsOptimal()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 
 		int tileSize = deviceService.getTileSize();
@@ -258,9 +266,11 @@ public class TestDeviceServiceIsolated
 	@Test
 	public void testIfWeGetSameResolutionConvertingTouchCoordsToDeviceCoords()
 	{
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
+		
+		systemParametersService.newResolutionWereSet(480, 315);
 
 		SystemParameters systemParameters = systemParametersService.getSystemParameters();
 		TouchCoords upperLeftT = new TouchCoords(0, 0);
@@ -275,14 +285,32 @@ public class TestDeviceServiceIsolated
 		
 		assertTrue(upperLeftT.x + upperRightT.x + bottomLeftT.x + bottomRightT.x == upperLeftD.x + upperRightD.x + bottomLeftD.x + bottomRightD.x);
 		assertTrue(upperLeftT.y + upperRightT.y + bottomLeftT.y + bottomRightT.y == upperLeftD.y + upperRightD.y + bottomLeftD.y + bottomRightD.y);
+		
+		systemParametersService.newResolutionWereSet(315, 480);
+
+		systemParameters = systemParametersService.getSystemParameters();
+		upperLeftT = new TouchCoords(0, 0);
+		upperRightT = new TouchCoords(systemParameters.width, 0);
+		bottomLeftT = new TouchCoords(0, systemParameters.height);
+		bottomRightT = new TouchCoords(systemParameters.width, systemParameters.height);
+		
+		upperLeftD = deviceService.TouchCoordsToDeviceCoords(upperLeftT);
+		upperRightD = deviceService.TouchCoordsToDeviceCoords(upperRightT);
+		bottomLeftD = deviceService.TouchCoordsToDeviceCoords(bottomLeftT);
+		bottomRightD = deviceService.TouchCoordsToDeviceCoords(bottomRightT);
+		
+		assertTrue(upperLeftT.x + upperRightT.x + bottomLeftT.x + bottomRightT.x == upperLeftD.x + upperRightD.x + bottomLeftD.x + bottomRightD.x);
+		assertTrue(upperLeftT.y + upperRightT.y + bottomLeftT.y + bottomRightT.y == upperLeftD.y + upperRightD.y + bottomLeftD.y + bottomRightD.y);
 	}
 	
 	@Test
 	public void testIfWeGetSameResultConvertingDeviceCoordsToTouchCoordsAndBack()
 	{
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
+		
+		systemParametersService.newResolutionWereSet(480, 315);
 
 		SystemParameters systemParameters = systemParametersService.getSystemParameters();
 		DeviceCoords upperLeftD = new DeviceCoords(0, 0);
@@ -304,29 +332,60 @@ public class TestDeviceServiceIsolated
 		assertTrue(upperRightD.x == upperRightDD.x && upperRightD.y == upperRightDD.y);
 		assertTrue(bottomLeftD.x == bottomLeftDD.x && bottomLeftD.y == bottomLeftDD.y);
 		assertTrue(bottomRightD.x == bottomRightDD.x && bottomRightD.y == bottomRightDD.y);
+		
+		systemParametersService.newResolutionWereSet(315, 480);
+		
+		systemParameters = systemParametersService.getSystemParameters();
+		upperLeftD = new DeviceCoords(0, 0);
+		upperRightD = new DeviceCoords(systemParameters.width, 0);
+		bottomLeftD = new DeviceCoords(0, systemParameters.height);
+		bottomRightD = new DeviceCoords(systemParameters.width, systemParameters.height);
+		
+		upperLeftT = deviceService.DeviceCoordsToTouchCoords(upperLeftD);
+		upperRightT = deviceService.DeviceCoordsToTouchCoords(upperRightD);
+		bottomLeftT = deviceService.DeviceCoordsToTouchCoords(bottomLeftD);
+		bottomRightT = deviceService.DeviceCoordsToTouchCoords(bottomRightD);
+		
+		upperLeftDD = deviceService.TouchCoordsToDeviceCoords(upperLeftT);
+		upperRightDD = deviceService.TouchCoordsToDeviceCoords(upperRightT);
+		bottomLeftDD = deviceService.TouchCoordsToDeviceCoords(bottomLeftT);
+		bottomRightDD = deviceService.TouchCoordsToDeviceCoords(bottomRightT);
+		
+		assertTrue(upperLeftD.x == upperLeftDD.x && upperLeftD.y == upperLeftDD.y);
+		assertTrue(upperRightD.x == upperRightDD.x && upperRightD.y == upperRightDD.y);
+		assertTrue(bottomLeftD.x == bottomLeftDD.x && bottomLeftD.y == bottomLeftDD.y);
+		assertTrue(bottomRightD.x == bottomRightDD.x && bottomRightD.y == bottomRightDD.y);
 	}
 	
 	@Test
-	public void testIfCoordsOutsideStillConvertsToWorldPosition()
+	public void testIfCoordsOutsideStillConvertsToCorrectWorldPosition()
 	{
-		ISystemParametersService systemParametersService = _testInjectorInstance.getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 		
-		systemParametersService.newResolutionWereSet(480, 320);
+		systemParametersService.newResolutionWereSet(480, 315);
 		
 		DeviceCoords deviceCoordsOutsideNegative = new DeviceCoords(-100, -100);
 		DeviceCoords deviceCoordsOutsidePositive = new DeviceCoords(systemParametersService.getSystemParameters().width + 100, systemParametersService.getSystemParameters().height + 100);
 		
-		assertTrue(deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative) != null);
-		assertTrue(deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive) != null);
+		WorldPosition negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative);
+		WorldPosition positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive);
+		DeviceCoords negativeD = deviceService.WorldPositionToDeviceCoords(negative);
+		DeviceCoords positiveD = deviceService.WorldPositionToDeviceCoords(positive);
+		assertTrue(negativeD.x <= deviceService.getTileSize() && negativeD.y <= deviceService.getTileSize());
+		assertTrue(positiveD.x >= 480 - deviceService.getTileSize() && positiveD.y >= 315 - deviceService.getTileSize());
 		
-		systemParametersService.newResolutionWereSet(320, 480);
+		systemParametersService.newResolutionWereSet(315, 480);
 		
 		deviceCoordsOutsideNegative = new DeviceCoords(-100, -100);
 		deviceCoordsOutsidePositive = new DeviceCoords(systemParametersService.getSystemParameters().width + 100, systemParametersService.getSystemParameters().height + 100);
 		
-		assertTrue(deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative) != null);
-		assertTrue(deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive) != null);
+		negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative);
+		positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive);
+		negativeD = deviceService.WorldPositionToDeviceCoords(negative);
+		positiveD = deviceService.WorldPositionToDeviceCoords(positive);
+		assertTrue(negativeD.x <= deviceService.getTileSize() && negativeD.y <= deviceService.getTileSize());
+		assertTrue(positiveD.x >= 315 - deviceService.getTileSize() && positiveD.y >= 480 - deviceService.getTileSize());
 	}
 }

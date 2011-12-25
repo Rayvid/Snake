@@ -8,16 +8,16 @@ import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.device.dtos.DeviceDeltas;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
 
 public class DeviceService implements IDeviceService
 {
 	private IAppSettingsService _appSettingsService;
-	private ISystemParametersService _systemParametersService;
+	private ISystemParamsService _systemParametersService;
 
 	@Inject
-	public DeviceService(ISystemParametersService systemParametersService, IAppSettingsService appSettingsService)
+	public DeviceService(ISystemParamsService systemParametersService, IAppSettingsService appSettingsService)
 	{
 		_systemParametersService = systemParametersService;
 		_appSettingsService = appSettingsService;
@@ -42,138 +42,61 @@ public class DeviceService implements IDeviceService
 	@Override
 	public WorldPosition DeviceCoordsToWorldPosition(DeviceCoords coords)
 	{
-		AppSettings appSettings = _appSettingsService.getAppSettings();
-
-		int x = appSettings.tilesHorizontally / 2;
-		int y = appSettings.tilesVertically / 2;
-		while (true)
+		SystemParameters systemParameters = _systemParametersService.getSystemParameters();
+		int tileSize = getTileSize();
+		
+		DeviceCoords zeroCoords = WorldPositionToDeviceCoords(new WorldPosition(0, 0));
+		DeviceCoords toTheRightCoords = WorldPositionToDeviceCoords(new WorldPosition(1, 0));
+		DeviceCoords downCoords = WorldPositionToDeviceCoords(new WorldPosition(0, 1));
+		
+		WorldPosition result = new WorldPosition(0, 0);
+		if (zeroCoords.x == toTheRightCoords.x)
 		{
-			WorldPosition currWorldPosition = new WorldPosition(x, y);
-
-			DeviceCoords currCoords = WorldPositionToDeviceCoords(currWorldPosition);
-			DeviceCoords rightCoords = WorldPositionToDeviceCoords(new WorldPosition(x + 1, y));
-			DeviceCoords downCoords = WorldPositionToDeviceCoords(new WorldPosition(x, y + 1));
-
-			if (coords.x >= Math.min(Math.min(currCoords.x, rightCoords.x), Math.min(currCoords.x, downCoords.x))
-					&& coords.x < Math.max(Math.max(currCoords.x, rightCoords.x), Math.max(currCoords.x, downCoords.x)))
+			if (zeroCoords.y > toTheRightCoords.y)
 			{
-				if (coords.y > Math.min(Math.min(currCoords.y, rightCoords.y), Math.min(currCoords.y, downCoords.y))
-						&& coords.y <= Math.max(Math.max(currCoords.y, rightCoords.y), Math.max(currCoords.y, downCoords.y)))
-				{
-					break;
-				}
+				result.tileX = (systemParameters.height - coords.y - 1) / tileSize;
 			}
 			else
 			{
-				if (coords.x > Math.min(currCoords.x, rightCoords.x))
-				{
-					if (rightCoords.x != currCoords.x)
-					{
-						if (rightCoords.x > currCoords.x)
-						{
-							x++;
-						}
-						else
-						{
-							x--;
-						}
-					}
-					else
-					{
-						if (downCoords.x > currCoords.x)
-						{
-							y++;
-						}
-						else
-						{
-							y--;
-						}
-					}
-				}
-				else
-				{
-					if (rightCoords.x != currCoords.x)
-					{
-						if (rightCoords.x > currCoords.x)
-						{
-							x--;
-						}
-						else
-						{
-							x++;
-						}
-					}
-					else
-					{
-						if (downCoords.x > currCoords.x)
-						{
-							y--;
-						}
-						else
-						{
-							y++;
-						}
-					}
-				}
+				result.tileX = coords.y / tileSize;
 			}
-
-			if (coords.y <= Math.min(Math.min(currCoords.y, rightCoords.y), Math.min(currCoords.y, downCoords.y))
-					|| coords.y > Math.max(Math.max(currCoords.y, rightCoords.y), Math.max(currCoords.y, downCoords.y)))
+		}
+		else
+		{
+			if (zeroCoords.x > toTheRightCoords.x)
 			{
-				if (coords.y > Math.min(currCoords.y, rightCoords.y))
-				{
-					if (rightCoords.y != currCoords.y)
-					{
-						if (rightCoords.y > currCoords.y)
-						{
-							x++;
-						}
-						else
-						{
-							x--;
-						}
-					}
-					else
-					{
-						if (downCoords.y > currCoords.y)
-						{
-							y++;
-						}
-						else
-						{
-							y--;
-						}
-					}
-				}
-				else
-				{
-					if (rightCoords.y != currCoords.y)
-					{
-						if (rightCoords.y > currCoords.y)
-						{
-							x--;
-						}
-						else
-						{
-							x++;
-						}
-					}
-					else
-					{
-						if (downCoords.y > currCoords.y)
-						{
-							y--;
-						}
-						else
-						{
-							y++;
-						}
-					}
-				}
+				result.tileX = (systemParameters.width - coords.x - 1) / tileSize;
+			}
+			else
+			{
+				result.tileX = coords.x / tileSize;
+			}
+		}
+		
+		if (zeroCoords.y == downCoords.y)
+		{
+			if (zeroCoords.x > downCoords.x)
+			{
+				result.tileY = (systemParameters.width - coords.x - 1) / tileSize;
+			}
+			else
+			{
+				result.tileY = coords.x / tileSize;
+			}
+		}
+		else
+		{
+			if (zeroCoords.y > downCoords.y)
+			{
+				result.tileY = (systemParameters.height - coords.y - 1) / tileSize;
+			}
+			else
+			{
+				result.tileY = coords.y / tileSize;
 			}
 		}
 
-		return new WorldPosition(x, y);
+		return result;
 	}
 
 	@Override

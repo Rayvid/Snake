@@ -17,9 +17,6 @@ public class AppSettings
 
 	public int tilesHorizontally;
 	public int tilesVertically;
-	public int textureSize;
 
 	public int growSnakeBy;
-
-	public long snakesMovementNanoInterval;
 }

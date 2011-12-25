@@ -9,6 +9,8 @@ import inc.bezdelniki.snakegame.input.InputService;
 import inc.bezdelniki.snakegame.lyingitem.*;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
+import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.snake.*;
 import inc.bezdelniki.snakegame.systemparameters.*;
 import inc.bezdelniki.snakegame.time.ITimeService;
@@ -23,8 +25,9 @@ public class BindingsConfiguration extends AbstractModule
 	@Override
 	protected void configure()
 	{
-		bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
+		bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 		bind(IAppSettingsService.class).to(AppSettingsService.class).in(Singleton.class);
+		bind(IRuntimeParamsService.class).to(RuntimeParamsService.class).in(Singleton.class);
 		bind(IDeviceService.class).to(DeviceService.class).in(Singleton.class);
 		bind(ILyingItemService.class).to(LyingItemService.class).in(Singleton.class);
 		bind(ISnakeService.class).to(SnakeService.class).in(Singleton.class);

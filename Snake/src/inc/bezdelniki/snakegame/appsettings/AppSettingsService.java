@@ -20,10 +20,7 @@ public class AppSettingsService implements IAppSettingsService
 
 		settings.tilesHorizontally = 30;
 		settings.tilesVertically = 20;
-		settings.textureSize = 16;
 		settings.growSnakeBy = 2;
-
-		settings.snakesMovementNanoInterval = 1000000000; // 1s
 
 		return settings;
 	}

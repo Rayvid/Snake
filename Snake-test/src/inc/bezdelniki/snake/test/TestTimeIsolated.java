@@ -14,11 +14,13 @@ import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.LyingItemService;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
+import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
-import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.SystemParamsService;
 import inc.bezdelniki.snakegame.time.ITimeService;
 import inc.bezdelniki.snakegame.time.TimeService;
 
@@ -41,7 +43,8 @@ public class TestTimeIsolated
 		protected void configure()
 		{
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
-			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
+			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
+			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
@@ -82,19 +85,21 @@ public class TestTimeIsolated
 	}
 
 	@Test
-	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
+	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException,
+			UnknownLyingItemTypeException
 	{
-		expect(_mockedTimeService.getNanoStamp()).andReturn((long) 0);
-		expect(_mockedTimeService.getNanoStamp()).andReturn(
-				_testInjectorInstance.getInstance(IAppSettingsService.class).getAppSettings().snakesMovementNanoInterval);
-		expect(_mockedTimeService.getNanoStamp()).andReturn(
-				_testInjectorInstance.getInstance(IAppSettingsService.class).getAppSettings().snakesMovementNanoInterval);
-		expect(_mockedTimeService.getNanoStamp()).andReturn(
-				(long) (_testInjectorInstance.getInstance(IAppSettingsService.class).getAppSettings().snakesMovementNanoInterval * 1.5));
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) 0).anyTimes();
 		replay(_mockedTimeService);
 
 		IGameWorldService worldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 		worldService.initGameWorld();
+
+		reset(_mockedTimeService);
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) worldService.getRuntimeParams().snakesMovementNanoInterval);
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) worldService.getRuntimeParams().snakesMovementNanoInterval);
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) (worldService.getRuntimeParams().snakesMovementNanoInterval * 1.5));
+		replay(_mockedTimeService);
+
 		WorldPosition headPosition = (WorldPosition) worldService.getGameWorld().snake.headPosition.clone();
 
 		worldService.moveSnakeIfItsTime();

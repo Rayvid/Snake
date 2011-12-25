@@ -19,11 +19,13 @@ import inc.bezdelniki.snakegame.lyingitem.LyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
+import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
-import inc.bezdelniki.snakegame.systemparameters.SystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.SystemParamsService;
 import inc.bezdelniki.snakegame.time.ITimeService;
 import inc.bezdelniki.snakegame.time.TimeService;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
@@ -44,8 +46,9 @@ public class TestPresentationIsolated
 		@Override
 		protected void configure()
 		{
-			bind(ISystemParametersService.class).to(SystemParametersService.class).in(Singleton.class);
+			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
+			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(ITimeService.class).to(TimeService.class);
 			bind(ISnakeService.class).to(SnakeService.class);

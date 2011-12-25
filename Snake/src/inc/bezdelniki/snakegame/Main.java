@@ -10,7 +10,7 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParametersService;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
@@ -23,14 +23,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Main implements ApplicationListener
 {
 	SpriteBatch _batch;
+	BitmapFont _font;
 
 	@Override
 	public void create()
 	{
-		if (_batch == null)
-		{
-			_batch = new SpriteBatch();
-		}
+		if (_batch == null)	_batch = new SpriteBatch();
+		if (_font == null) _font = new BitmapFont(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/f16.fnt"), Gdx.files.classpath("inc/bezdelniki/snakegame/resources/f16.png"), false);
 		
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		if (gameWorldService.getGameWorld() == null)
@@ -95,15 +94,15 @@ public class Main implements ApplicationListener
 		_batch.begin();
 		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.drawAllLyingItems(_batch);
-		BitmapFont font = new BitmapFont();
-		font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
+		_font.setColor(1.0f, 1.0f, 1.0f, 0.5f);
+		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
 		_batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height)
 	{
-		ISystemParametersService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParametersService.class);
+		ISystemParamsService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
 		systemParametersService.newResolutionWereSet(width, height);
 		
 		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
