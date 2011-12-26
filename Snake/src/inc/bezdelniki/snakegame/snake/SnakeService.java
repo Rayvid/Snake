@@ -11,6 +11,7 @@ import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
@@ -99,10 +100,10 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch)
+	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch, LayoutParams layoutParams)
 	{
-		_presentationService.presentSnakesHead(batch, snake.headPosition);
-		_presentationService.presentSnakesBody(batch, getSnakesTrail(snake, snakeMovementChangesInEffect), snake.headPosition);
+		_presentationService.presentSnakesHead(batch, snake.headPosition, layoutParams);
+		_presentationService.presentSnakesBody(batch, getSnakesTrail(snake, snakeMovementChangesInEffect), snake.headPosition, layoutParams);
 	}
 
 	@Override

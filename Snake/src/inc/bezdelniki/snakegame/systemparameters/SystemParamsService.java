@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
-import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public class SystemParamsService implements ISystemParamsService
 {
@@ -23,9 +23,9 @@ public class SystemParamsService implements ISystemParamsService
 	}
 
 	@Override
-	public SystemParameters getSystemParameters()
+	public SystemParams getSystemParams()
 	{
-		SystemParameters systemParameters = new SystemParameters();
+		SystemParams systemParameters = new SystemParams();
 
 		systemParameters.width = _width;
 		systemParameters.height = _height;

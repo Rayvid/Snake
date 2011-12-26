@@ -65,7 +65,7 @@ public class TestRuntimeParamsIsolated
 		RuntimeParams mockedReturn;
 		mockedReturn = new RuntimeParams();
 		
-		expect(_mockedRuntimeParamsService.initParamsForNewGame()).andReturn(mockedReturn);
+		expect(_mockedRuntimeParamsService.createParamsForNewGame()).andReturn(mockedReturn);
 		replay(_mockedRuntimeParamsService);
 		
 		GameWorldService worldService = (GameWorldService) _testInjectorInstance.getInstance(IGameWorldService.class);
@@ -78,18 +78,19 @@ public class TestRuntimeParamsIsolated
 	{	
 		IAppSettingsService appSettingsService = new AppSettingsService();
 		ISystemParamsService systemParamsService = new SystemParamsService(appSettingsService);
-		RuntimeParamsService runtimeParamsService = new RuntimeParamsService();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+		RuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 		
 		systemParamsService.newResolutionWereSet(480, 315);
-		RuntimeParams runtimeParams1 = runtimeParamsService.initParamsForNewGame();
+		RuntimeParams runtimeParams1 = runtimeParamsService.createParamsForNewGame();
 		
 		systemParamsService.newResolutionWereSet(3150, 4800);
-		RuntimeParams runtimeParams2 = runtimeParamsService.initParamsForNewGame();
+		RuntimeParams runtimeParams2 = runtimeParamsService.createParamsForNewGame();
 		
-		assertTrue(runtimeParams1.renderingParams.gameBoxPaddingTop != runtimeParams2.renderingParams.gameBoxPaddingTop);
-		assertTrue(runtimeParams1.renderingParams.gameBoxPaddingLeft != runtimeParams2.renderingParams.gameBoxPaddingLeft);
-		assertTrue(runtimeParams1.renderingParams.gameBoxPaddingRight != runtimeParams2.renderingParams.gameBoxPaddingRight);
-		assertTrue(runtimeParams1.renderingParams.gameBoxPaddingBottom != runtimeParams2.renderingParams.gameBoxPaddingBottom);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingTop < runtimeParams2.layoutParams.gameBoxPaddingTop);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingLeft < runtimeParams2.layoutParams.gameBoxPaddingLeft);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingRight < runtimeParams2.layoutParams.gameBoxPaddingRight);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
 	}
 	
 }

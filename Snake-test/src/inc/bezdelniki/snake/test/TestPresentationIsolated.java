@@ -21,6 +21,8 @@ import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -68,14 +70,16 @@ public class TestPresentationIsolated
 	@Test
 	public void testIfDrawSnakeCallsDrawHeadMethod()
 	{
+		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		Snake snake = snakeService.createSnake();
 
 		SpriteBatch batch = null;
-		_mockedPresentationService.presentSnakesHead(batch, snake.headPosition);
+		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		_mockedPresentationService.presentSnakesHead(batch, snake.headPosition, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
-		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch);
+		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch, runtimeParams.layoutParams);
 		verify(_mockedPresentationService);
 	}
 
@@ -83,15 +87,16 @@ public class TestPresentationIsolated
 	@Test
 	public void testIfDrawSnakeCallsDrawBodyMethod()
 	{
+		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		Snake snake = snakeService.createSnake();
 
 		SpriteBatch batch = null;
-
-		_mockedPresentationService.presentSnakesBody(eq(batch), isA(List.class), eq(snake.headPosition));
+		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		_mockedPresentationService.presentSnakesBody(eq(batch), isA(List.class), eq(snake.headPosition), isA(LayoutParams.class));
 		replay(_mockedPresentationService);
 
-		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch);
+		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch, runtimeParams.layoutParams);
 		verify(_mockedPresentationService);
 	}
 
@@ -100,11 +105,12 @@ public class TestPresentationIsolated
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 		gameWorldService.initGameWorld();
+		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
 
 		LyingItem item1 = gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
 
 		SpriteBatch batch = null;
-		_mockedPresentationService.presentLyingItem(batch, item1);
+		_mockedPresentationService.presentLyingItem(batch, item1, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
 		gameWorldService.drawAllLyingItems(batch);
@@ -112,8 +118,8 @@ public class TestPresentationIsolated
 
 		LyingItem item2 = gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
 		reset(_mockedPresentationService);
-		_mockedPresentationService.presentLyingItem(batch, item1);
-		_mockedPresentationService.presentLyingItem(batch, item2);
+		_mockedPresentationService.presentLyingItem(batch, item1, runtimeParams.layoutParams);
+		_mockedPresentationService.presentLyingItem(batch, item2, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
 		gameWorldService.drawAllLyingItems(batch);

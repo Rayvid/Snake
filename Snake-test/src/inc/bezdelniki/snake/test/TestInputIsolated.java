@@ -21,6 +21,7 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -76,6 +77,7 @@ public class TestInputIsolated
 
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
+		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
 
 		WorldPosition toTheUp = (WorldPosition) snake.headPosition.clone();
 		toTheUp.tileY--;
@@ -104,54 +106,54 @@ public class TestInputIsolated
 
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
 
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUp)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUpLeft)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUpRight)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheRightRight)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheDown)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheDownRight)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheDownLeft)));
-		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheLeft)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUp, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUpLeft, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheUpRight, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheRightRight, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheDown, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheDownRight, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheDownLeft, runtimeParams.layoutParams)));
+		expect(_mockedInputService.GetTouchCoords()).andReturn(deviceService.DeviceCoordsToTouchCoords(deviceService.WorldPositionToDeviceCoords(toTheLeft, runtimeParams.layoutParams)));
 		replay(_mockedInputService);
 
 		IUserActionService userActionService = _testInjectorInstance.getInstance(IUserActionService.class);
-		SnakeMovementChange movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		SnakeMovementChange movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.UP);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.LEFT);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.UP);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.RIGHT);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.DOWN);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.RIGHT);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.DOWN);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();
 
-		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords(), runtimeParams.layoutParams);
 		assertTrue(movementChange.newDirection == Direction.LEFT);
 		gameWorldService.moveSnake();
 

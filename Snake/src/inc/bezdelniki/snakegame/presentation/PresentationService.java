@@ -12,6 +12,7 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 
 public class PresentationService implements IPresentationService
 {
@@ -22,51 +23,53 @@ public class PresentationService implements IPresentationService
 	private Sprite _appleSprite = null;
 
 	@Inject
-	public PresentationService(IDeviceService deviceService)
+	public PresentationService(
+			IDeviceService deviceService)
 	{
 		_deviceService = deviceService;
 	}
-	
-	private void initGdxResources()
+
+	private void initGdxResources(LayoutParams layoutParams)
 	{
-		if (_mainObjectsTexture == null) _mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
+		if (_mainObjectsTexture == null)
+			_mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 		if (_snakesHeadSprite == null)
 		{
 			_snakesHeadSprite = new Sprite(_mainObjectsTexture, 0, 0, 16, 16);
-			_snakesHeadSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+			_snakesHeadSprite.setSize(_deviceService.getTileSize(layoutParams), _deviceService.getTileSize(layoutParams));
 		}
 		if (_snakesBodySprite == null)
 		{
 			_snakesBodySprite = new Sprite(_mainObjectsTexture, 16, 0, 16, 16);
-			_snakesBodySprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+			_snakesBodySprite.setSize(_deviceService.getTileSize(layoutParams), _deviceService.getTileSize(layoutParams));
 		}
 		if (_appleSprite == null)
 		{
 			_appleSprite = new Sprite(_mainObjectsTexture, 32, 0, 16, 16);
-			_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+			_appleSprite.setSize(_deviceService.getTileSize(layoutParams), _deviceService.getTileSize(layoutParams));
 		}
 	}
 
 	@Override
-	public void presentSnakesHead(SpriteBatch batch, WorldPosition position)
+	public void presentSnakesHead(SpriteBatch batch, WorldPosition position, LayoutParams layoutParams)
 	{
-		initGdxResources();
-		
-		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
+		initGdxResources(layoutParams);
+
+		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position, layoutParams);
 		_snakesHeadSprite.setPosition(headCoords.x, headCoords.y);
 		_snakesHeadSprite.draw(batch);
 	}
 
 	@Override
-	public void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition)
+	public void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition, LayoutParams layoutParams)
 	{
-		initGdxResources();
-		
+		initGdxResources(layoutParams);
+
 		for (WorldPosition position : snakesTrail)
 		{
 			if (!position.equals(headPosition))
 			{
-				DeviceCoords bodyItemCoords = _deviceService.WorldPositionToDeviceCoords(position);
+				DeviceCoords bodyItemCoords = _deviceService.WorldPositionToDeviceCoords(position, layoutParams);
 				_snakesBodySprite.setPosition(bodyItemCoords.x, bodyItemCoords.y);
 				_snakesBodySprite.draw(batch);
 			}
@@ -74,11 +77,11 @@ public class PresentationService implements IPresentationService
 	}
 
 	@Override
-	public void presentLyingItem(SpriteBatch batch, LyingItem item)
+	public void presentLyingItem(SpriteBatch batch, LyingItem item, LayoutParams layoutParams)
 	{
-		initGdxResources();
-		
-		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position);
+		initGdxResources(layoutParams);
+
+		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position, layoutParams);
 		_appleSprite.setPosition(itemCoords.x, itemCoords.y);
 		_appleSprite.draw(batch);
 	}

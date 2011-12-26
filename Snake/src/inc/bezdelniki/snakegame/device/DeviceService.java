@@ -8,8 +8,9 @@ import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.device.dtos.DeviceDeltas;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
-import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public class DeviceService implements IDeviceService
 {
@@ -24,75 +25,78 @@ public class DeviceService implements IDeviceService
 	}
 
 	@Override
-	public DeviceCoords WorldPositionToDeviceCoords(WorldPosition position)
+	public DeviceCoords WorldPositionToDeviceCoords(WorldPosition position, LayoutParams layoutParams)
 	{
 		DeviceDeltas deltas = getDeltas();
+		SystemParams systemParams = _systemParametersService.getSystemParams();
 
-		int tileSize = getTileSize();
+		int tileSize = getTileSize(layoutParams);
 		DeviceCoords deviceCoords =
 				new DeviceCoords(
-						position.tileX * deltas.deltaDeviceXForWorldX * tileSize
-							+ (_systemParametersService.getSystemParameters().width - tileSize - position.tileY * deltas.deltaDeviceXForWorldY * tileSize) * deltas.deltaDeviceXForWorldY,
-						_systemParametersService.getSystemParameters().height - tileSize
-							- (position.tileY * deltas.deltaDeviceYForWorldY * tileSize + position.tileX * deltas.deltaDeviceYForWorldX * tileSize));
+						(layoutParams.gameBoxPaddingLeft + position.tileX * tileSize)
+								* deltas.deltaDeviceXForWorldX
+								+ (systemParams.width - layoutParams.gameBoxPaddingLeft - tileSize - position.tileY * tileSize)
+								* deltas.deltaDeviceXForWorldY,
+						systemParams.height - layoutParams.gameBoxPaddingTop - tileSize
+								- (position.tileY * deltas.deltaDeviceYForWorldY * tileSize + position.tileX * deltas.deltaDeviceYForWorldX * tileSize));
 
 		return deviceCoords;
 	}
 
 	@Override
-	public WorldPosition DeviceCoordsToWorldPosition(DeviceCoords coords)
+	public WorldPosition DeviceCoordsToWorldPosition(DeviceCoords coords, LayoutParams layoutParams)
 	{
-		SystemParameters systemParameters = _systemParametersService.getSystemParameters();
-		int tileSize = getTileSize();
-		
-		DeviceCoords zeroCoords = WorldPositionToDeviceCoords(new WorldPosition(0, 0));
-		DeviceCoords toTheRightCoords = WorldPositionToDeviceCoords(new WorldPosition(1, 0));
-		DeviceCoords downCoords = WorldPositionToDeviceCoords(new WorldPosition(0, 1));
-		
+		SystemParams systemParameters = _systemParametersService.getSystemParams();
+		int tileSize = getTileSize(layoutParams);
+
+		DeviceCoords zeroCoords = WorldPositionToDeviceCoords(new WorldPosition(0, 0), layoutParams);
+		DeviceCoords toTheRightCoords = WorldPositionToDeviceCoords(new WorldPosition(1, 0), layoutParams);
+		DeviceCoords downCoords = WorldPositionToDeviceCoords(new WorldPosition(0, 1), layoutParams);
+
 		WorldPosition result = new WorldPosition(0, 0);
 		if (zeroCoords.x == toTheRightCoords.x)
 		{
 			if (zeroCoords.y > toTheRightCoords.y)
 			{
-				result.tileX = (systemParameters.height - coords.y - 1) / tileSize;
+				result.tileX = (systemParameters.height - layoutParams.gameBoxPaddingTop - coords.y - 1) / tileSize;
 			}
 			else
 			{
-				result.tileX = coords.y / tileSize;
+				result.tileX = (coords.y - layoutParams.gameBoxPaddingTop) / tileSize;
 			}
 		}
 		else
 		{
 			if (zeroCoords.x > toTheRightCoords.x)
 			{
-				result.tileX = (systemParameters.width - coords.x - 1) / tileSize;
+				result.tileX = (systemParameters.width - layoutParams.gameBoxPaddingLeft - coords.x - 1) / tileSize;
 			}
 			else
 			{
-				result.tileX = coords.x / tileSize;
+				result.tileX = (coords.x - layoutParams.gameBoxPaddingLeft) / tileSize;
 			}
 		}
-		
+
 		if (zeroCoords.y == downCoords.y)
 		{
 			if (zeroCoords.x > downCoords.x)
 			{
-				result.tileY = (systemParameters.width - coords.x - 1) / tileSize;
+				result.tileY = (systemParameters.width - layoutParams.gameBoxPaddingLeft - coords.x - 1) / tileSize;
 			}
 			else
 			{
-				result.tileY = coords.x / tileSize;
+				result.tileY = (coords.x - layoutParams.gameBoxPaddingLeft) / tileSize;
 			}
 		}
 		else
 		{
 			if (zeroCoords.y > downCoords.y)
 			{
-				result.tileY = (systemParameters.height - coords.y - 1) / tileSize;
+				result.tileY = (systemParameters.height - layoutParams.gameBoxPaddingTop - coords.y - 1) / tileSize;
 			}
 			else
 			{
-				result.tileY = coords.y / tileSize;
+				result.tileY = (coords.y - layoutParams.gameBoxPaddingTop) / tileSize;
 			}
 		}
 
@@ -104,7 +108,7 @@ public class DeviceService implements IDeviceService
 	{
 		return new DeviceCoords(
 				touchCoords.x,
-				_systemParametersService.getSystemParameters().height - touchCoords.y);
+				_systemParametersService.getSystemParams().height - touchCoords.y);
 	}
 
 	@Override
@@ -112,13 +116,13 @@ public class DeviceService implements IDeviceService
 	{
 		return new TouchCoords(
 				deviceCoords.x,
-				_systemParametersService.getSystemParameters().height - deviceCoords.y);
+				_systemParametersService.getSystemParams().height - deviceCoords.y);
 	}
 
 	@Override
 	public DeviceDeltas getDeltas()
 	{
-		SystemParameters systemParameters = _systemParametersService.getSystemParameters();
+		SystemParams systemParameters = _systemParametersService.getSystemParams();
 		DeviceDeltas deltas = new DeviceDeltas();
 
 		if (systemParameters.width >= systemParameters.height)
@@ -140,12 +144,19 @@ public class DeviceService implements IDeviceService
 	}
 
 	@Override
-	public int getTileSize()
+	public int getTileSize(LayoutParams layoutParams)
 	{
 		AppSettings appSettings = _appSettingsService.getAppSettings();
-		SystemParameters systemParameters = _systemParametersService.getSystemParameters();
+		SystemParams systemParameters = _systemParametersService.getSystemParams();
 
-		return Math.min(Math.max(systemParameters.height, systemParameters.width) / appSettings.tilesHorizontally,
-				Math.min(systemParameters.height, systemParameters.width) / appSettings.tilesVertically);
+		return Math.min(
+				Math.max(
+						systemParameters.height - layoutParams.gameBoxPaddingTop - layoutParams.gameBoxPaddingBottom,
+						systemParameters.width - layoutParams.gameBoxPaddingLeft - layoutParams.gameBoxPaddingRight)
+						/ appSettings.tilesHorizontally,
+				Math.min(
+						systemParameters.height - layoutParams.gameBoxPaddingTop - layoutParams.gameBoxPaddingBottom,
+						systemParameters.width - layoutParams.gameBoxPaddingLeft - layoutParams.gameBoxPaddingRight)
+						/ appSettings.tilesVertically);
 	}
 }

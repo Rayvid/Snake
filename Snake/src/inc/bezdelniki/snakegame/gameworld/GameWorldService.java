@@ -63,7 +63,7 @@ public class GameWorldService implements IGameWorldService
 		_gameWorld.movementChangesInEffect = new ArrayList<SnakeMovementChange>();
 		_gameWorld.lastSnakesMovementNanoTimestamp = _timeService.getNanoStamp();
 		
-		_runtimeParams = _runtimeParamsService.initParamsForNewGame();
+		_runtimeParams = _runtimeParamsService.createParamsForNewGame();
 	}
 
 	@Override
@@ -252,7 +252,7 @@ public class GameWorldService implements IGameWorldService
 	{
 		for (LyingItem item : _gameWorld.lyingItems)
 		{
-			_presentationService.presentLyingItem(batch, item);
+			_presentationService.presentLyingItem(batch, item, _runtimeParams.layoutParams);
 		}
 	}
 }

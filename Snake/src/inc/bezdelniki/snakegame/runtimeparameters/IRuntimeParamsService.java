@@ -4,5 +4,5 @@ import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 
 public interface IRuntimeParamsService
 {
-	RuntimeParams initParamsForNewGame();
+	RuntimeParams createParamsForNewGame();
 }

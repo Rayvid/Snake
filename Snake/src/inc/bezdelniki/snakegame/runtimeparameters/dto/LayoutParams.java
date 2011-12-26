@@ -1,6 +1,6 @@
 package inc.bezdelniki.snakegame.runtimeparameters.dto;
 
-public class RenderingParams
+public class LayoutParams
 {
 	public int gameBoxPaddingTop;
 	public int gameBoxPaddingLeft;

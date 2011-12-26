@@ -6,6 +6,7 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
@@ -38,9 +39,9 @@ public class UserActionService implements IUserActionService
 	}
 
 	@Override
-	public SnakeMovementChange createSnakeMovementChangeAccordingTouch(Snake snake, TouchCoords touchCoords)
+	public SnakeMovementChange createSnakeMovementChangeAccordingTouch(Snake snake, TouchCoords touchCoords, LayoutParams layoutParams)
 	{
-		WorldPosition touchPosition = _deviceService.DeviceCoordsToWorldPosition(_deviceService.TouchCoordsToDeviceCoords(touchCoords));
+		WorldPosition touchPosition = _deviceService.DeviceCoordsToWorldPosition(_deviceService.TouchCoordsToDeviceCoords(touchCoords), layoutParams);
 
 		if (Math.abs(touchPosition.tileX - snake.headPosition.tileX) != 0 || Math.abs(touchPosition.tileY - snake.headPosition.tileY) != 0)
 		{

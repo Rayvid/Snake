@@ -1,10 +1,9 @@
 package inc.bezdelniki.snakegame.systemparameters;
 
-import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParameters;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public interface ISystemParamsService
 {
-	SystemParameters getSystemParameters();
-
+	SystemParams getSystemParams();
 	void newResolutionWereSet(int width, int height);
 }

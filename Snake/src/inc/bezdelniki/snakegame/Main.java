@@ -7,6 +7,7 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
@@ -58,10 +59,11 @@ public class Main implements ApplicationListener
 
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
+		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
 
 		if (inputService.isThereTouchInEffect())
 		{
-			SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
+			SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords(), runtimeParams.layoutParams);
 
 			if (movementChange != null)
 			{
@@ -92,7 +94,7 @@ public class Main implements ApplicationListener
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		_batch.begin();
-		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, _batch);
+		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, _batch, runtimeParams.layoutParams);
 		gameWorldService.drawAllLyingItems(_batch);
 		_font.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
