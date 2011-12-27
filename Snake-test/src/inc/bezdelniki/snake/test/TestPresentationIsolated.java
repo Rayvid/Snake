@@ -23,6 +23,8 @@ import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.score.IScoreService;
+import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -55,6 +57,7 @@ public class TestPresentationIsolated
 			bind(ITimeService.class).to(TimeService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
+			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class);
 
 			bind(IPresentationService.class).toInstance(_mockedPresentationService);
@@ -68,7 +71,7 @@ public class TestPresentationIsolated
 	}
 
 	@Test
-	public void testIfDrawSnakeCallsDrawHeadMethod()
+	public void testIfPresentSnakeCallsPresentHeadMethod()
 	{
 		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
@@ -79,13 +82,13 @@ public class TestPresentationIsolated
 		_mockedPresentationService.presentSnakesHead(batch, snake.headPosition, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
-		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch, runtimeParams.layoutParams);
+		snakeService.presentSnake(snake, new ArrayList<SnakeMovementChange>(), batch, runtimeParams.layoutParams);
 		verify(_mockedPresentationService);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testIfDrawSnakeCallsDrawBodyMethod()
+	public void testIfPresentSnakeCallsPresentBodyMethod()
 	{
 		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
@@ -96,12 +99,12 @@ public class TestPresentationIsolated
 		_mockedPresentationService.presentSnakesBody(eq(batch), isA(List.class), eq(snake.headPosition), isA(LayoutParams.class));
 		replay(_mockedPresentationService);
 
-		snakeService.drawSnake(snake, new ArrayList<SnakeMovementChange>(), batch, runtimeParams.layoutParams);
+		snakeService.presentSnake(snake, new ArrayList<SnakeMovementChange>(), batch, runtimeParams.layoutParams);
 		verify(_mockedPresentationService);
 	}
 
 	@Test
-	public void testIfDrawLyingItemsCallsDrawLyingItemMethodAccordingLyingItemsCount() throws LyingItemNowhereToPlaceException
+	public void testIfPresentLyingItemsCallsPresentLyingItemMethodAccordingLyingItemsCount() throws LyingItemNowhereToPlaceException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 		gameWorldService.initGameWorld();
@@ -113,7 +116,7 @@ public class TestPresentationIsolated
 		_mockedPresentationService.presentLyingItem(batch, item1, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
-		gameWorldService.drawAllLyingItems(batch);
+		gameWorldService.presentAllLyingItems(batch);
 		verify(_mockedPresentationService);
 
 		LyingItem item2 = gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
@@ -122,7 +125,21 @@ public class TestPresentationIsolated
 		_mockedPresentationService.presentLyingItem(batch, item2, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
-		gameWorldService.drawAllLyingItems(batch);
+		gameWorldService.presentAllLyingItems(batch);
+		verify(_mockedPresentationService);
+	}
+	
+	@Test
+	public void testIfPresentScoreCallsPresentScoreMethod()
+	{
+		IScoreService scoreService = _testInjectorInstance.getInstance(IScoreService.class);
+
+		SpriteBatch batch = null;
+		int score = 1;
+		_mockedPresentationService.presentScore(batch, score);
+		replay(_mockedPresentationService);
+
+		scoreService.presentScore(batch, score);
 		verify(_mockedPresentationService);
 	}
 }

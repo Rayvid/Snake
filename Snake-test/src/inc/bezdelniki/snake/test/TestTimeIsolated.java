@@ -16,6 +16,8 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.score.IScoreService;
+import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
@@ -49,6 +51,7 @@ public class TestTimeIsolated
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
+			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 
 			bind(ITimeService.class).toInstance(_mockedTimeService);
@@ -85,7 +88,7 @@ public class TestTimeIsolated
 	}
 
 	@Test
-	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException,
+	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise(), SnakeMovementResultedEndOfGameException,
 			UnknownLyingItemTypeException
 	{
 		expect(_mockedTimeService.getNanoStamp()).andReturn((long) 0).anyTimes();

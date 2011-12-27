@@ -21,8 +21,9 @@ public interface IGameWorldService
 	void applySnakeMovementChange(SnakeMovementChange movementChange);
     void applyLyingItem(LyingItem lyingItem);
 	LyingItem createAndApplyLyingItemSomewhere(ItemType itemType) throws LyingItemNowhereToPlaceException;
-	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException;
-	void moveSnake() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException;
+	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException;
+	void moveSnake() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException;
 	LyingItem getLyingItemInTile(WorldPosition position);
-	void drawAllLyingItems(SpriteBatch batch);
+	void presentAllLyingItems(SpriteBatch batch);
+	int getScore();
 }

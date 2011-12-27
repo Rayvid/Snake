@@ -22,6 +22,8 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.score.IScoreService;
+import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -56,6 +58,7 @@ public class TestSnakeIsolated
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(ITimeService.class).to(TimeService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
+			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 
 			bind(ISnakeService.class).toInstance(_mockedSnakeService);
@@ -97,7 +100,7 @@ public class TestSnakeIsolated
 	}
 
 	@Test
-	public void testSnakesLengthChangesAfterGrowingWhenMoving() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testSnakesLengthChangesAfterGrowingWhenMoving() throws SnakeMovementResultedEndOfGameException
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
@@ -112,7 +115,7 @@ public class TestSnakeIsolated
 	}
 
 	@Test
-	public void testSnakeIsMoving() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testSnakeIsMoving() throws SnakeMovementResultedEndOfGameException
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
@@ -120,21 +123,14 @@ public class TestSnakeIsolated
 
 		Snake snake = snakeService.createSnake();
 
-		WorldPosition oldPos = null;
-		try
-		{
-			oldPos = (WorldPosition) snake.headPosition.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-		}
+		WorldPosition oldPos = (WorldPosition) snake.headPosition.clone();
 		snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
 
 		assertTrue(!snake.headPosition.equals(oldPos));
 	}
 
 	@Test
-	public void testIfGameWorldSnakeMoveCallsSnakeMoveUnderTheHood() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
+	public void testIfGameWorldSnakeMoveCallsSnakeMoveUnderTheHood() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		Snake snake = new Snake();
 		snake.headPosition = new WorldPosition(0, 0);
@@ -154,7 +150,7 @@ public class TestSnakeIsolated
 	}
 
 	@Test(expected = SnakeMovementResultedEndOfGameException.class)
-	public void testIfEndOfGameComesWhenMovingSnakeIntoWall() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException
+	public void testIfEndOfGameComesWhenMovingSnakeIntoWall() throws SnakeMovementResultedEndOfGameException
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
@@ -172,7 +168,7 @@ public class TestSnakeIsolated
 	}
 
 	@Test
-	public void testIfSnakesTrailCoordListContainsSameCountAsSnakeLength() throws CloneNotSupportedException
+	public void testIfSnakesTrailCoordListContainsSameCountAsSnakeLength()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
@@ -195,7 +191,7 @@ public class TestSnakeIsolated
 	}
 
 	@Test
-	public void testIfAfterEndOfGameSnakeDoesNotMove() throws CloneNotSupportedException
+	public void testIfAfterEndOfGameSnakeDoesNotMove()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
@@ -230,7 +226,7 @@ public class TestSnakeIsolated
 	}
 	
 	@Test
-	public void testIfAfterEndOfGameSnakeDoesNotResize() throws CloneNotSupportedException
+	public void testIfAfterEndOfGameSnakeDoesNotResize()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
@@ -266,7 +262,7 @@ public class TestSnakeIsolated
 	}
 
 	@Test
-	public void testIfSnakeStopsAtTheTop() throws CloneNotSupportedException
+	public void testIfSnakeStopsAtTheTop()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);

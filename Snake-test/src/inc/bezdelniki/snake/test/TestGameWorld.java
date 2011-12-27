@@ -57,7 +57,7 @@ public class TestGameWorld
 	}
 
 	@Test
-	public void testIfSnakeEatsLyingApplesAndGrowsAfterwards() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
+	public void testIfSnakeEatsLyingApplesAndGrowsAfterwards() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		ILyingItemService lyingItemService = SnakeInjector.getInjectorInstance().getInstance(ILyingItemService.class);
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
@@ -77,7 +77,7 @@ public class TestGameWorld
 	}
 
 	@Test
-	public void testIfLyingItemIsNeverCreatedInSnakesPath()
+	public void testIfLyingItemIsNeverCreatedOnSnakeOrSnakesPath()
 	{
 		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);

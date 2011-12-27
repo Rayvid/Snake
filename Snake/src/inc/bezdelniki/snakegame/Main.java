@@ -8,6 +8,7 @@ import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
@@ -56,6 +57,7 @@ public class Main implements ApplicationListener
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
 		IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
+		IScoreService scoreService = SnakeInjector.getInjectorInstance().getInstance(IScoreService.class);
 
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
@@ -85,17 +87,15 @@ public class Main implements ApplicationListener
 		catch (SnakeMovementResultedEndOfGameException e)
 		{
 		}
-		catch (CloneNotSupportedException e)
-		{
-		}
 		catch (UnknownLyingItemTypeException e)
 		{
 		}
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		_batch.begin();
-		snakeService.drawSnake(snake, gameWorld.movementChangesInEffect, _batch, runtimeParams.layoutParams);
-		gameWorldService.drawAllLyingItems(_batch);
+		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch, runtimeParams.layoutParams);
+		gameWorldService.presentAllLyingItems(_batch);
+		scoreService.presentScore(_batch, gameWorldService.getScore());
 		_font.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
 		_batch.end();

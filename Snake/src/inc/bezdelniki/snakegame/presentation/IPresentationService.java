@@ -14,4 +14,5 @@ public interface IPresentationService
 	void presentSnakesHead(SpriteBatch batch, WorldPosition position, LayoutParams layoutParams);
 	void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition, LayoutParams layoutParams);
 	void presentLyingItem(SpriteBatch batch, LyingItem item, LayoutParams layoutParams);
+	void presentScore(SpriteBatch batch, int score);
 }

@@ -26,14 +26,7 @@ public class UserActionService implements IUserActionService
 		SnakeMovementChange userAction = new SnakeMovementChange();
 		userAction.previousDirection = snake.direction;
 		userAction.newDirection = direction;
-		try
-		{
-			userAction.headPositionWhenChangeWereMade = (WorldPosition) snake.headPosition.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			userAction.headPositionWhenChangeWereMade = null;
-		}
+		userAction.headPositionWhenChangeWereMade = (WorldPosition) snake.headPosition.clone();
 
 		return userAction;
 	}

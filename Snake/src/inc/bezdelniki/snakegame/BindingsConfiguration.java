@@ -11,6 +11,8 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.score.IScoreService;
+import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.*;
 import inc.bezdelniki.snakegame.systemparameters.*;
 import inc.bezdelniki.snakegame.time.ITimeService;
@@ -32,6 +34,7 @@ public class BindingsConfiguration extends AbstractModule
 		bind(ILyingItemService.class).to(LyingItemService.class).in(Singleton.class);
 		bind(ISnakeService.class).to(SnakeService.class).in(Singleton.class);
 		bind(IUserActionService.class).to(UserActionService.class).in(Singleton.class);
+		bind(IScoreService.class).to(ScoreService.class);
 		bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 		bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
 		bind(ITimeService.class).to(TimeService.class).in(Singleton.class);

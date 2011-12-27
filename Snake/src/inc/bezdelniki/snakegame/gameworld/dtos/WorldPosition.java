@@ -11,9 +11,17 @@ public class WorldPosition implements Cloneable
 	public int tileX;
 	public int tileY;
 
-	public Object clone() throws CloneNotSupportedException
+	@Override
+	public Object clone()
 	{
-		return super.clone();
+		try
+		{
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			return null;
+		}
 	}
 
 	@Override

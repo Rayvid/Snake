@@ -20,6 +20,7 @@ import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.time.ITimeService;
@@ -33,8 +34,10 @@ public class GameWorldService implements IGameWorldService
 	private ITimeService _timeService;
 	private IPresentationService _presentationService;
 	private IRuntimeParamsService _runtimeParamsService;
+	private IScoreService _scoreService;
 	private GameWorld _gameWorld = null;
 	private RuntimeParams _runtimeParams = null;
+	private int _score;
 
 	@Inject
 	public GameWorldService(
@@ -43,7 +46,8 @@ public class GameWorldService implements IGameWorldService
 			ITimeService timeService,
 			ILyingItemService lyingItemsService,
 			IPresentationService presentationService,
-			IRuntimeParamsService runtimeParamsService)
+			IRuntimeParamsService runtimeParamsService,
+			IScoreService scoreService)
 	{
 		_appSettingsService = appSettingsService;
 		_snakeService = snakeService;
@@ -51,6 +55,7 @@ public class GameWorldService implements IGameWorldService
 		_lyingItemsService = lyingItemsService;
 		_presentationService = presentationService;
 		_runtimeParamsService = runtimeParamsService;
+		_scoreService = scoreService;
 	}
 
 	@Override
@@ -162,6 +167,7 @@ public class GameWorldService implements IGameWorldService
 		{
 			if (_gameWorld.lyingItems.get(i).position.equals(position))
 			{
+				_score += _scoreService.getScore4Item(_gameWorld.lyingItems.get(i));
 				_gameWorld.lyingItems.remove(i);
 				return;
 			}
@@ -169,7 +175,7 @@ public class GameWorldService implements IGameWorldService
 	}
 
 	@Override
-	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
+	public void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		if (_timeService.getNanoStamp() - _gameWorld.lastSnakesMovementNanoTimestamp >= _runtimeParams.snakesMovementNanoInterval)
 		{
@@ -179,7 +185,7 @@ public class GameWorldService implements IGameWorldService
 	}
 
 	@Override
-	public void moveSnake() throws SnakeMovementResultedEndOfGameException, CloneNotSupportedException, UnknownLyingItemTypeException
+	public void moveSnake() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		_snakeService.moveSnake(_gameWorld.snake, _gameWorld.movementChangesInEffect);
 		_gameWorld.lastSnakesMovementNanoTimestamp = _timeService.getNanoStamp();
@@ -254,11 +260,17 @@ public class GameWorldService implements IGameWorldService
 	}
 
 	@Override
-	public void drawAllLyingItems(SpriteBatch batch)
+	public void presentAllLyingItems(SpriteBatch batch)
 	{
 		for (LyingItem item : _gameWorld.lyingItems)
 		{
 			_presentationService.presentLyingItem(batch, item, _runtimeParams.layoutParams);
 		}
+	}
+
+	@Override
+	public int getScore()
+	{
+		return _score;
 	}
 }

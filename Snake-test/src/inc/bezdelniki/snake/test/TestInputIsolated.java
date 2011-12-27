@@ -22,6 +22,8 @@ import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.score.IScoreService;
+import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -57,6 +59,7 @@ public class TestInputIsolated
 			bind(ITimeService.class).to(TimeService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
+			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 			bind(IUserActionService.class).to(UserActionService.class);
 
@@ -71,7 +74,7 @@ public class TestInputIsolated
 	}
 
 	@Test
-	public void testIfCorrectUserActionIsCreatedAccordingTouch() throws CloneNotSupportedException, SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
+	public void testIfCorrectUserActionIsCreatedAccordingTouch() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 

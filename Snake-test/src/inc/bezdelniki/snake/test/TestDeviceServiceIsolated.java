@@ -58,7 +58,7 @@ public class TestDeviceServiceIsolated
 	}
 
 	@Test
-	public void testIfWorldPositionToDevicePositionReturnsMeaningfullResults() throws CloneNotSupportedException
+	public void testIfWorldPositionToDevicePositionReturnsMeaningfullResults()
 	{
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
@@ -161,7 +161,7 @@ public class TestDeviceServiceIsolated
 	}
 
 	@Test
-	public void testIfWorldPositionToDevicePositionAndBackReturnsSameResults() throws CloneNotSupportedException
+	public void testIfWorldPositionToDevicePositionAndBackReturnsSameResults()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);

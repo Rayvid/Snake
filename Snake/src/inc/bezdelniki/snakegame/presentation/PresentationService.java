@@ -94,4 +94,11 @@ public class PresentationService implements IPresentationService
 		_snakesBodySprite = null;
 		_appleSprite = null;
 	}
+
+	@Override
+	public void presentScore(SpriteBatch batch, int score)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

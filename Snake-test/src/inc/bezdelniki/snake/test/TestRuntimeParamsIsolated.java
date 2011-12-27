@@ -18,6 +18,8 @@ import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.score.IScoreService;
+import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
@@ -47,6 +49,7 @@ public class TestRuntimeParamsIsolated
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
+			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class);
 			
 			bind(IRuntimeParamsService.class).toInstance(_mockedRuntimeParamsService);
@@ -60,7 +63,7 @@ public class TestRuntimeParamsIsolated
 	}
 	
 	@Test
-	public void testIfInitGameWorldCallsInitRuntimeParameters4NewGameUnderTheHood()
+	public void testIfInitGameWorldCallsCreateRuntimeParameters4NewGameUnderTheHood()
 	{
 		RuntimeParams mockedReturn;
 		mockedReturn = new RuntimeParams();

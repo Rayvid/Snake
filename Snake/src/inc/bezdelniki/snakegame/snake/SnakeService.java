@@ -53,8 +53,7 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException,
-			CloneNotSupportedException
+	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException
 	{
 		AppSettings settings = _appSettingsService.getAppSettings();
 
@@ -100,7 +99,7 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch, LayoutParams layoutParams)
+	public void presentSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch, LayoutParams layoutParams)
 	{
 		_presentationService.presentSnakesHead(batch, snake.headPosition, layoutParams);
 		_presentationService.presentSnakesBody(batch, getSnakesTrail(snake, snakeMovementChangesInEffect), snake.headPosition, layoutParams);
@@ -125,15 +124,7 @@ public class SnakeService implements ISnakeService
 	private WorldPosition traverseBackTroughSnakesTrail(WorldPosition position, Direction snakesDirection)
 	{
 		WorldPosition newPosition = null;
-
-		try
-		{
-			newPosition = (WorldPosition) position.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			return null;
-		}
+		newPosition = (WorldPosition) position.clone();
 
 		switch (snakesDirection)
 		{
@@ -163,14 +154,7 @@ public class SnakeService implements ISnakeService
 		List<WorldPosition> snakesTrailList = new ArrayList<WorldPosition>();
 
 		WorldPosition position;
-		try
-		{
-			position = (WorldPosition) snake.headPosition.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			return null;
-		}
+		position = (WorldPosition) snake.headPosition.clone();
 
 		Direction direction = snake.direction;
 		int currentMovementChange = snakeMovementChangesInEffect.size() - 1;

@@ -10,9 +10,19 @@ public class Snake implements Cloneable
 	public int newLength;
 	public Direction direction;
 	
-	public Object clone() throws CloneNotSupportedException
+	@Override
+	public Object clone()
 	{
-		Snake result = (Snake) super.clone();
+		Snake result;
+		try
+		{
+			result = (Snake) super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			return null;
+		}
+		
 		result.headPosition = (WorldPosition) headPosition.clone();
 		
 		return result;

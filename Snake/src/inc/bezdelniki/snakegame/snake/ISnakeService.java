@@ -13,15 +13,9 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 public interface ISnakeService
 {
 	Snake createSnake();
-
 	void growSnake(Snake snake);
-
-	void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException,
-			CloneNotSupportedException;
-
-	void drawSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch, LayoutParams layoutParams);
-
+	void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException;
+	void presentSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch, LayoutParams layoutParams);
 	boolean doesTileBelongToSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, WorldPosition tile, boolean doIncludeHead);
-
 	List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect);
 }
