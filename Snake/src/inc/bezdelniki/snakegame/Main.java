@@ -107,6 +107,9 @@ public class Main implements ApplicationListener
 		ISystemParamsService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
 		systemParametersService.newResolutionWereSet(width, height);
 		
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		gameWorldService.systemParamsCanBeChanged();
+		
 		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
 		presentationService.graphicContextCanBeLost();
 	}

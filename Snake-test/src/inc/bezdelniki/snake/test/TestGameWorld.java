@@ -17,9 +17,11 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 
 public class TestGameWorld
 {
@@ -126,5 +128,28 @@ public class TestGameWorld
 		{
 			gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
 		}
+	}
+	
+	@Test
+	public void testIfRuntimeSettingsAreUpdatedWhenSystemParamsChanges()
+	{
+		ISystemParamsService systemParamsService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
+		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		gameWorldService.initGameWorld();
+		
+		systemParamsService.newResolutionWereSet(480, 315);
+		gameWorldService.systemParamsCanBeChanged();
+		
+		RuntimeParams runtimeParams1 = gameWorldService.getRuntimeParams();
+		
+		systemParamsService.newResolutionWereSet(4800, 3150);
+		gameWorldService.systemParamsCanBeChanged();
+		
+		RuntimeParams runtimeParams2 = gameWorldService.getRuntimeParams();
+		
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingTop < runtimeParams2.layoutParams.gameBoxPaddingTop);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingLeft < runtimeParams2.layoutParams.gameBoxPaddingLeft);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingRight < runtimeParams2.layoutParams.gameBoxPaddingRight);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
 	}
 }

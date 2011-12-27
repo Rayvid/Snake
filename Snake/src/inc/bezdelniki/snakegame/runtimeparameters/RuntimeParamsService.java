@@ -33,15 +33,17 @@ public class RuntimeParamsService implements IRuntimeParamsService
 		RuntimeParams result = new RuntimeParams();
 		LayoutParams zeroPaddingLayout = new LayoutParams();
 
+		int tileSize = _deviceService.getTileSize(zeroPaddingLayout);
+		
 		result.layoutParams = new LayoutParams();
-		result.layoutParams.gameBoxPaddingTop = _deviceService.getTileSize(zeroPaddingLayout) * 2;
-		result.layoutParams.gameBoxPaddingLeft = (int) (_deviceService.getTileSize(zeroPaddingLayout) * 1);
-		result.layoutParams.gameBoxPaddingRight = (int) (_deviceService.getTileSize(zeroPaddingLayout) * 1);
-		result.layoutParams.gameBoxPaddingBottom = (int) (_deviceService.getTileSize(zeroPaddingLayout) * 1);
+		result.layoutParams.gameBoxPaddingTop = tileSize * 2;
+		result.layoutParams.gameBoxPaddingLeft = tileSize;
+		result.layoutParams.gameBoxPaddingRight = tileSize;
+		result.layoutParams.gameBoxPaddingBottom = tileSize;
 
 		SystemParams systemParams = _systemParamsService.getSystemParams();
 		AppSettings appSettings = _appSettingsService.getAppSettings();
-		int tileSize = _deviceService.getTileSize(result.layoutParams);
+		tileSize = _deviceService.getTileSize(result.layoutParams);
 
 		if (systemParams.width > systemParams.height)
 		{
