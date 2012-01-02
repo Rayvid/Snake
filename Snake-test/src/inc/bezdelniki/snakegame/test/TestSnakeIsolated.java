@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -10,6 +10,8 @@ import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.font.FontService;
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
@@ -54,6 +56,7 @@ public class TestSnakeIsolated
 			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
+			bind(IFontService.class).to(FontService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(ITimeService.class).to(TimeService.class);

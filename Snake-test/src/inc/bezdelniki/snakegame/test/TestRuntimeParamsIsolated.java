@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -9,6 +9,8 @@ import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.font.FontService;
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
@@ -24,6 +26,7 @@ import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.SystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.time.ITimeService;
 import inc.bezdelniki.snakegame.time.TimeService;
 
@@ -48,6 +51,7 @@ public class TestRuntimeParamsIsolated
 			bind(ITimeService.class).to(TimeService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
+			bind(IFontService.class).to(FontService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
 			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class);
@@ -96,4 +100,47 @@ public class TestRuntimeParamsIsolated
 		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
 	}
 	
+	@Test
+	public void testIfAdjustLayoutParamsDependsOnScreenResolution()
+	{	
+		IAppSettingsService appSettingsService = new AppSettingsService();
+		ISystemParamsService systemParamsService = new SystemParamsService(appSettingsService);
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+		RuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
+		
+		systemParamsService.newResolutionWereSet(480, 315);
+		RuntimeParams runtimeParams1 = runtimeParamsService.createParamsForNewGame();
+		RuntimeParams runtimeParams2 = runtimeParamsService.createParamsForNewGame();
+		
+		systemParamsService.newResolutionWereSet(3150, 4800);
+		runtimeParamsService.adjustLayoutParams(runtimeParams2);
+		
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingTop < runtimeParams2.layoutParams.gameBoxPaddingTop);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingLeft < runtimeParams2.layoutParams.gameBoxPaddingLeft);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingRight < runtimeParams2.layoutParams.gameBoxPaddingRight);
+		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
+	}
+	
+	@Test
+	public void testIfScoreCoordsFitsLayout()
+	{
+		IAppSettingsService appSettingsService = new AppSettingsService();
+		ISystemParamsService systemParamsService = new SystemParamsService(appSettingsService);
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+		RuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
+	
+		systemParamsService.newResolutionWereSet(480, 315);
+		SystemParams systemParams = systemParamsService.getSystemParams();
+		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		
+		assertTrue(systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop / 2 < runtimeParams.layoutParams.scoreCoords.y);
+		assertTrue(systemParams.height > runtimeParams.layoutParams.scoreCoords.y);
+		
+		systemParamsService.newResolutionWereSet(3150, 4800);
+		systemParams = systemParamsService.getSystemParams();
+		runtimeParams = runtimeParamsService.createParamsForNewGame();
+		
+		assertTrue(systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop / 2 < runtimeParams.layoutParams.scoreCoords.y);
+		assertTrue(systemParams.height > runtimeParams.layoutParams.scoreCoords.y);
+	}
 }

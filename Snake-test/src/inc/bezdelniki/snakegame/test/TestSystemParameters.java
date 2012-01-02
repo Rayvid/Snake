@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

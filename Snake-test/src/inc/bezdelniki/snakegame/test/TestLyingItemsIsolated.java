@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -15,6 +15,8 @@ import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.font.FontService;
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
@@ -52,6 +54,7 @@ public class TestLyingItemsIsolated
 			bind(IDeviceService.class).to(DeviceService.class);
 			bind(ITimeService.class).to(TimeService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
+			bind(IFontService.class).to(FontService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(IScoreService.class).to(ScoreService.class);
 			bind(IGameWorldService.class).to(GameWorldService.class);

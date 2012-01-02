@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.junit.Assert.*;
 
@@ -140,16 +140,20 @@ public class TestGameWorld
 		systemParamsService.newResolutionWereSet(480, 315);
 		gameWorldService.systemParamsCanBeChanged();
 		
-		RuntimeParams runtimeParams1 = gameWorldService.getRuntimeParams();
+		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
+		int gameBoxPaddingTop = runtimeParams.layoutParams.gameBoxPaddingTop;
+		int gameBoxPaddingBottom = runtimeParams.layoutParams.gameBoxPaddingBottom;
+		int gameBoxPaddingLeft = runtimeParams.layoutParams.gameBoxPaddingLeft;
+		int gameBoxPaddingRight = runtimeParams.layoutParams.gameBoxPaddingRight;
 		
 		systemParamsService.newResolutionWereSet(4800, 3150);
 		gameWorldService.systemParamsCanBeChanged();
 		
-		RuntimeParams runtimeParams2 = gameWorldService.getRuntimeParams();
+		runtimeParams = gameWorldService.getRuntimeParams();
 		
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingTop < runtimeParams2.layoutParams.gameBoxPaddingTop);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingLeft < runtimeParams2.layoutParams.gameBoxPaddingLeft);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingRight < runtimeParams2.layoutParams.gameBoxPaddingRight);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
+		assertTrue(gameBoxPaddingTop < runtimeParams.layoutParams.gameBoxPaddingTop);
+		assertTrue(gameBoxPaddingLeft < runtimeParams.layoutParams.gameBoxPaddingLeft);
+		assertTrue(gameBoxPaddingRight < runtimeParams.layoutParams.gameBoxPaddingRight);
+		assertTrue(gameBoxPaddingBottom < runtimeParams.layoutParams.gameBoxPaddingBottom);
 	}
 }

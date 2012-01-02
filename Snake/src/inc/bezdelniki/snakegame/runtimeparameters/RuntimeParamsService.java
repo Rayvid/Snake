@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
@@ -31,52 +32,61 @@ public class RuntimeParamsService implements IRuntimeParamsService
 	public RuntimeParams createParamsForNewGame()
 	{
 		RuntimeParams result = new RuntimeParams();
+		
+		adjustLayoutParams(result);
+		
+		result.snakesMovementNanoInterval = 200000000; // 0.2s
+
+		return result;
+	}
+
+	@Override
+	public void adjustLayoutParams(RuntimeParams runtimeParams)
+	{
 		LayoutParams zeroPaddingLayout = new LayoutParams();
 
 		int tileSize = _deviceService.getTileSize(zeroPaddingLayout);
 		
-		result.layoutParams = new LayoutParams();
-		result.layoutParams.gameBoxPaddingTop = tileSize * 2;
-		result.layoutParams.gameBoxPaddingLeft = tileSize;
-		result.layoutParams.gameBoxPaddingRight = tileSize;
-		result.layoutParams.gameBoxPaddingBottom = tileSize;
+		runtimeParams.layoutParams = new LayoutParams();
+		runtimeParams.layoutParams.gameBoxPaddingTop = tileSize * 2;
+		runtimeParams.layoutParams.gameBoxPaddingLeft = tileSize;
+		runtimeParams.layoutParams.gameBoxPaddingRight = tileSize;
+		runtimeParams.layoutParams.gameBoxPaddingBottom = tileSize;
 
 		SystemParams systemParams = _systemParamsService.getSystemParams();
 		AppSettings appSettings = _appSettingsService.getAppSettings();
-		tileSize = _deviceService.getTileSize(result.layoutParams);
+		tileSize = _deviceService.getTileSize(runtimeParams.layoutParams);
 
 		if (systemParams.width > systemParams.height)
 		{
 			int whatsLeft = systemParams.width - appSettings.tilesHorizontally * tileSize
-					- result.layoutParams.gameBoxPaddingLeft
-					- result.layoutParams.gameBoxPaddingRight;
-			result.layoutParams.gameBoxPaddingLeft += whatsLeft / 2;
-			result.layoutParams.gameBoxPaddingRight += whatsLeft - whatsLeft / 2;
+					- runtimeParams.layoutParams.gameBoxPaddingLeft
+					- runtimeParams.layoutParams.gameBoxPaddingRight;
+			runtimeParams.layoutParams.gameBoxPaddingLeft += whatsLeft / 2;
+			runtimeParams.layoutParams.gameBoxPaddingRight += whatsLeft - whatsLeft / 2;
 
 			whatsLeft = systemParams.height - appSettings.tilesVertically * tileSize
-					- result.layoutParams.gameBoxPaddingTop
-					- result.layoutParams.gameBoxPaddingBottom;
-			result.layoutParams.gameBoxPaddingTop += whatsLeft / 2;
-			result.layoutParams.gameBoxPaddingBottom += whatsLeft - whatsLeft / 2;
+					- runtimeParams.layoutParams.gameBoxPaddingTop
+					- runtimeParams.layoutParams.gameBoxPaddingBottom;
+			runtimeParams.layoutParams.gameBoxPaddingTop += whatsLeft / 2;
+			runtimeParams.layoutParams.gameBoxPaddingBottom += whatsLeft - whatsLeft / 2;
 		}
 		else
 		{
 			int whatsLeft = systemParams.height - appSettings.tilesHorizontally * tileSize
-					- result.layoutParams.gameBoxPaddingTop
-					- result.layoutParams.gameBoxPaddingBottom;
-			result.layoutParams.gameBoxPaddingTop += whatsLeft / 2;
-			result.layoutParams.gameBoxPaddingBottom += whatsLeft - whatsLeft / 2;
+					- runtimeParams.layoutParams.gameBoxPaddingTop
+					- runtimeParams.layoutParams.gameBoxPaddingBottom;
+			runtimeParams.layoutParams.gameBoxPaddingTop += whatsLeft / 2;
+			runtimeParams.layoutParams.gameBoxPaddingBottom += whatsLeft - whatsLeft / 2;
 
 			whatsLeft = systemParams.width - appSettings.tilesVertically * tileSize
-					- result.layoutParams.gameBoxPaddingLeft
-					- result.layoutParams.gameBoxPaddingRight;
-			result.layoutParams.gameBoxPaddingLeft += whatsLeft / 2;
-			result.layoutParams.gameBoxPaddingRight += whatsLeft - whatsLeft / 2;
+					- runtimeParams.layoutParams.gameBoxPaddingLeft
+					- runtimeParams.layoutParams.gameBoxPaddingRight;
+			runtimeParams.layoutParams.gameBoxPaddingLeft += whatsLeft / 2;
+			runtimeParams.layoutParams.gameBoxPaddingRight += whatsLeft - whatsLeft / 2;
 		}
 
-		result.snakesMovementNanoInterval = 1000000000; // 1s
-
-		return result;
+		runtimeParams.layoutParams.scoreCoords = new DeviceCoords(2, systemParams.height - 2);
 	}
 
 }

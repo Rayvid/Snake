@@ -4,12 +4,14 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
@@ -17,6 +19,9 @@ import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 public class PresentationService implements IPresentationService
 {
 	private IDeviceService _deviceService;
+	private IFontService _fontService;
+	
+	private BitmapFont _regularInfoFont = null;
 	private Texture _mainObjectsTexture = null;
 	private Sprite _snakesHeadSprite = null;
 	private Sprite _snakesBodySprite = null;
@@ -24,15 +29,25 @@ public class PresentationService implements IPresentationService
 
 	@Inject
 	public PresentationService(
-			IDeviceService deviceService)
+			IDeviceService deviceService,
+			IFontService fontService)
 	{
 		_deviceService = deviceService;
+		_fontService = fontService;
 	}
 
 	private void initGdxResources(LayoutParams layoutParams)
 	{
+		if (_regularInfoFont == null)
+		{
+			_regularInfoFont = _fontService.getRegularInfoFont();
+		}
+		
 		if (_mainObjectsTexture == null)
+		{
 			_mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
+		}
+		
 		if (_snakesHeadSprite == null)
 		{
 			_snakesHeadSprite = new Sprite(_mainObjectsTexture, 0, 0, 16, 16);
@@ -89,16 +104,20 @@ public class PresentationService implements IPresentationService
 	@Override
 	public void graphicContextCanBeLost()
 	{
+		_regularInfoFont = null;
+		
 		_mainObjectsTexture = null;
+		
 		_snakesHeadSprite = null;
 		_snakesBodySprite = null;
 		_appleSprite = null;
 	}
 
 	@Override
-	public void presentScore(SpriteBatch batch, int score)
+	public void presentScore(SpriteBatch batch, int score, LayoutParams layoutParams)
 	{
-		// TODO Auto-generated method stub
+		initGdxResources(layoutParams);
 		
+		_regularInfoFont.draw(batch, (new Integer(score)).toString(), layoutParams.scoreCoords.x, layoutParams.scoreCoords.y);
 	}
 }

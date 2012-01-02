@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -6,6 +6,8 @@ import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.font.FontService;
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
@@ -48,6 +50,7 @@ public class TestTimeIsolated
 			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
 			bind(IDeviceService.class).to(DeviceService.class);
+			bind(IFontService.class).to(FontService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(ILyingItemService.class).to(LyingItemService.class);
@@ -88,8 +91,7 @@ public class TestTimeIsolated
 	}
 
 	@Test
-	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise(), SnakeMovementResultedEndOfGameException,
-			UnknownLyingItemTypeException
+	public void testIfMovementOccursWhenEnoughTimePassedAndDoesNotOtherwise() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		expect(_mockedTimeService.getNanoStamp()).andReturn((long) 0).anyTimes();
 		replay(_mockedTimeService);

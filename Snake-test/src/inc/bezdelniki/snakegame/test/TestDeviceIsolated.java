@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -13,6 +13,8 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.device.dtos.DeviceDeltas;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
+import inc.bezdelniki.snakegame.font.FontService;
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
@@ -32,7 +34,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-public class TestDeviceServiceIsolated
+public class TestDeviceIsolated
 {
 	private Injector _testInjectorInstance;
 	private IDeviceService _mockedDeviceService;
@@ -45,13 +47,14 @@ public class TestDeviceServiceIsolated
 			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
+			bind(IFontService.class).to(FontService.class);
 			bind(IPresentationService.class).to(PresentationService.class);
 			bind(ISnakeService.class).to(SnakeService.class);
 			bind(IDeviceService.class).toInstance(_mockedDeviceService);
 		}
 	}
 
-	public TestDeviceServiceIsolated()
+	public TestDeviceIsolated()
 	{
 		_mockedDeviceService = createNiceMock(IDeviceService.class);
 		_testInjectorInstance = Guice.createInjector(new TestDeviceBindingsConfiguration());
@@ -436,7 +439,7 @@ public class TestDeviceServiceIsolated
 		SystemParams systemParams = systemParamsService.getSystemParams();
 		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
 		int tileSize = deviceService.getTileSize(runtimeParams.layoutParams);
-		
+
 		DeviceCoords topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0), runtimeParams.layoutParams);
 		DeviceCoords topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0), runtimeParams.layoutParams);
 		DeviceCoords bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1), runtimeParams.layoutParams);
@@ -467,7 +470,7 @@ public class TestDeviceServiceIsolated
 		systemParams = systemParamsService.getSystemParams();
 		runtimeParams = runtimeParamsService.createParamsForNewGame();
 		tileSize = deviceService.getTileSize(runtimeParams.layoutParams);
-		
+
 		topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0), runtimeParams.layoutParams);
 		topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0), runtimeParams.layoutParams);
 		bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1), runtimeParams.layoutParams);

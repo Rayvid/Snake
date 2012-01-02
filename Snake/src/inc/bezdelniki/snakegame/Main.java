@@ -1,5 +1,6 @@
 package inc.bezdelniki.snakegame;
 
+import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceException;
@@ -31,7 +32,11 @@ public class Main implements ApplicationListener
 	public void create()
 	{
 		if (_batch == null)	_batch = new SpriteBatch();
-		if (_font == null) _font = new BitmapFont(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/f16.fnt"), Gdx.files.classpath("inc/bezdelniki/snakegame/resources/f16.png"), false);
+		if (_font == null)
+		{
+			IFontService fontService = SnakeInjector.getInjectorInstance().getInstance(IFontService.class);
+			_font = fontService.getRegularInfoFont();
+		}
 		
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		if (gameWorldService.getGameWorld() == null)
@@ -95,7 +100,7 @@ public class Main implements ApplicationListener
 		_batch.begin();
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch, runtimeParams.layoutParams);
 		gameWorldService.presentAllLyingItems(_batch);
-		scoreService.presentScore(_batch, gameWorldService.getScore());
+		scoreService.presentScore(_batch, gameWorldService.getScore(), runtimeParams.layoutParams);
 		_font.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
 		_batch.end();

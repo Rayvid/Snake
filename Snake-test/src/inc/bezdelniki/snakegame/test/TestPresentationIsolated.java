@@ -1,4 +1,4 @@
-package inc.bezdelniki.snake.test;
+package inc.bezdelniki.snakegame.test;
 
 import static org.easymock.EasyMock.*;
 
@@ -133,13 +133,16 @@ public class TestPresentationIsolated
 	public void testIfPresentScoreCallsPresentScoreMethod()
 	{
 		IScoreService scoreService = _testInjectorInstance.getInstance(IScoreService.class);
+		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
+		gameWorldService.initGameWorld();
+		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
 
 		SpriteBatch batch = null;
 		int score = 1;
-		_mockedPresentationService.presentScore(batch, score);
+		_mockedPresentationService.presentScore(batch, score, runtimeParams.layoutParams);
 		replay(_mockedPresentationService);
 
-		scoreService.presentScore(batch, score);
+		scoreService.presentScore(batch, score, runtimeParams.layoutParams);
 		verify(_mockedPresentationService);
 	}
 }

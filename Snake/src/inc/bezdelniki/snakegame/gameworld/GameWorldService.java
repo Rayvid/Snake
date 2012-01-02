@@ -86,7 +86,7 @@ public class GameWorldService implements IGameWorldService
 	@Override
 	public void systemParamsCanBeChanged()
 	{
-		_runtimeParams = _runtimeParamsService.createParamsForNewGame();
+		_runtimeParamsService.adjustLayoutParams(_runtimeParams);
 	}
 
 	@Override
