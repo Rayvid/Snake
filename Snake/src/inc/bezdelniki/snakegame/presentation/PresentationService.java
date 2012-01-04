@@ -21,6 +21,7 @@ public class PresentationService implements IPresentationService
 	private IDeviceService _deviceService;
 	private IFontService _fontService;
 	
+	private BitmapFont _smallFont = null;
 	private BitmapFont _regularInfoFont = null;
 	private Texture _mainObjectsTexture = null;
 	private Sprite _snakesHeadSprite = null;
@@ -38,6 +39,10 @@ public class PresentationService implements IPresentationService
 
 	private void initGdxResources(LayoutParams layoutParams)
 	{
+		if (_smallFont == null)
+		{
+			_smallFont = _fontService.getSmallFont();
+		}
 		if (_regularInfoFont == null)
 		{
 			_regularInfoFont = _fontService.getRegularInfoFont();

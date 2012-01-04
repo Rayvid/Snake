@@ -10,15 +10,15 @@ public class AppSettingsService implements IAppSettingsService
 	public AppSettings getAppSettings()
 	{
 		AppSettings settings = new AppSettings();
-		settings.initialWidth = 480;
+		settings.initialWidth = 540;
 		settings.initialHeight = 320;
 
 		settings.initialDirection = Direction.RIGHT;
 		settings.initialSnakeLength = 5;
-		settings.initialHeadPositionX = 15;
+		settings.initialHeadPositionX = 18;
 		settings.initialHeadPositionY = 10;
 
-		settings.tilesHorizontally = 30;
+		settings.tilesHorizontally = 36;
 		settings.tilesVertically = 20;
 		settings.growSnakeBy = 2;
 

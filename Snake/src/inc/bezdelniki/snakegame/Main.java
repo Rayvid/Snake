@@ -35,7 +35,7 @@ public class Main implements ApplicationListener
 		if (_font == null)
 		{
 			IFontService fontService = SnakeInjector.getInjectorInstance().getInstance(IFontService.class);
-			_font = fontService.getRegularInfoFont();
+			_font = fontService.getSmallFont();
 		}
 		
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
@@ -101,8 +101,7 @@ public class Main implements ApplicationListener
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch, runtimeParams.layoutParams);
 		gameWorldService.presentAllLyingItems(_batch);
 		scoreService.presentScore(_batch, gameWorldService.getScore(), runtimeParams.layoutParams);
-		_font.setColor(1.0f, 1.0f, 1.0f, 0.5f);
-		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 100, 100);
+		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 		_batch.end();
 	}
 

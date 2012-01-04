@@ -4,5 +4,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public interface IFontService
 {
+	BitmapFont getSmallFont();
 	BitmapFont getRegularInfoFont();
 }
