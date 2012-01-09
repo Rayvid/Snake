@@ -131,7 +131,7 @@ public class TestGameWorld
 	}
 	
 	@Test
-	public void testIfRuntimeSettingsAreUpdatedWhenSystemParamsChanges()
+	public void testIfRuntimeParamsAreUpdatedWhenSystemParamsChanges()
 	{
 		ISystemParamsService systemParamsService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
@@ -140,7 +140,7 @@ public class TestGameWorld
 		systemParamsService.newResolutionWereSet(480, 315);
 		gameWorldService.systemParamsCanBeChanged();
 		
-		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
+		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
 		int gameBoxPaddingTop = runtimeParams.layoutParams.gameBoxPaddingTop;
 		int gameBoxPaddingBottom = runtimeParams.layoutParams.gameBoxPaddingBottom;
 		int gameBoxPaddingLeft = runtimeParams.layoutParams.gameBoxPaddingLeft;
@@ -148,8 +148,6 @@ public class TestGameWorld
 		
 		systemParamsService.newResolutionWereSet(4800, 3150);
 		gameWorldService.systemParamsCanBeChanged();
-		
-		runtimeParams = gameWorldService.getRuntimeParams();
 		
 		assertTrue(gameBoxPaddingTop < runtimeParams.layoutParams.gameBoxPaddingTop);
 		assertTrue(gameBoxPaddingLeft < runtimeParams.layoutParams.gameBoxPaddingLeft);

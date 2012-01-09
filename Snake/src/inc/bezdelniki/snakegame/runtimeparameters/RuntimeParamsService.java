@@ -29,23 +29,20 @@ public class RuntimeParamsService implements IRuntimeParamsService
 	}
 
 	@Override
-	public RuntimeParams createParamsForNewGame()
+	public void initParamsForNewGame(RuntimeParams runtimeParams)
 	{
-		RuntimeParams result = new RuntimeParams();
+		adjustLayoutParams(runtimeParams);
 		
-		adjustLayoutParams(result);
-		
-		result.snakesMovementNanoInterval = 200000000; // 0.2s
-
-		return result;
+		runtimeParams.snakesMovementNanoInterval = 200000000; // 0.2s
 	}
 
 	@Override
 	public void adjustLayoutParams(RuntimeParams runtimeParams)
 	{
 		LayoutParams zeroPaddingLayout = new LayoutParams();
+		runtimeParams.layoutParams = zeroPaddingLayout;
 
-		int tileSize = _deviceService.getTileSize(zeroPaddingLayout);
+		int tileSize = _deviceService.getTileSize();
 		
 		runtimeParams.layoutParams = new LayoutParams();
 		runtimeParams.layoutParams.gameBoxPaddingTop = tileSize * 2;
@@ -55,7 +52,7 @@ public class RuntimeParamsService implements IRuntimeParamsService
 
 		SystemParams systemParams = _systemParamsService.getSystemParams();
 		AppSettings appSettings = _appSettingsService.getAppSettings();
-		tileSize = _deviceService.getTileSize(runtimeParams.layoutParams);
+		tileSize = _deviceService.getTileSize();
 
 		if (systemParams.width > systemParams.height)
 		{

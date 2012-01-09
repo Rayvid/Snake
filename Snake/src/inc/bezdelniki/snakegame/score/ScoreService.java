@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 
 public class ScoreService implements IScoreService
 {
@@ -24,8 +23,8 @@ public class ScoreService implements IScoreService
 	}
 
 	@Override
-	public void presentScore(SpriteBatch batch, int score, LayoutParams layoutParams)
+	public void presentScore(SpriteBatch batch, int score)
 	{
-		_presentationService.presentScore(batch, score, layoutParams);
+		_presentationService.presentScore(batch, score);
 	}
 }

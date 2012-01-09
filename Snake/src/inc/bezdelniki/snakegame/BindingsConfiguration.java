@@ -1,10 +1,14 @@
 package inc.bezdelniki.snakegame;
 
+import java.util.ArrayList;
+
 import inc.bezdelniki.snakegame.appsettings.*;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.font.FontService;
+import inc.bezdelniki.snakegame.font.configuration.FontConfiguration;
+import inc.bezdelniki.snakegame.font.configuration.FontConfigurationItem;
 import inc.bezdelniki.snakegame.gameworld.*;
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.input.InputService;
@@ -13,6 +17,7 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.*;
@@ -29,6 +34,24 @@ public class BindingsConfiguration extends AbstractModule
 	@Override
 	protected void configure()
 	{
+		RuntimeParams runtimeParams = new RuntimeParams();
+		bind(RuntimeParams.class).toInstance(runtimeParams);
+		
+		FontConfiguration fontConfiguration = new FontConfiguration();
+		bind(FontConfiguration.class).toInstance(fontConfiguration);
+		
+		fontConfiguration.configurationItems = new ArrayList<FontConfigurationItem>();
+		FontConfigurationItem fontConfigurationItem1 = new FontConfigurationItem();
+		fontConfigurationItem1.tileSizeMin = 0;
+		fontConfigurationItem1.smallFontClassPath = "inc/bezdelniki/snakegame/resources/sf12";
+		fontConfigurationItem1.regularInfoClassPath = "inc/bezdelniki/snakegame/resources/f12";
+		fontConfiguration.configurationItems.add(fontConfigurationItem1);
+		FontConfigurationItem fontConfigurationItem2 = new FontConfigurationItem();
+		fontConfigurationItem2.tileSizeMin = 13;
+		fontConfigurationItem2.smallFontClassPath = "inc/bezdelniki/snakegame/resources/sf16";
+		fontConfigurationItem2.regularInfoClassPath = "inc/bezdelniki/snakegame/resources/f16";
+		fontConfiguration.configurationItems.add(fontConfigurationItem2);
+		
 		bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 		bind(IAppSettingsService.class).to(AppSettingsService.class).in(Singleton.class);
 		bind(IRuntimeParamsService.class).to(RuntimeParamsService.class).in(Singleton.class);

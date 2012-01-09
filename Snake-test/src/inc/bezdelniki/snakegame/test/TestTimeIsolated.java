@@ -18,6 +18,7 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.score.ScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
@@ -46,6 +47,9 @@ public class TestTimeIsolated
 		@Override
 		protected void configure()
 		{
+			RuntimeParams runtimeParams = new RuntimeParams();
+			bind(RuntimeParams.class).toInstance(runtimeParams);
+			
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
@@ -98,11 +102,12 @@ public class TestTimeIsolated
 
 		IGameWorldService worldService = _testInjectorInstance.getInstance(IGameWorldService.class);
 		worldService.initGameWorld();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 
 		reset(_mockedTimeService);
-		expect(_mockedTimeService.getNanoStamp()).andReturn((long) worldService.getRuntimeParams().snakesMovementNanoInterval);
-		expect(_mockedTimeService.getNanoStamp()).andReturn((long) worldService.getRuntimeParams().snakesMovementNanoInterval);
-		expect(_mockedTimeService.getNanoStamp()).andReturn((long) (worldService.getRuntimeParams().snakesMovementNanoInterval * 1.5));
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) runtimeParams.snakesMovementNanoInterval);
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) runtimeParams.snakesMovementNanoInterval);
+		expect(_mockedTimeService.getNanoStamp()).andReturn((long) (runtimeParams.snakesMovementNanoInterval * 1.5));
 		replay(_mockedTimeService);
 
 		WorldPosition headPosition = (WorldPosition) worldService.getGameWorld().snake.headPosition.clone();

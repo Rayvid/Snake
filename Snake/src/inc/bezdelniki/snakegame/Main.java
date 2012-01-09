@@ -66,11 +66,11 @@ public class Main implements ApplicationListener
 
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
-		RuntimeParams runtimeParams = gameWorldService.getRuntimeParams();
+		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
 
 		if (inputService.isThereTouchInEffect())
 		{
-			SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords(), runtimeParams.layoutParams);
+			SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
 
 			if (movementChange != null)
 			{
@@ -98,9 +98,9 @@ public class Main implements ApplicationListener
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		_batch.begin();
-		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch, runtimeParams.layoutParams);
+		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.presentAllLyingItems(_batch);
-		scoreService.presentScore(_batch, gameWorldService.getScore(), runtimeParams.layoutParams);
+		scoreService.presentScore(_batch, gameWorldService.getScore());
 		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 		_batch.end();
 	}

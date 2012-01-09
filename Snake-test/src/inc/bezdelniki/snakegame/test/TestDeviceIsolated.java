@@ -20,7 +20,6 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.SnakeService;
@@ -66,7 +65,10 @@ public class TestDeviceIsolated
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
 		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 
 		Snake snake = snakeService.createSnake();
@@ -81,15 +83,15 @@ public class TestDeviceIsolated
 
 		systemParamsService.newResolutionWereSet(480, 315);
 		SystemParams systemParameters = systemParamsService.getSystemParams();
-		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
-		DeviceCoords headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition, runtimeParams.layoutParams);
-		DeviceCoords toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight, runtimeParams.layoutParams);
-		DeviceCoords toTheLeftCoords = deviceService.WorldPositionToDeviceCoords(toTheLeft, runtimeParams.layoutParams);
-		DeviceCoords upCoords = deviceService.WorldPositionToDeviceCoords(up, runtimeParams.layoutParams);
-		DeviceCoords downCoords = deviceService.WorldPositionToDeviceCoords(down, runtimeParams.layoutParams);
+		DeviceCoords headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition);
+		DeviceCoords toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight);
+		DeviceCoords toTheLeftCoords = deviceService.WorldPositionToDeviceCoords(toTheLeft);
+		DeviceCoords upCoords = deviceService.WorldPositionToDeviceCoords(up);
+		DeviceCoords downCoords = deviceService.WorldPositionToDeviceCoords(down);
 
-		int tileSize = deviceService.getTileSize(runtimeParams.layoutParams);
+		int tileSize = deviceService.getTileSize();
 
 		assertTrue(toTheRightCoords.x > -systemParameters.width
 				&& toTheRightCoords.x < systemParameters.width
@@ -122,16 +124,15 @@ public class TestDeviceIsolated
 
 		systemParamsService.newResolutionWereSet(315, 480);
 		systemParameters = systemParamsService.getSystemParams();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
-		runtimeParams = runtimeParamsService.createParamsForNewGame();
+		headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition);
+		toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight);
+		toTheLeftCoords = deviceService.WorldPositionToDeviceCoords(toTheLeft);
+		upCoords = deviceService.WorldPositionToDeviceCoords(up);
+		downCoords = deviceService.WorldPositionToDeviceCoords(down);
 
-		headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition, runtimeParams.layoutParams);
-		toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight, runtimeParams.layoutParams);
-		toTheLeftCoords = deviceService.WorldPositionToDeviceCoords(toTheLeft, runtimeParams.layoutParams);
-		upCoords = deviceService.WorldPositionToDeviceCoords(up, runtimeParams.layoutParams);
-		downCoords = deviceService.WorldPositionToDeviceCoords(down, runtimeParams.layoutParams);
-
-		tileSize = deviceService.getTileSize(runtimeParams.layoutParams);
+		tileSize = deviceService.getTileSize();
 
 		assertTrue(toTheRightCoords.x > -systemParameters.width
 				&& toTheRightCoords.x < systemParameters.width
@@ -168,7 +169,10 @@ public class TestDeviceIsolated
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+		
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+		
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
 		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 
@@ -183,43 +187,37 @@ public class TestDeviceIsolated
 		down.tileY++;
 
 		systemParamsService.newResolutionWereSet(480, 315);
-		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
-		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(
-				deviceService.WorldPositionToDeviceCoords(toTheRight, runtimeParams.layoutParams), runtimeParams.layoutParams)));
-		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft, runtimeParams.layoutParams),
-				runtimeParams.layoutParams)));
-		assertTrue(up.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(up, runtimeParams.layoutParams),
-				runtimeParams.layoutParams)));
-		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down, runtimeParams.layoutParams),
-				runtimeParams.layoutParams)));
+		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
+		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
+		assertTrue(up.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(up))));
+		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down))));
 
 		systemParamsService.newResolutionWereSet(315, 480);
-		runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
-		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(
-				deviceService.WorldPositionToDeviceCoords(toTheRight, runtimeParams.layoutParams), runtimeParams.layoutParams)));
-		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft, runtimeParams.layoutParams),
-				runtimeParams.layoutParams)));
-		assertTrue(up.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(up, runtimeParams.layoutParams),
-				runtimeParams.layoutParams)));
-		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down, runtimeParams.layoutParams),
-				runtimeParams.layoutParams)));
+		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
+		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
+		assertTrue(up.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(up))));
+		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down))));
 	}
 
 	@Test
 	public void testIfBiggerDimensionHasBeenChoosenAsHorizontal()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
-		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 
-		systemParametersService.newResolutionWereSet(480, 315);
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
+		systemParamsService.newResolutionWereSet(480, 315);
 		DeviceDeltas deltas = deviceService.getDeltas();
 		assertTrue(deltas.deltaDeviceYForWorldX == 0 && deltas.deltaDeviceXForWorldX != 0 && deltas.deltaDeviceXForWorldY == 0
 				&& deltas.deltaDeviceYForWorldY != 0);
 
-		systemParametersService.newResolutionWereSet(315, 480);
+		systemParamsService.newResolutionWereSet(315, 480);
 		deltas = deviceService.getDeltas();
 		assertTrue(deltas.deltaDeviceYForWorldX != 0 && deltas.deltaDeviceXForWorldX == 0 && deltas.deltaDeviceXForWorldY != 0
 				&& deltas.deltaDeviceYForWorldY == 0);
@@ -229,12 +227,13 @@ public class TestDeviceIsolated
 	public void testIfTileSizeIsOptimal()
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
-		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 
-		LayoutParams zeroPaddingLayout = new LayoutParams();
-		int tileSize = deviceService.getTileSize(zeroPaddingLayout);
-		SystemParams systemParameters = systemParametersService.getSystemParams();
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
+		int tileSize = deviceService.getTileSize();
+		SystemParams systemParameters = systemParamsService.getSystemParams();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize
@@ -250,9 +249,9 @@ public class TestDeviceIsolated
 				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
 				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
 
-		systemParametersService.newResolutionWereSet(200, 100);
-		tileSize = deviceService.getTileSize(zeroPaddingLayout);
-		systemParameters = systemParametersService.getSystemParams();
+		systemParamsService.newResolutionWereSet(200, 100);
+		tileSize = deviceService.getTileSize();
+		systemParameters = systemParamsService.getSystemParams();
 		appSettings = appSettingsService.getAppSettings();
 
 		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize
@@ -268,9 +267,9 @@ public class TestDeviceIsolated
 				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
 				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
 
-		systemParametersService.newResolutionWereSet(1000, 2000);
-		tileSize = deviceService.getTileSize(zeroPaddingLayout);
-		systemParameters = systemParametersService.getSystemParams();
+		systemParamsService.newResolutionWereSet(1000, 2000);
+		tileSize = deviceService.getTileSize();
+		systemParameters = systemParamsService.getSystemParams();
 		appSettings = appSettingsService.getAppSettings();
 
 		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize
@@ -290,13 +289,15 @@ public class TestDeviceIsolated
 	@Test
 	public void testIfWeGetSameResolutionConvertingTouchCoordsToDeviceCoords()
 	{
-		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 
-		systemParametersService.newResolutionWereSet(480, 315);
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
 
-		SystemParams systemParameters = systemParametersService.getSystemParams();
+		systemParamsService.newResolutionWereSet(480, 315);
+
+		SystemParams systemParameters = systemParamsService.getSystemParams();
 		TouchCoords upperLeftT = new TouchCoords(0, 0);
 		TouchCoords upperRightT = new TouchCoords(systemParameters.width, 0);
 		TouchCoords bottomLeftT = new TouchCoords(0, systemParameters.height);
@@ -310,9 +311,9 @@ public class TestDeviceIsolated
 		assertTrue(upperLeftT.x + upperRightT.x + bottomLeftT.x + bottomRightT.x == upperLeftD.x + upperRightD.x + bottomLeftD.x + bottomRightD.x);
 		assertTrue(upperLeftT.y + upperRightT.y + bottomLeftT.y + bottomRightT.y == upperLeftD.y + upperRightD.y + bottomLeftD.y + bottomRightD.y);
 
-		systemParametersService.newResolutionWereSet(315, 480);
+		systemParamsService.newResolutionWereSet(315, 480);
 
-		systemParameters = systemParametersService.getSystemParams();
+		systemParameters = systemParamsService.getSystemParams();
 		upperLeftT = new TouchCoords(0, 0);
 		upperRightT = new TouchCoords(systemParameters.width, 0);
 		bottomLeftT = new TouchCoords(0, systemParameters.height);
@@ -330,13 +331,15 @@ public class TestDeviceIsolated
 	@Test
 	public void testIfWeGetSameResultConvertingDeviceCoordsToTouchCoordsAndBack()
 	{
-		ISystemParamsService systemParametersService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		IDeviceService deviceService = new DeviceService(systemParametersService, appSettingsService);
 
-		systemParametersService.newResolutionWereSet(480, 315);
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
 
-		SystemParams systemParameters = systemParametersService.getSystemParams();
+		systemParamsService.newResolutionWereSet(480, 315);
+
+		SystemParams systemParameters = systemParamsService.getSystemParams();
 		DeviceCoords upperLeftD = new DeviceCoords(0, 0);
 		DeviceCoords upperRightD = new DeviceCoords(systemParameters.width, 0);
 		DeviceCoords bottomLeftD = new DeviceCoords(0, systemParameters.height);
@@ -357,9 +360,9 @@ public class TestDeviceIsolated
 		assertTrue(bottomLeftD.x == bottomLeftDD.x && bottomLeftD.y == bottomLeftDD.y);
 		assertTrue(bottomRightD.x == bottomRightDD.x && bottomRightD.y == bottomRightDD.y);
 
-		systemParametersService.newResolutionWereSet(315, 480);
+		systemParamsService.newResolutionWereSet(315, 480);
 
-		systemParameters = systemParametersService.getSystemParams();
+		systemParameters = systemParamsService.getSystemParams();
 		upperLeftD = new DeviceCoords(0, 0);
 		upperRightD = new DeviceCoords(systemParameters.width, 0);
 		bottomLeftD = new DeviceCoords(0, systemParameters.height);
@@ -386,7 +389,10 @@ public class TestDeviceIsolated
 	{
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
 		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 
 		systemParamsService.newResolutionWereSet(480, 315);
@@ -395,16 +401,16 @@ public class TestDeviceIsolated
 		DeviceCoords deviceCoordsOutsidePositive = new DeviceCoords(systemParamsService.getSystemParams().width + 100,
 				systemParamsService.getSystemParams().height + 100);
 
-		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
-		WorldPosition negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative, runtimeParams.layoutParams);
-		WorldPosition positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive, runtimeParams.layoutParams);
-		DeviceCoords negativeD = deviceService.WorldPositionToDeviceCoords(negative, runtimeParams.layoutParams);
-		DeviceCoords positiveD = deviceService.WorldPositionToDeviceCoords(positive, runtimeParams.layoutParams);
-		assertTrue(negativeD.x <= deviceService.getTileSize(runtimeParams.layoutParams)
-				&& negativeD.y <= deviceService.getTileSize(runtimeParams.layoutParams));
-		assertTrue(positiveD.x >= 480 - deviceService.getTileSize(runtimeParams.layoutParams)
-				&& positiveD.y >= 315 - deviceService.getTileSize(runtimeParams.layoutParams));
+		WorldPosition negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative);
+		WorldPosition positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive);
+		DeviceCoords negativeD = deviceService.WorldPositionToDeviceCoords(negative);
+		DeviceCoords positiveD = deviceService.WorldPositionToDeviceCoords(positive);
+		assertTrue(negativeD.x <= deviceService.getTileSize()
+				&& negativeD.y <= deviceService.getTileSize());
+		assertTrue(positiveD.x >= 480 - deviceService.getTileSize()
+				&& positiveD.y >= 315 - deviceService.getTileSize());
 
 		systemParamsService.newResolutionWereSet(315, 480);
 
@@ -412,16 +418,16 @@ public class TestDeviceIsolated
 		deviceCoordsOutsidePositive = new DeviceCoords(systemParamsService.getSystemParams().width + 100,
 				systemParamsService.getSystemParams().height + 100);
 
-		runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
-		negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative, runtimeParams.layoutParams);
-		positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive, runtimeParams.layoutParams);
-		negativeD = deviceService.WorldPositionToDeviceCoords(negative, runtimeParams.layoutParams);
-		positiveD = deviceService.WorldPositionToDeviceCoords(positive, runtimeParams.layoutParams);
-		assertTrue(negativeD.x <= deviceService.getTileSize(runtimeParams.layoutParams)
-				&& negativeD.y <= deviceService.getTileSize(runtimeParams.layoutParams));
-		assertTrue(positiveD.x >= 315 - deviceService.getTileSize(runtimeParams.layoutParams)
-				&& positiveD.y >= 480 - deviceService.getTileSize(runtimeParams.layoutParams));
+		negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative);
+		positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive);
+		negativeD = deviceService.WorldPositionToDeviceCoords(negative);
+		positiveD = deviceService.WorldPositionToDeviceCoords(positive);
+		assertTrue(negativeD.x <= deviceService.getTileSize()
+				&& negativeD.y <= deviceService.getTileSize());
+		assertTrue(positiveD.x >= 315 - deviceService.getTileSize()
+				&& positiveD.y >= 480 - deviceService.getTileSize());
 	}
 
 	@Test
@@ -429,7 +435,10 @@ public class TestDeviceIsolated
 	{
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
 		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 
 		AppSettings appSettings = appSettingsService.getAppSettings();
@@ -437,15 +446,13 @@ public class TestDeviceIsolated
 		systemParamsService.newResolutionWereSet(480, 315);
 
 		SystemParams systemParams = systemParamsService.getSystemParams();
-		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
-		int tileSize = deviceService.getTileSize(runtimeParams.layoutParams);
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
+		int tileSize = deviceService.getTileSize();
 
-		DeviceCoords topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0), runtimeParams.layoutParams);
-		DeviceCoords topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0), runtimeParams.layoutParams);
-		DeviceCoords bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1), runtimeParams.layoutParams);
-		DeviceCoords bottomRight = deviceService.WorldPositionToDeviceCoords(
-				new WorldPosition(appSettings.tilesHorizontally - 1, appSettings.tilesVertically - 1),
-				runtimeParams.layoutParams);
+		DeviceCoords topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0));
+		DeviceCoords topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0));
+		DeviceCoords bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1));
+		DeviceCoords bottomRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, appSettings.tilesVertically - 1));
 
 		assertTrue(topLeft.x + topRight.x + bottomLeft.x + bottomRight.x == runtimeParams.layoutParams.gameBoxPaddingLeft * 2
 				+ (systemParams.width - tileSize - runtimeParams.layoutParams.gameBoxPaddingRight) * 2
@@ -468,15 +475,13 @@ public class TestDeviceIsolated
 		systemParamsService.newResolutionWereSet(315, 480);
 
 		systemParams = systemParamsService.getSystemParams();
-		runtimeParams = runtimeParamsService.createParamsForNewGame();
-		tileSize = deviceService.getTileSize(runtimeParams.layoutParams);
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
+		tileSize = deviceService.getTileSize();
 
-		topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0), runtimeParams.layoutParams);
-		topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0), runtimeParams.layoutParams);
-		bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1), runtimeParams.layoutParams);
-		bottomRight = deviceService.WorldPositionToDeviceCoords(
-				new WorldPosition(appSettings.tilesHorizontally - 1, appSettings.tilesVertically - 1),
-				runtimeParams.layoutParams);
+		topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0));
+		topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0));
+		bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1));
+		bottomRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, appSettings.tilesVertically - 1));
 
 		assertTrue(topLeft.x + topRight.x + bottomLeft.x + bottomRight.x == runtimeParams.layoutParams.gameBoxPaddingLeft * 2
 				+ (systemParams.width - tileSize - runtimeParams.layoutParams.gameBoxPaddingRight) * 2

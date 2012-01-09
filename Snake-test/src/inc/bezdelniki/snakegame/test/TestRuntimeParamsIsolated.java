@@ -45,6 +45,9 @@ public class TestRuntimeParamsIsolated
 		@Override
 		protected void configure()
 		{
+			RuntimeParams runtimeParams = new RuntimeParams();
+			bind(RuntimeParams.class).toInstance(runtimeParams);
+			
 			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
 			bind(IAppSettingsService.class).to(AppSettingsService.class);
 			bind(IDeviceService.class).to(DeviceService.class);
@@ -67,12 +70,10 @@ public class TestRuntimeParamsIsolated
 	}
 	
 	@Test
-	public void testIfInitGameWorldCallsCreateRuntimeParameters4NewGameUnderTheHood()
+	public void testIfInitGameWorldCallsCreateParamsForNewGameUsingConfiguredInstance()
 	{
-		RuntimeParams mockedReturn;
-		mockedReturn = new RuntimeParams();
-		
-		expect(_mockedRuntimeParamsService.createParamsForNewGame()).andReturn(mockedReturn);
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		_mockedRuntimeParamsService.initParamsForNewGame(runtimeParams);
 		replay(_mockedRuntimeParamsService);
 		
 		GameWorldService worldService = (GameWorldService) _testInjectorInstance.getInstance(IGameWorldService.class);
@@ -81,44 +82,30 @@ public class TestRuntimeParamsIsolated
 	}
 	
 	@Test
-	public void testIfRuntimeParams4NewGameDependsOnScreenResolution()
-	{	
-		IAppSettingsService appSettingsService = new AppSettingsService();
-		ISystemParamsService systemParamsService = new SystemParamsService(appSettingsService);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
-		RuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
-		
-		systemParamsService.newResolutionWereSet(480, 315);
-		RuntimeParams runtimeParams1 = runtimeParamsService.createParamsForNewGame();
-		
-		systemParamsService.newResolutionWereSet(3150, 4800);
-		RuntimeParams runtimeParams2 = runtimeParamsService.createParamsForNewGame();
-		
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingTop < runtimeParams2.layoutParams.gameBoxPaddingTop);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingLeft < runtimeParams2.layoutParams.gameBoxPaddingLeft);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingRight < runtimeParams2.layoutParams.gameBoxPaddingRight);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
-	}
-	
-	@Test
 	public void testIfAdjustLayoutParamsDependsOnScreenResolution()
 	{	
 		IAppSettingsService appSettingsService = new AppSettingsService();
 		ISystemParamsService systemParamsService = new SystemParamsService(appSettingsService);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+		
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+		
 		RuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 		
 		systemParamsService.newResolutionWereSet(480, 315);
-		RuntimeParams runtimeParams1 = runtimeParamsService.createParamsForNewGame();
-		RuntimeParams runtimeParams2 = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
+		int oldGameBoxPaddingTop = runtimeParams.layoutParams.gameBoxPaddingTop;
+		int oldGameBoxPaddingLeft = runtimeParams.layoutParams.gameBoxPaddingLeft;
+		int oldGameBoxPaddingRight = runtimeParams.layoutParams.gameBoxPaddingRight;
+		int oldGameBoxPaddingBottom = runtimeParams.layoutParams.gameBoxPaddingBottom;
 		
 		systemParamsService.newResolutionWereSet(3150, 4800);
-		runtimeParamsService.adjustLayoutParams(runtimeParams2);
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 		
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingTop < runtimeParams2.layoutParams.gameBoxPaddingTop);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingLeft < runtimeParams2.layoutParams.gameBoxPaddingLeft);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingRight < runtimeParams2.layoutParams.gameBoxPaddingRight);
-		assertTrue(runtimeParams1.layoutParams.gameBoxPaddingBottom < runtimeParams2.layoutParams.gameBoxPaddingBottom);
+		assertTrue(oldGameBoxPaddingTop < runtimeParams.layoutParams.gameBoxPaddingTop);
+		assertTrue(oldGameBoxPaddingLeft < runtimeParams.layoutParams.gameBoxPaddingLeft);
+		assertTrue(oldGameBoxPaddingRight < runtimeParams.layoutParams.gameBoxPaddingRight);
+		assertTrue(oldGameBoxPaddingBottom < runtimeParams.layoutParams.gameBoxPaddingBottom);
 	}
 	
 	@Test
@@ -126,19 +113,22 @@ public class TestRuntimeParamsIsolated
 	{
 		IAppSettingsService appSettingsService = new AppSettingsService();
 		ISystemParamsService systemParamsService = new SystemParamsService(appSettingsService);
-		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService);
+
+		RuntimeParams runtimeParams = new RuntimeParams();
+		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
 		RuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
 	
 		systemParamsService.newResolutionWereSet(480, 315);
 		SystemParams systemParams = systemParamsService.getSystemParams();
-		RuntimeParams runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 		
 		assertTrue(systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop / 2 < runtimeParams.layoutParams.scoreCoords.y);
 		assertTrue(systemParams.height > runtimeParams.layoutParams.scoreCoords.y);
 		
 		systemParamsService.newResolutionWereSet(3150, 4800);
 		systemParams = systemParamsService.getSystemParams();
-		runtimeParams = runtimeParamsService.createParamsForNewGame();
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
 		
 		assertTrue(systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop / 2 < runtimeParams.layoutParams.scoreCoords.y);
 		assertTrue(systemParams.height > runtimeParams.layoutParams.scoreCoords.y);

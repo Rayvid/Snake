@@ -47,7 +47,8 @@ public class GameWorldService implements IGameWorldService
 			ILyingItemService lyingItemsService,
 			IPresentationService presentationService,
 			IRuntimeParamsService runtimeParamsService,
-			IScoreService scoreService)
+			IScoreService scoreService,
+			RuntimeParams runtimeParams)
 	{
 		_appSettingsService = appSettingsService;
 		_snakeService = snakeService;
@@ -56,6 +57,8 @@ public class GameWorldService implements IGameWorldService
 		_presentationService = presentationService;
 		_runtimeParamsService = runtimeParamsService;
 		_scoreService = scoreService;
+		
+		_runtimeParams = runtimeParams;
 	}
 
 	@Override
@@ -68,19 +71,13 @@ public class GameWorldService implements IGameWorldService
 		_gameWorld.movementChangesInEffect = new ArrayList<SnakeMovementChange>();
 		_gameWorld.lastSnakesMovementNanoTimestamp = _timeService.getNanoStamp();
 		
-		_runtimeParams = _runtimeParamsService.createParamsForNewGame();
+		_runtimeParamsService.initParamsForNewGame(_runtimeParams);
 	}
 
 	@Override
 	public GameWorld getGameWorld()
 	{
 		return _gameWorld;
-	}
-	
-	@Override
-	public RuntimeParams getRuntimeParams()
-	{
-		return _runtimeParams;
 	}
 	
 	@Override
@@ -264,7 +261,7 @@ public class GameWorldService implements IGameWorldService
 	{
 		for (LyingItem item : _gameWorld.lyingItems)
 		{
-			_presentationService.presentLyingItem(batch, item, _runtimeParams.layoutParams);
+			_presentationService.presentLyingItem(batch, item);
 		}
 	}
 
