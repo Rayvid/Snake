@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.device.DeviceService;
@@ -13,50 +12,30 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.device.dtos.DeviceDeltas;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
-import inc.bezdelniki.snakegame.font.FontService;
-import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
-import inc.bezdelniki.snakegame.presentation.IPresentationService;
-import inc.bezdelniki.snakegame.presentation.PresentationService;
-import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
-import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
-import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
-import inc.bezdelniki.snakegame.systemparameters.SystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
+import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 
 public class TestDeviceIsolated
 {
 	private Injector _testInjectorInstance;
 	private IDeviceService _mockedDeviceService;
 
-	private class TestDeviceBindingsConfiguration extends AbstractModule
-	{
-		@Override
-		protected void configure()
-		{
-			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
-			bind(IAppSettingsService.class).to(AppSettingsService.class);
-			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
-			bind(IFontService.class).to(FontService.class);
-			bind(IPresentationService.class).to(PresentationService.class);
-			bind(ISnakeService.class).to(SnakeService.class);
-			bind(IDeviceService.class).toInstance(_mockedDeviceService);
-		}
-	}
-
 	public TestDeviceIsolated()
 	{
 		_mockedDeviceService = createNiceMock(IDeviceService.class);
-		_testInjectorInstance = Guice.createInjector(new TestDeviceBindingsConfiguration());
+		_testInjectorInstance = Guice.createInjector(
+				BindingsConfigurationFactory.BuildDefaultBindingsConfiguration(
+						IDeviceService.class,
+						_mockedDeviceService,
+						IDeviceService.class));
 	}
 
 	@Test
@@ -66,10 +45,12 @@ public class TestDeviceIsolated
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
 
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		Snake snake = snakeService.createSnake();
 		WorldPosition toTheRight = (WorldPosition) snake.headPosition.clone();
@@ -83,7 +64,6 @@ public class TestDeviceIsolated
 
 		systemParamsService.newResolutionWereSet(480, 315);
 		SystemParams systemParameters = systemParamsService.getSystemParams();
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
 		DeviceCoords headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition);
 		DeviceCoords toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight);
@@ -124,7 +104,6 @@ public class TestDeviceIsolated
 
 		systemParamsService.newResolutionWereSet(315, 480);
 		systemParameters = systemParamsService.getSystemParams();
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
 		headCoords = deviceService.WorldPositionToDeviceCoords(snake.headPosition);
 		toTheRightCoords = deviceService.WorldPositionToDeviceCoords(toTheRight);
@@ -169,12 +148,15 @@ public class TestDeviceIsolated
 	{
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
-		
-		RuntimeParams runtimeParams = new RuntimeParams();
+
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
-		
+
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
+
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		Snake snake = snakeService.createSnake();
 		WorldPosition toTheRight = (WorldPosition) snake.headPosition.clone();
@@ -187,7 +169,6 @@ public class TestDeviceIsolated
 		down.tileY++;
 
 		systemParamsService.newResolutionWereSet(480, 315);
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
 		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
 		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
@@ -195,7 +176,6 @@ public class TestDeviceIsolated
 		assertTrue(down.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(down))));
 
 		systemParamsService.newResolutionWereSet(315, 480);
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
 		assertTrue(toTheRight.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheRight))));
 		assertTrue(toTheLeft.equals(deviceService.DeviceCoordsToWorldPosition(deviceService.WorldPositionToDeviceCoords(toTheLeft))));
@@ -209,8 +189,12 @@ public class TestDeviceIsolated
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		systemParamsService.newResolutionWereSet(480, 315);
 		DeviceDeltas deltas = deviceService.getDeltas();
@@ -229,61 +213,56 @@ public class TestDeviceIsolated
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
 
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
+
+		systemParamsService.newResolutionWereSet(315, 540);
 		int tileSize = deviceService.getTileSize();
 		SystemParams systemParameters = systemParamsService.getSystemParams();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
-		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize
-				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0
-				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
-				|| systemParameters.width - tileSize * appSettings.tilesHorizontally < tileSize
-				&& systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0
-				&& systemParameters.height - tileSize * appSettings.tilesVertically >= 0
-				|| systemParameters.height - tileSize * appSettings.tilesVertically < tileSize
-				&& systemParameters.height - tileSize * appSettings.tilesVertically >= 0
-				&& systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0
-				|| systemParameters.width - tileSize * appSettings.tilesVertically < tileSize
-				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
-				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
+		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop
+				&& systemParameters.height - tileSize * appSettings.tilesHorizontally
+				>= runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop
+				&& systemParameters.width - tileSize * appSettings.tilesVertically
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				&& systemParameters.width - tileSize * appSettings.tilesVertically
+				>= runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				|| systemParameters.width - tileSize * appSettings.tilesHorizontally
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				&& systemParameters.width - tileSize * appSettings.tilesHorizontally
+				>= runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				&& systemParameters.height - tileSize * appSettings.tilesVertically
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop
+				&& systemParameters.height - tileSize * appSettings.tilesVertically
+				>= runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop);
 
-		systemParamsService.newResolutionWereSet(200, 100);
+		systemParamsService.newResolutionWereSet(540, 315);
 		tileSize = deviceService.getTileSize();
 		systemParameters = systemParamsService.getSystemParams();
 		appSettings = appSettingsService.getAppSettings();
 
-		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize
-				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0
-				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
-				|| systemParameters.width - tileSize * appSettings.tilesHorizontally < tileSize
-				&& systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0
-				&& systemParameters.height - tileSize * appSettings.tilesVertically >= 0
-				|| systemParameters.height - tileSize * appSettings.tilesVertically < tileSize
-				&& systemParameters.height - tileSize * appSettings.tilesVertically >= 0
-				&& systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0
-				|| systemParameters.width - tileSize * appSettings.tilesVertically < tileSize
-				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
-				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
-
-		systemParamsService.newResolutionWereSet(1000, 2000);
-		tileSize = deviceService.getTileSize();
-		systemParameters = systemParamsService.getSystemParams();
-		appSettings = appSettingsService.getAppSettings();
-
-		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally < tileSize
-				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0
-				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
-				|| systemParameters.width - tileSize * appSettings.tilesHorizontally < tileSize
-				&& systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0
-				&& systemParameters.height - tileSize * appSettings.tilesVertically >= 0
-				|| systemParameters.height - tileSize * appSettings.tilesVertically < tileSize
-				&& systemParameters.height - tileSize * appSettings.tilesVertically >= 0
-				&& systemParameters.width - tileSize * appSettings.tilesHorizontally >= 0
-				|| systemParameters.width - tileSize * appSettings.tilesVertically < tileSize
-				&& systemParameters.width - tileSize * appSettings.tilesVertically >= 0
-				&& systemParameters.height - tileSize * appSettings.tilesHorizontally >= 0);
+		assertTrue(systemParameters.height - tileSize * appSettings.tilesHorizontally
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop
+				&& systemParameters.height - tileSize * appSettings.tilesHorizontally
+				>= runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop
+				&& systemParameters.width - tileSize * appSettings.tilesVertically
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				&& systemParameters.width - tileSize * appSettings.tilesVertically
+				>= runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				|| systemParameters.width - tileSize * appSettings.tilesHorizontally
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				&& systemParameters.width - tileSize * appSettings.tilesHorizontally
+				>= runtimeParams.layoutParams.gameBoxPaddingLeft + runtimeParams.layoutParams.gameBoxPaddingRight
+				&& systemParameters.height - tileSize * appSettings.tilesVertically
+				< tileSize + runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop
+				&& systemParameters.height - tileSize * appSettings.tilesVertically
+				>= runtimeParams.layoutParams.gameBoxPaddingBottom + runtimeParams.layoutParams.gameBoxPaddingTop);
 	}
 
 	@Test
@@ -292,8 +271,12 @@ public class TestDeviceIsolated
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		systemParamsService.newResolutionWereSet(480, 315);
 
@@ -334,8 +317,12 @@ public class TestDeviceIsolated
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
+
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		systemParamsService.newResolutionWereSet(480, 315);
 
@@ -390,18 +377,18 @@ public class TestDeviceIsolated
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
 
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		systemParamsService.newResolutionWereSet(480, 315);
 
 		DeviceCoords deviceCoordsOutsideNegative = new DeviceCoords(-100, -100);
 		DeviceCoords deviceCoordsOutsidePositive = new DeviceCoords(systemParamsService.getSystemParams().width + 100,
 				systemParamsService.getSystemParams().height + 100);
-
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
 		WorldPosition negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative);
 		WorldPosition positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive);
@@ -417,8 +404,6 @@ public class TestDeviceIsolated
 		deviceCoordsOutsideNegative = new DeviceCoords(-100, -100);
 		deviceCoordsOutsidePositive = new DeviceCoords(systemParamsService.getSystemParams().width + 100,
 				systemParamsService.getSystemParams().height + 100);
-
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 
 		negative = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsideNegative);
 		positive = deviceService.DeviceCoordsToWorldPosition(deviceCoordsOutsidePositive);
@@ -436,23 +421,25 @@ public class TestDeviceIsolated
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 
-		RuntimeParams runtimeParams = new RuntimeParams();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IDeviceService deviceService = new DeviceService(systemParamsService, appSettingsService, runtimeParams);
 
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(systemParamsService, appSettingsService, deviceService);
+		_mockedDeviceService.getTileSize();
+		expectLastCall().andDelegateTo(deviceService).anyTimes();
+		replay(_mockedDeviceService);
 
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		systemParamsService.newResolutionWereSet(480, 315);
 
 		SystemParams systemParams = systemParamsService.getSystemParams();
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 		int tileSize = deviceService.getTileSize();
 
 		DeviceCoords topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0));
 		DeviceCoords topRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, 0));
 		DeviceCoords bottomLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, appSettings.tilesVertically - 1));
-		DeviceCoords bottomRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1, appSettings.tilesVertically - 1));
+		DeviceCoords bottomRight = deviceService.WorldPositionToDeviceCoords(new WorldPosition(appSettings.tilesHorizontally - 1,
+				appSettings.tilesVertically - 1));
 
 		assertTrue(topLeft.x + topRight.x + bottomLeft.x + bottomRight.x == runtimeParams.layoutParams.gameBoxPaddingLeft * 2
 				+ (systemParams.width - tileSize - runtimeParams.layoutParams.gameBoxPaddingRight) * 2
@@ -475,7 +462,6 @@ public class TestDeviceIsolated
 		systemParamsService.newResolutionWereSet(315, 480);
 
 		systemParams = systemParamsService.getSystemParams();
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
 		tileSize = deviceService.getTileSize();
 
 		topLeft = deviceService.WorldPositionToDeviceCoords(new WorldPosition(0, 0));

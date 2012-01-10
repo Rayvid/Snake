@@ -6,18 +6,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 
-import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
-import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
-import inc.bezdelniki.snakegame.device.DeviceService;
-import inc.bezdelniki.snakegame.device.IDeviceService;
-import inc.bezdelniki.snakegame.font.FontService;
-import inc.bezdelniki.snakegame.font.IFontService;
-import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceException;
@@ -25,48 +16,21 @@ import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.LyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
-import inc.bezdelniki.snakegame.presentation.IPresentationService;
-import inc.bezdelniki.snakegame.presentation.PresentationService;
-import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
-import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
-import inc.bezdelniki.snakegame.score.IScoreService;
-import inc.bezdelniki.snakegame.score.ScoreService;
-import inc.bezdelniki.snakegame.snake.ISnakeService;
-import inc.bezdelniki.snakegame.snake.SnakeService;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
-import inc.bezdelniki.snakegame.systemparameters.SystemParamsService;
-import inc.bezdelniki.snakegame.time.ITimeService;
-import inc.bezdelniki.snakegame.time.TimeService;
+import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 
 public class TestLyingItemsIsolated
 {
 	private Injector _testInjectorInstance;
 	private ILyingItemService _mockedLyingItemService;
 
-	private class TestLyingItemsBindingsConfiguration extends AbstractModule
-	{
-		@Override
-		protected void configure()
-		{
-			bind(ISystemParamsService.class).to(SystemParamsService.class).in(Singleton.class);
-			bind(IAppSettingsService.class).to(AppSettingsService.class);
-			bind(IRuntimeParamsService.class).to(RuntimeParamsService.class);
-			bind(IDeviceService.class).to(DeviceService.class);
-			bind(ITimeService.class).to(TimeService.class);
-			bind(ISnakeService.class).to(SnakeService.class);
-			bind(IFontService.class).to(FontService.class);
-			bind(IPresentationService.class).to(PresentationService.class);
-			bind(IScoreService.class).to(ScoreService.class);
-			bind(IGameWorldService.class).to(GameWorldService.class);
-
-			bind(ILyingItemService.class).toInstance(_mockedLyingItemService);
-		}
-	}
-
 	public TestLyingItemsIsolated()
 	{
 		_mockedLyingItemService = createMock(ILyingItemService.class);
-		_testInjectorInstance = Guice.createInjector(new TestLyingItemsBindingsConfiguration());
+		_testInjectorInstance = Guice.createInjector(
+				BindingsConfigurationFactory.BuildDefaultBindingsConfiguration(
+						ILyingItemService.class,
+						_mockedLyingItemService,
+						ILyingItemService.class));
 	}
 	
 	@Test

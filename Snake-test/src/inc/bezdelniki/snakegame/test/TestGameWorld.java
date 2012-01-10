@@ -17,11 +17,9 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 
 public class TestGameWorld
 {
@@ -128,30 +126,5 @@ public class TestGameWorld
 		{
 			gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
 		}
-	}
-	
-	@Test
-	public void testIfRuntimeParamsAreUpdatedWhenSystemParamsChanges()
-	{
-		ISystemParamsService systemParamsService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-		gameWorldService.initGameWorld();
-		
-		systemParamsService.newResolutionWereSet(480, 315);
-		gameWorldService.systemParamsCanBeChanged();
-		
-		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
-		int gameBoxPaddingTop = runtimeParams.layoutParams.gameBoxPaddingTop;
-		int gameBoxPaddingBottom = runtimeParams.layoutParams.gameBoxPaddingBottom;
-		int gameBoxPaddingLeft = runtimeParams.layoutParams.gameBoxPaddingLeft;
-		int gameBoxPaddingRight = runtimeParams.layoutParams.gameBoxPaddingRight;
-		
-		systemParamsService.newResolutionWereSet(4800, 3150);
-		gameWorldService.systemParamsCanBeChanged();
-		
-		assertTrue(gameBoxPaddingTop < runtimeParams.layoutParams.gameBoxPaddingTop);
-		assertTrue(gameBoxPaddingLeft < runtimeParams.layoutParams.gameBoxPaddingLeft);
-		assertTrue(gameBoxPaddingRight < runtimeParams.layoutParams.gameBoxPaddingRight);
-		assertTrue(gameBoxPaddingBottom < runtimeParams.layoutParams.gameBoxPaddingBottom);
 	}
 }

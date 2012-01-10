@@ -72,6 +72,19 @@ public class PresentationService implements IPresentationService
 			_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 	}
+	
+	@Override
+	public void graphicContextCanBeLostResolutionCanBeChanged()
+	{
+		_smallFont = null;
+		_regularInfoFont = null;
+
+		_mainObjectsTexture = null;
+
+		_snakesHeadSprite = null;
+		_snakesBodySprite = null;
+		_appleSprite = null;
+	}
 
 	@Override
 	public void presentSnakesHead(SpriteBatch batch, WorldPosition position)
@@ -107,18 +120,6 @@ public class PresentationService implements IPresentationService
 		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position);
 		_appleSprite.setPosition(itemCoords.x, itemCoords.y);
 		_appleSprite.draw(batch);
-	}
-
-	@Override
-	public void graphicContextCanBeLost()
-	{
-		_regularInfoFont = null;
-
-		_mainObjectsTexture = null;
-
-		_snakesHeadSprite = null;
-		_snakesBodySprite = null;
-		_appleSprite = null;
 	}
 
 	@Override

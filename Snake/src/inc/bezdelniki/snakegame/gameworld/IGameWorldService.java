@@ -15,7 +15,6 @@ public interface IGameWorldService
 {
 	void initGameWorld();
 	GameWorld getGameWorld();
-	void systemParamsCanBeChanged();
 	void applySnakeMovementChange(SnakeMovementChange movementChange);
     void applyLyingItem(LyingItem lyingItem);
 	LyingItem createAndApplyLyingItemSomewhere(ItemType itemType) throws LyingItemNowhereToPlaceException;

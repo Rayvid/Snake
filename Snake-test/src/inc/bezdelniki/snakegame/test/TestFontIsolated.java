@@ -12,29 +12,25 @@ import inc.bezdelniki.snakegame.font.FontService;
 import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.font.configuration.FontConfiguration;
 import inc.bezdelniki.snakegame.font.configuration.FontConfigurationItem;
+import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class TestFontIsolated
 {
+	@SuppressWarnings("unused")
 	private Injector _testInjectorInstance;
 	private IFontService _mockedFontService;
-
-	private class TestLyingItemsBindingsConfiguration extends AbstractModule
-	{
-		@Override
-		protected void configure()
-		{
-			bind(IFontService.class).toInstance(_mockedFontService);
-		}
-	}
 
 	public TestFontIsolated()
 	{
 		_mockedFontService = createMock(IFontService.class);
-		_testInjectorInstance = Guice.createInjector(new TestLyingItemsBindingsConfiguration());
+		_testInjectorInstance = Guice.createInjector(
+				BindingsConfigurationFactory.BuildDefaultBindingsConfiguration(
+						IFontService.class,
+						_mockedFontService,
+						IFontService.class));
 	}
 	
 	@Test

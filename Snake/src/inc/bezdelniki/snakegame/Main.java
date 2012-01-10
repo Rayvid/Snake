@@ -1,6 +1,5 @@
 package inc.bezdelniki.snakegame;
 
-import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceException;
@@ -8,7 +7,6 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -20,24 +18,16 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Main implements ApplicationListener
 {
 	SpriteBatch _batch;
-	BitmapFont _font;
 
 	@Override
 	public void create()
 	{
-		if (_batch == null)	_batch = new SpriteBatch();
-		if (_font == null)
-		{
-			IFontService fontService = SnakeInjector.getInjectorInstance().getInstance(IFontService.class);
-			_font = fontService.getSmallFont();
-		}
-		
+		if (_batch == null)	_batch = new SpriteBatch();		
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		if (gameWorldService.getGameWorld() == null)
 		{
@@ -66,7 +56,6 @@ public class Main implements ApplicationListener
 
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
-		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
 
 		if (inputService.isThereTouchInEffect())
 		{
@@ -101,7 +90,6 @@ public class Main implements ApplicationListener
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.presentAllLyingItems(_batch);
 		scoreService.presentScore(_batch, gameWorldService.getScore());
-		_font.draw(_batch, new Double(Gdx.graphics.getFramesPerSecond()).toString(), 2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 		_batch.end();
 	}
 
@@ -111,11 +99,8 @@ public class Main implements ApplicationListener
 		ISystemParamsService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
 		systemParametersService.newResolutionWereSet(width, height);
 		
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-		gameWorldService.systemParamsCanBeChanged();
-		
 		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
-		presentationService.graphicContextCanBeLost();
+		presentationService.graphicContextCanBeLostResolutionCanBeChanged();
 	}
 
 	@Override

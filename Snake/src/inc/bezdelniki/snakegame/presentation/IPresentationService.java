@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface IPresentationService
 {
-	void graphicContextCanBeLost();
+	void graphicContextCanBeLostResolutionCanBeChanged();
 	void presentSnakesHead(SpriteBatch batch, WorldPosition position);
 	void presentSnakesBody(SpriteBatch batch, List<WorldPosition> snakesTrail, WorldPosition headPosition);
 	void presentLyingItem(SpriteBatch batch, LyingItem item);

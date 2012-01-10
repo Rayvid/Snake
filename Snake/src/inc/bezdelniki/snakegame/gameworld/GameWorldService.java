@@ -79,12 +79,6 @@ public class GameWorldService implements IGameWorldService
 	{
 		return _gameWorld;
 	}
-	
-	@Override
-	public void systemParamsCanBeChanged()
-	{
-		_runtimeParamsService.adjustLayoutParams(_runtimeParams);
-	}
 
 	@Override
 	public void applyLyingItem(LyingItem lyingItem)

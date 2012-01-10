@@ -4,18 +4,28 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
+import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public class SystemParamsService implements ISystemParamsService
 {
 	private int _width;
 	private int _height;
+	
 	private IAppSettingsService _appSettingsService;
+	private IRuntimeParamsService _runtimeParamsService;
+	private RuntimeParams _runtimeParams;
 
 	@Inject
-	public SystemParamsService(IAppSettingsService appSettingsService)
+	public SystemParamsService(
+			IAppSettingsService appSettingsService,
+			IRuntimeParamsService runtimeParamsService,
+			RuntimeParams runtimeParams)
 	{
 		_appSettingsService = appSettingsService;
+		_runtimeParamsService = runtimeParamsService;
+		_runtimeParams = runtimeParams;
 
 		AppSettings appSettings = _appSettingsService.getAppSettings();
 		_width = appSettings.initialWidth;
@@ -38,5 +48,7 @@ public class SystemParamsService implements ISystemParamsService
 	{
 		_width = width;
 		_height = height;
+		
+		_runtimeParamsService.adjustLayoutParams(_runtimeParams);
 	}
 }
