@@ -21,6 +21,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -37,9 +38,10 @@ public class Main implements ApplicationListener
 	public void create()
 	{
 		_texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/background.png"));
-		_topLeft = new NinePatch(new TextureRegion(_texture, 0, 0, 6, 6), 1, 3, 1, 3);
-		_topCenter = new NinePatch(new TextureRegion(_texture, 4, 0, 8, 4), 1, 2, 1, 2);
-		_topRight = new NinePatch(new TextureRegion(_texture, 12, 0, 4, 4), 2, 3, 1, 2);
+		//_texture.setFilter(TextureFilter.MipMap, TextureFilter.MipMap);
+		_topLeft = new NinePatch(new TextureRegion(_texture, 0, 0, 4, 4), 1, 2, 1, 2);
+		_topCenter = new NinePatch(new TextureRegion(_texture, 4, 0, 3, 4), 1, 1, 1, 2);
+		//_topRight = new NinePatch(new TextureRegion(_texture, 12, 0, 4, 4), 2, 3, 1, 2);
 
 		if (_batch == null)
 			_batch = new SpriteBatch();
@@ -111,7 +113,7 @@ public class Main implements ApplicationListener
 		//_batch.draw(_texture, 0, 0, systemParams.width, systemParams.height);
 		_topLeft.draw(_batch, 0, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop, runtimeParams.layoutParams.gameBoxPaddingLeft,
 				runtimeParams.layoutParams.gameBoxPaddingTop);
-		_topLeft.draw(_batch, runtimeParams.layoutParams.gameBoxPaddingLeft, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop,
+		_topCenter.draw(_batch, runtimeParams.layoutParams.gameBoxPaddingLeft, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop,
 				systemParams.width - 200, systemParams.height);
 		_batch.end();
 	}
