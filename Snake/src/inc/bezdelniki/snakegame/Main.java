@@ -7,27 +7,42 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Main implements ApplicationListener
 {
 	SpriteBatch _batch;
+	Texture _texture;
+	NinePatch _topLeft;
+	NinePatch _topCenter;
+	NinePatch _topRight;
 
 	@Override
 	public void create()
 	{
-		if (_batch == null)	_batch = new SpriteBatch();		
+		_texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/background.png"));
+		_topLeft = new NinePatch(new TextureRegion(_texture, 0, 0, 6, 6), 1, 3, 1, 3);
+		_topCenter = new NinePatch(new TextureRegion(_texture, 4, 0, 8, 4), 1, 2, 1, 2);
+		_topRight = new NinePatch(new TextureRegion(_texture, 12, 0, 4, 4), 2, 3, 1, 2);
+
+		if (_batch == null)
+			_batch = new SpriteBatch();
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		if (gameWorldService.getGameWorld() == null)
 		{
@@ -53,7 +68,10 @@ public class Main implements ApplicationListener
 		IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
 		IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
 		IScoreService scoreService = SnakeInjector.getInjectorInstance().getInstance(IScoreService.class);
+		ISystemParamsService systemParamsService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
+		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
 
+		SystemParams systemParams = systemParamsService.getSystemParams();
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
 
@@ -90,6 +108,11 @@ public class Main implements ApplicationListener
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.presentAllLyingItems(_batch);
 		scoreService.presentScore(_batch, gameWorldService.getScore());
+		//_batch.draw(_texture, 0, 0, systemParams.width, systemParams.height);
+		_topLeft.draw(_batch, 0, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop, runtimeParams.layoutParams.gameBoxPaddingLeft,
+				runtimeParams.layoutParams.gameBoxPaddingTop);
+		_topLeft.draw(_batch, runtimeParams.layoutParams.gameBoxPaddingLeft, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop,
+				systemParams.width - 200, systemParams.height);
 		_batch.end();
 	}
 
@@ -98,7 +121,7 @@ public class Main implements ApplicationListener
 	{
 		ISystemParamsService systemParametersService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
 		systemParametersService.newResolutionWereSet(width, height);
-		
+
 		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
 		presentationService.graphicContextCanBeLostResolutionCanBeChanged();
 	}
