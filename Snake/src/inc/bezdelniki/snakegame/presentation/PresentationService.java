@@ -11,9 +11,10 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
-import inc.bezdelniki.snakegame.font.IFontService;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
+import inc.bezdelniki.snakegame.resources.background.DTO.Background;
+import inc.bezdelniki.snakegame.resources.font.IFontService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 
 public class PresentationService implements IPresentationService
@@ -59,17 +60,14 @@ public class PresentationService implements IPresentationService
 		if (_snakesHeadSprite == null)
 		{
 			_snakesHeadSprite = new TextureRegion(_mainObjectsTexture, 0, 0, 16, 16);
-			//_snakesHeadSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 		if (_snakesBodySprite == null)
 		{
 			_snakesBodySprite = new TextureRegion(_mainObjectsTexture, 16, 0, 16, 16);
-			//_snakesBodySprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 		if (_appleSprite == null)
 		{
 			_appleSprite = new TextureRegion(_mainObjectsTexture, 32, 0, 16, 16);
-			//_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 	}
 	
@@ -92,7 +90,7 @@ public class PresentationService implements IPresentationService
 		initGdxResources();
 
 		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
-		batch.draw(_snakesHeadSprite, headCoords.x, headCoords.y);
+		batch.draw(_snakesHeadSprite, headCoords.x, headCoords.y, _deviceService.getTileSize(), _deviceService.getTileSize());
 	}
 
 	@Override
@@ -105,7 +103,7 @@ public class PresentationService implements IPresentationService
 			if (!position.equals(headPosition))
 			{
 				DeviceCoords bodyItemCoords = _deviceService.WorldPositionToDeviceCoords(position);
-				batch.draw(_snakesBodySprite, bodyItemCoords.x, bodyItemCoords.y);
+				batch.draw(_snakesBodySprite, bodyItemCoords.x, bodyItemCoords.y, _deviceService.getTileSize(), _deviceService.getTileSize());
 			}
 		}
 	}
@@ -116,7 +114,7 @@ public class PresentationService implements IPresentationService
 		initGdxResources();
 
 		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position);
-		batch.draw(_appleSprite, itemCoords.x, itemCoords.y);
+		batch.draw(_appleSprite, itemCoords.x, itemCoords.y, _deviceService.getTileSize(), _deviceService.getTileSize());
 	}
 
 	@Override
@@ -125,5 +123,12 @@ public class PresentationService implements IPresentationService
 		initGdxResources();
 
 		_regularInfoFont.draw(batch, (new Integer(score)).toString(), _runtimeParams.layoutParams.scoreCoords.x, _runtimeParams.layoutParams.scoreCoords.y);
+	}
+
+	@Override
+	public void presentBackground(SpriteBatch batch, Background background)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

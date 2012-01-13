@@ -8,9 +8,8 @@ import java.util.List;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
-import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceException;
+import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
-import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
@@ -67,27 +66,16 @@ public class TestPresentationIsolated
 	}
 
 	@Test
-	public void testIfPresentLyingItemsCallsPresentLyingItemMethodAccordingLyingItemsCount() throws LyingItemNowhereToPlaceException
+	public void testIfPresentLyingItemCallsPresentLyingItemMethod()
 	{
-		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
-		gameWorldService.initGameWorld();
-
-		LyingItem item1 = gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
+		ILyingItemService lyingItemService = _testInjectorInstance.getInstance(ILyingItemService.class);
 
 		SpriteBatch batch = null;
-		_mockedPresentationService.presentLyingItem(batch, item1);
+		LyingItem item = new LyingItem();
+		_mockedPresentationService.presentLyingItem(batch, item);
 		replay(_mockedPresentationService);
 
-		gameWorldService.presentAllLyingItems(batch);
-		verify(_mockedPresentationService);
-
-		LyingItem item2 = gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
-		reset(_mockedPresentationService);
-		_mockedPresentationService.presentLyingItem(batch, item1);
-		_mockedPresentationService.presentLyingItem(batch, item2);
-		replay(_mockedPresentationService);
-
-		gameWorldService.presentAllLyingItems(batch);
+		lyingItemService.presentLyingItem(batch, item);
 		verify(_mockedPresentationService);
 	}
 

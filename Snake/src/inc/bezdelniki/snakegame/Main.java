@@ -113,7 +113,7 @@ public class Main implements ApplicationListener
 		_topLeft.draw(_batch, 0, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop, runtimeParams.layoutParams.gameBoxPaddingLeft,
 				runtimeParams.layoutParams.gameBoxPaddingTop);
 		_topCenter.draw(_batch, runtimeParams.layoutParams.gameBoxPaddingLeft, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop,
-				systemParams.width - 200, systemParams.height);
+				systemParams.width - 200, runtimeParams.layoutParams.gameBoxPaddingTop);
 		_batch.end();
 	}
 

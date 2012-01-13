@@ -1,4 +1,4 @@
-package inc.bezdelniki.snakegame.font.configuration;
+package inc.bezdelniki.snakegame.resources.font.configuration;
 
 import java.util.List;
 

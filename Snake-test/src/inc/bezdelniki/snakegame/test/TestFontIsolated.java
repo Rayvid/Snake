@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.device.IDeviceService;
-import inc.bezdelniki.snakegame.font.FontService;
-import inc.bezdelniki.snakegame.font.IFontService;
-import inc.bezdelniki.snakegame.font.configuration.FontConfiguration;
-import inc.bezdelniki.snakegame.font.configuration.FontConfigurationItem;
+import inc.bezdelniki.snakegame.resources.font.FontService;
+import inc.bezdelniki.snakegame.resources.font.IFontService;
+import inc.bezdelniki.snakegame.resources.font.configuration.FontConfiguration;
+import inc.bezdelniki.snakegame.resources.font.configuration.FontConfigurationItem;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 
 import com.google.inject.Guice;

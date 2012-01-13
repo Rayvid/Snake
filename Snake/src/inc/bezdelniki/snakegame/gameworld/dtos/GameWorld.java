@@ -11,5 +11,4 @@ public class GameWorld
 	public List<LyingItem> lyingItems;
 	public Snake snake;
 	public List<SnakeMovementChange> movementChangesInEffect;
-	public long lastSnakesMovementNanoTimestamp;
 }

@@ -1,6 +1,6 @@
-package inc.bezdelniki.snakegame.font;
+package inc.bezdelniki.snakegame.resources.font;
 
-import inc.bezdelniki.snakegame.font.configuration.FontConfigurationItem;
+import inc.bezdelniki.snakegame.resources.font.configuration.FontConfigurationItem;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 

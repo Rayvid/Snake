@@ -1,7 +1,8 @@
-package inc.bezdelniki.snakegame.background.DTO;
+package inc.bezdelniki.snakegame.resources.background.DTO;
+
+import inc.bezdelniki.snakegame.resources.sprite.DTO.Sprite;
 
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Background
 {
@@ -9,7 +10,7 @@ public class Background
 	NinePatch MiddleTop;
 	NinePatch RightTop;
 	NinePatch LeftCenter;
-	TextureRegion MiddleCenter;
+	Sprite MiddleCenter;
 	NinePatch RightCenter;
 	NinePatch LeftBottom;
 	NinePatch MiddleBottom;

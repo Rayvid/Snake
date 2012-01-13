@@ -19,12 +19,12 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-public class ScoreTestIsolated
+public class TestScoreIsolated
 {
 	private Injector _testInjectorInstance;
 	private IScoreService _mockedScoreService;
 
-	public ScoreTestIsolated()
+	public TestScoreIsolated()
 	{
 		_mockedScoreService = createMock(IScoreService.class);
 		_testInjectorInstance = Guice.createInjector(
