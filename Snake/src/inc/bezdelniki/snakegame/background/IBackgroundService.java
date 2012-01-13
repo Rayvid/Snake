@@ -1,8 +1,8 @@
 package inc.bezdelniki.snakegame.background;
 
-import com.badlogic.gdx.graphics.g2d.NinePatch;
+import inc.bezdelniki.snakegame.background.DTO.Background;
 
 public interface IBackgroundService
 {
-	NinePatch GetBackground(); 
+	Background GetBackground(); 
 }

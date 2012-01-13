@@ -5,8 +5,8 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.device.IDeviceService;
@@ -25,9 +25,9 @@ public class PresentationService implements IPresentationService
 	private BitmapFont _smallFont = null;
 	private BitmapFont _regularInfoFont = null;
 	private Texture _mainObjectsTexture = null;
-	private Sprite _snakesHeadSprite = null;
-	private Sprite _snakesBodySprite = null;
-	private Sprite _appleSprite = null;
+	private TextureRegion _snakesHeadSprite = null;
+	private TextureRegion _snakesBodySprite = null;
+	private TextureRegion _appleSprite = null;
 
 	@Inject
 	public PresentationService(
@@ -58,18 +58,18 @@ public class PresentationService implements IPresentationService
 
 		if (_snakesHeadSprite == null)
 		{
-			_snakesHeadSprite = new Sprite(_mainObjectsTexture, 0, 0, 16, 16);
-			_snakesHeadSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+			_snakesHeadSprite = new TextureRegion(_mainObjectsTexture, 0, 0, 16, 16);
+			//_snakesHeadSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 		if (_snakesBodySprite == null)
 		{
-			_snakesBodySprite = new Sprite(_mainObjectsTexture, 16, 0, 16, 16);
-			_snakesBodySprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+			_snakesBodySprite = new TextureRegion(_mainObjectsTexture, 16, 0, 16, 16);
+			//_snakesBodySprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 		if (_appleSprite == null)
 		{
-			_appleSprite = new Sprite(_mainObjectsTexture, 32, 0, 16, 16);
-			_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
+			_appleSprite = new TextureRegion(_mainObjectsTexture, 32, 0, 16, 16);
+			//_appleSprite.setSize(_deviceService.getTileSize(), _deviceService.getTileSize());
 		}
 	}
 	
@@ -92,8 +92,7 @@ public class PresentationService implements IPresentationService
 		initGdxResources();
 
 		DeviceCoords headCoords = _deviceService.WorldPositionToDeviceCoords(position);
-		_snakesHeadSprite.setPosition(headCoords.x, headCoords.y);
-		_snakesHeadSprite.draw(batch);
+		batch.draw(_snakesHeadSprite, headCoords.x, headCoords.y);
 	}
 
 	@Override
@@ -106,8 +105,7 @@ public class PresentationService implements IPresentationService
 			if (!position.equals(headPosition))
 			{
 				DeviceCoords bodyItemCoords = _deviceService.WorldPositionToDeviceCoords(position);
-				_snakesBodySprite.setPosition(bodyItemCoords.x, bodyItemCoords.y);
-				_snakesBodySprite.draw(batch);
+				batch.draw(_snakesBodySprite, bodyItemCoords.x, bodyItemCoords.y);
 			}
 		}
 	}
@@ -118,8 +116,7 @@ public class PresentationService implements IPresentationService
 		initGdxResources();
 
 		DeviceCoords itemCoords = _deviceService.WorldPositionToDeviceCoords(item.position);
-		_appleSprite.setPosition(itemCoords.x, itemCoords.y);
-		_appleSprite.draw(batch);
+		batch.draw(_appleSprite, itemCoords.x, itemCoords.y);
 	}
 
 	@Override
