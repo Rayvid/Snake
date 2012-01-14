@@ -16,11 +16,14 @@ import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.resources.background.DTO.Background;
 import inc.bezdelniki.snakegame.resources.font.IFontService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public class PresentationService implements IPresentationService
 {
 	private IDeviceService _deviceService;
 	private IFontService _fontService;
+	private ISystemParamsService _systemParamsService;
 	private RuntimeParams _runtimeParams;
 
 	private BitmapFont _smallFont = null;
@@ -32,10 +35,12 @@ public class PresentationService implements IPresentationService
 
 	@Inject
 	public PresentationService(
+			ISystemParamsService systemParamsService,
 			IDeviceService deviceService,
 			IFontService fontService,
 			RuntimeParams runtimeParams)
 	{
+		_systemParamsService = systemParamsService;
 		_deviceService = deviceService;
 		_fontService = fontService;
 		_runtimeParams = runtimeParams;
@@ -128,7 +133,64 @@ public class PresentationService implements IPresentationService
 	@Override
 	public void presentBackground(SpriteBatch batch, Background background)
 	{
-		// TODO Auto-generated method stub
+		SystemParams systemParams = _systemParamsService.getSystemParams();
 		
+		background.leftTop.draw(
+				batch,
+				0,
+				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop,
+				_runtimeParams.layoutParams.gameBoxPaddingLeft,
+				_runtimeParams.layoutParams.gameBoxPaddingTop);
+		background.middleTop.draw(
+				batch,
+				_runtimeParams.layoutParams.gameBoxPaddingLeft,
+				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop,
+				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingLeft - _runtimeParams.layoutParams.gameBoxPaddingRight,
+				_runtimeParams.layoutParams.gameBoxPaddingTop);
+		background.rightTop.draw(
+				batch,
+				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingRight,
+				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop,
+				_runtimeParams.layoutParams.gameBoxPaddingRight,
+				_runtimeParams.layoutParams.gameBoxPaddingTop);
+		background.leftCenter.draw(
+				batch,
+				0,
+				_runtimeParams.layoutParams.gameBoxPaddingBottom,
+				_runtimeParams.layoutParams.gameBoxPaddingLeft,
+				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop - _runtimeParams.layoutParams.gameBoxPaddingBottom);
+
+		background.middleCenter.setPosition(
+				_runtimeParams.layoutParams.gameBoxPaddingLeft,
+				_runtimeParams.layoutParams.gameBoxPaddingBottom);
+		background.middleCenter.setSize(
+				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingLeft - _runtimeParams.layoutParams.gameBoxPaddingRight,
+				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop - _runtimeParams.layoutParams.gameBoxPaddingBottom);
+		background.middleCenter.draw(batch);
+		
+		background.rightCenter.draw(
+				batch,
+				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingRight,
+				_runtimeParams.layoutParams.gameBoxPaddingBottom,
+				_runtimeParams.layoutParams.gameBoxPaddingRight,
+				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop - _runtimeParams.layoutParams.gameBoxPaddingBottom);
+		background.leftBottom.draw(
+				batch,
+				0,
+				0,
+				_runtimeParams.layoutParams.gameBoxPaddingLeft,
+				_runtimeParams.layoutParams.gameBoxPaddingBottom);
+		background.middleBottom.draw(
+				batch,
+				_runtimeParams.layoutParams.gameBoxPaddingLeft,
+				0,
+				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingLeft - _runtimeParams.layoutParams.gameBoxPaddingRight,
+				_runtimeParams.layoutParams.gameBoxPaddingBottom);
+		background.rightBottom.draw(
+				batch,
+				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingRight,
+				0,
+				_runtimeParams.layoutParams.gameBoxPaddingRight,
+				_runtimeParams.layoutParams.gameBoxPaddingBottom);
 	}
 }

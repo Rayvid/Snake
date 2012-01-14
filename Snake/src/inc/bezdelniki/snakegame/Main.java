@@ -7,43 +7,35 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
+import inc.bezdelniki.snakegame.resources.background.IBackgroundService;
+import inc.bezdelniki.snakegame.resources.background.DTO.Background;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
-import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Main implements ApplicationListener
 {
 	SpriteBatch _batch;
-	Texture _texture;
-	NinePatch _topLeft;
-	NinePatch _topCenter;
-	NinePatch _topRight;
+	Background _background;
 
 	@Override
 	public void create()
 	{
-		_texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/background.png"));
-		//_texture.setFilter(TextureFilter.MipMap, TextureFilter.MipMap);
-		_topLeft = new NinePatch(new TextureRegion(_texture, 0, 0, 4, 4), 1, 2, 1, 2);
-		_topCenter = new NinePatch(new TextureRegion(_texture, 4, 0, 3, 4), 1, 1, 1, 2);
-		//_topRight = new NinePatch(new TextureRegion(_texture, 12, 0, 4, 4), 2, 3, 1, 2);
-
 		if (_batch == null)
 			_batch = new SpriteBatch();
+		
+		IBackgroundService backgroundService = SnakeInjector.getInjectorInstance().getInstance(IBackgroundService.class);
+		_background = backgroundService.GetBackground();
+		
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
 		if (gameWorldService.getGameWorld() == null)
 		{
@@ -69,10 +61,8 @@ public class Main implements ApplicationListener
 		IInputService inputService = SnakeInjector.getInjectorInstance().getInstance(IInputService.class);
 		IUserActionService userActionsService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
 		IScoreService scoreService = SnakeInjector.getInjectorInstance().getInstance(IScoreService.class);
-		ISystemParamsService systemParamsService = SnakeInjector.getInjectorInstance().getInstance(ISystemParamsService.class);
-		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
-
-		SystemParams systemParams = systemParamsService.getSystemParams();
+		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
+		
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
 
@@ -106,14 +96,10 @@ public class Main implements ApplicationListener
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		_batch.begin();
+		presentationService.presentBackground(_batch, _background);
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.presentAllLyingItems(_batch);
 		scoreService.presentScore(_batch, gameWorldService.getScore());
-		//_batch.draw(_texture, 0, 0, systemParams.width, systemParams.height);
-		_topLeft.draw(_batch, 0, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop, runtimeParams.layoutParams.gameBoxPaddingLeft,
-				runtimeParams.layoutParams.gameBoxPaddingTop);
-		_topCenter.draw(_batch, runtimeParams.layoutParams.gameBoxPaddingLeft, systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop,
-				systemParams.width - 200, runtimeParams.layoutParams.gameBoxPaddingTop);
 		_batch.end();
 	}
 

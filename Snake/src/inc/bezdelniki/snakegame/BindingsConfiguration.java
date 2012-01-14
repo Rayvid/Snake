@@ -11,6 +11,8 @@ import inc.bezdelniki.snakegame.input.InputService;
 import inc.bezdelniki.snakegame.lyingitem.*;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
+import inc.bezdelniki.snakegame.resources.background.BackgroundService;
+import inc.bezdelniki.snakegame.resources.background.IBackgroundService;
 import inc.bezdelniki.snakegame.resources.font.FontService;
 import inc.bezdelniki.snakegame.resources.font.IFontService;
 import inc.bezdelniki.snakegame.resources.font.configuration.FontConfiguration;
@@ -62,6 +64,7 @@ public class BindingsConfiguration extends AbstractModule
 		bind(IScoreService.class).to(ScoreService.class);
 		bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 		bind(IFontService.class).to(FontService.class).in(Singleton.class);
+		bind(IBackgroundService.class).to(BackgroundService.class).in(Singleton.class);
 		bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
 		bind(ITimeService.class).to(TimeService.class).in(Singleton.class);
 		bind(IInputService.class).to(InputService.class).in(Singleton.class);

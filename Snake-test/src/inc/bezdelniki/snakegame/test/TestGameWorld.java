@@ -17,43 +17,14 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
+import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
+import inc.bezdelniki.snakegame.useraction.IUserActionService;
 
 public class TestGameWorld
 {
-	@Test
-	public void testIfLyingObjectIsNeverPlacedOnSnake()
-	{
-		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
-		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
-		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
-
-		gameWorldService.initGameWorld();
-		Snake snake = gameWorldService.getGameWorld().snake;
-		AppSettings appSettings = appSettingsService.getAppSettings();
-
-		try
-		{
-			for (int i = 0; i < appSettings.tilesVertically * appSettings.tilesHorizontally + 1; i++)
-			{
-				gameWorldService.createAndApplyLyingItemSomewhere(ItemType.APPLE);
-			}
-
-			fail();
-		}
-		catch (LyingItemNowhereToPlaceException ex)
-		{
-		}
-
-		List<WorldPosition> snakesTrail = snakeService.getSnakesTrail(snake, gameWorldService.getGameWorld().movementChangesInEffect);
-		for (WorldPosition position : snakesTrail)
-		{
-			assertTrue(gameWorldService.getLyingItemInTile(position) == null);
-		}
-	}
-
 	@Test
 	public void testIfSnakeEatsLyingApplesAndGrowsAfterwards() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
@@ -75,16 +46,20 @@ public class TestGameWorld
 	}
 
 	@Test
-	public void testIfLyingItemIsNeverCreatedOnSnakeOrSnakesPath()
+	public void testIfLyingItemIsNeverPlacedOnSnakeOrSnakesPath() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException
 	{
 		IAppSettingsService appSettingsService = SnakeInjector.getInjectorInstance().getInstance(IAppSettingsService.class);
 		ISnakeService snakeService = SnakeInjector.getInjectorInstance().getInstance(ISnakeService.class);
 		IGameWorldService gameWorldService = SnakeInjector.getInjectorInstance().getInstance(IGameWorldService.class);
+		IUserActionService userActionService = SnakeInjector.getInjectorInstance().getInstance(IUserActionService.class);
 
 		gameWorldService.initGameWorld();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 		GameWorld gameWorld = gameWorldService.getGameWorld();
 		Snake snake = gameWorld.snake;
+		
+		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.RIGHT));
+		gameWorldService.moveSnake();
 
 		try
 		{

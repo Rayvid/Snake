@@ -137,8 +137,7 @@ public class GameWorldService implements IGameWorldService
 			_gameWorld.movementChangesInEffect.add(movementChange);
 	}
 
-	@Override
-	public LyingItem getLyingItemInTile(WorldPosition position)
+	private LyingItem getLyingItemInTile(WorldPosition position)
 	{
 		for (LyingItem item : _gameWorld.lyingItems)
 		{
