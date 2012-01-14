@@ -3,6 +3,7 @@ package inc.bezdelniki.snakegame.presentation;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,7 +14,7 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
-import inc.bezdelniki.snakegame.resources.background.DTO.Background;
+import inc.bezdelniki.snakegame.resources.background.dtos.Background;
 import inc.bezdelniki.snakegame.resources.font.IFontService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
@@ -127,7 +128,8 @@ public class PresentationService implements IPresentationService
 	{
 		initGdxResources();
 
-		_regularInfoFont.draw(batch, (new Integer(score)).toString(), _runtimeParams.layoutParams.scoreCoords.x, _runtimeParams.layoutParams.scoreCoords.y);
+		_regularInfoFont.setColor(new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		_regularInfoFont.draw(batch, "Score: " + (new Integer(score)).toString(), _runtimeParams.layoutParams.scoreCoords.x, _runtimeParams.layoutParams.scoreCoords.y);
 	}
 
 	@Override
@@ -160,13 +162,12 @@ public class PresentationService implements IPresentationService
 				_runtimeParams.layoutParams.gameBoxPaddingLeft,
 				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop - _runtimeParams.layoutParams.gameBoxPaddingBottom);
 
-		background.middleCenter.setPosition(
+		batch.draw(
+				background.middleCenter,
 				_runtimeParams.layoutParams.gameBoxPaddingLeft,
-				_runtimeParams.layoutParams.gameBoxPaddingBottom);
-		background.middleCenter.setSize(
+				_runtimeParams.layoutParams.gameBoxPaddingBottom,
 				systemParams.width - _runtimeParams.layoutParams.gameBoxPaddingLeft - _runtimeParams.layoutParams.gameBoxPaddingRight,
 				systemParams.height - _runtimeParams.layoutParams.gameBoxPaddingTop - _runtimeParams.layoutParams.gameBoxPaddingBottom);
-		background.middleCenter.draw(batch);
 		
 		background.rightCenter.draw(
 				batch,
@@ -192,5 +193,14 @@ public class PresentationService implements IPresentationService
 				0,
 				_runtimeParams.layoutParams.gameBoxPaddingRight,
 				_runtimeParams.layoutParams.gameBoxPaddingBottom);
+	}
+
+	@Override
+	public void presentFps(SpriteBatch batch)
+	{
+		initGdxResources();
+		
+		_smallFont.setColor(new Color(1.0f, 1.0f, 1.0f, .5f));
+		_smallFont.draw(batch, (new Integer(Gdx.graphics.getFramesPerSecond())).toString(), _runtimeParams.layoutParams.fpsCoords.x, _runtimeParams.layoutParams.fpsCoords.y);
 	}
 }

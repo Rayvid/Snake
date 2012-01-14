@@ -9,4 +9,5 @@ public class LayoutParams
 	public int gameBoxPaddingBottom;
 	public int gameBoxPaddingRight;
 	public DeviceCoords scoreCoords;
+	public DeviceCoords fpsCoords;
 }

@@ -105,11 +105,45 @@ public class TestRuntimeParamsIsolated
 		
 		assertTrue(systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop / 2 < runtimeParams.layoutParams.scoreCoords.y);
 		assertTrue(systemParams.height > runtimeParams.layoutParams.scoreCoords.y);
+		assertTrue(systemParams.width - 20 > runtimeParams.layoutParams.scoreCoords.x);
+		assertTrue(0 <= runtimeParams.layoutParams.scoreCoords.x);
 		
 		systemParamsService.newResolutionWereSet(3150, 4800);
 		systemParams = systemParamsService.getSystemParams();
 		
 		assertTrue(systemParams.height - runtimeParams.layoutParams.gameBoxPaddingTop / 2 < runtimeParams.layoutParams.scoreCoords.y);
 		assertTrue(systemParams.height > runtimeParams.layoutParams.scoreCoords.y);
+		assertTrue(systemParams.width - 20 > runtimeParams.layoutParams.scoreCoords.x);
+		assertTrue(0 <= runtimeParams.layoutParams.scoreCoords.x);
+	}
+	
+	@Test
+	public void testIfFpsCoordsFitsLayout()
+	{
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
+		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+		
+		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
+		expectLastCall().andDelegateTo(runtimeParamsService).anyTimes();
+		replay(_mockedRuntimeParamsService);
+	
+		systemParamsService.newResolutionWereSet(480, 315);
+		SystemParams systemParams = systemParamsService.getSystemParams();
+		
+		assertTrue(runtimeParams.layoutParams.gameBoxPaddingBottom / 2 < runtimeParams.layoutParams.fpsCoords.y);
+		assertTrue(runtimeParams.layoutParams.gameBoxPaddingBottom > runtimeParams.layoutParams.fpsCoords.y);
+		assertTrue(systemParams.width - 20 > runtimeParams.layoutParams.fpsCoords.x);
+		assertTrue(0 <= runtimeParams.layoutParams.fpsCoords.x);
+		
+		systemParamsService.newResolutionWereSet(3150, 4800);
+		systemParams = systemParamsService.getSystemParams();
+		
+		assertTrue(runtimeParams.layoutParams.gameBoxPaddingBottom / 2 < runtimeParams.layoutParams.fpsCoords.y);
+		assertTrue(runtimeParams.layoutParams.gameBoxPaddingBottom > runtimeParams.layoutParams.fpsCoords.y);
+		assertTrue(systemParams.width - 20 > runtimeParams.layoutParams.fpsCoords.x);
+		assertTrue(0 <= runtimeParams.layoutParams.fpsCoords.x);
 	}
 }

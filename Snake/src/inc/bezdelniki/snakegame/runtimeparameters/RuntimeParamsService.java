@@ -84,6 +84,6 @@ public class RuntimeParamsService implements IRuntimeParamsService
 		}
 
 		runtimeParams.layoutParams.scoreCoords = new DeviceCoords(2, systemParams.height - 2);
+		runtimeParams.layoutParams.fpsCoords = new DeviceCoords(2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 	}
-
 }

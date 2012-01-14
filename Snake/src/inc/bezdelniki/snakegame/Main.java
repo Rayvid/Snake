@@ -8,7 +8,7 @@ import inc.bezdelniki.snakegame.input.IInputService;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.background.IBackgroundService;
-import inc.bezdelniki.snakegame.resources.background.DTO.Background;
+import inc.bezdelniki.snakegame.resources.background.dtos.Background;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -97,6 +97,7 @@ public class Main implements ApplicationListener
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		_batch.begin();
 		presentationService.presentBackground(_batch, _background);
+		presentationService.presentFps(_batch);
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.presentAllLyingItems(_batch);
 		scoreService.presentScore(_batch, gameWorldService.getScore());
