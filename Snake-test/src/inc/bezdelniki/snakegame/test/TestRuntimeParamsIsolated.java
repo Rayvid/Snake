@@ -146,4 +146,11 @@ public class TestRuntimeParamsIsolated
 		assertTrue(systemParams.width - 20 > runtimeParams.layoutParams.fpsCoords.x);
 		assertTrue(0 <= runtimeParams.layoutParams.fpsCoords.x);
 	}
+	
+	@Test
+	public void testIfControlsFitsLayout()
+	{
+		// There cannot be touchable areas in play area
+		fail();
+	}
 }
