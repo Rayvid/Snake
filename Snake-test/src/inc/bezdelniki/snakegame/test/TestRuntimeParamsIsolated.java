@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.controls.dtos.Control;
+import inc.bezdelniki.snakegame.controls.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
@@ -150,7 +152,36 @@ public class TestRuntimeParamsIsolated
 	@Test
 	public void testIfControlsFitsLayout()
 	{
-		// There cannot be touchable areas in play area
-		fail();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
+		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
+		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+		
+		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
+		expectLastCall().andDelegateTo(runtimeParamsService).anyTimes();
+		replay(_mockedRuntimeParamsService);
+	
+		systemParamsService.newResolutionWereSet(480, 315);
+		SystemParams systemParams = systemParamsService.getSystemParams();
+		
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			for (TouchableRegion touchRegion : control.touchableRegions)
+			{
+				fail();
+			}
+		}
+		
+		systemParamsService.newResolutionWereSet(3150, 4800);
+		systemParams = systemParamsService.getSystemParams();
+		
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			for (TouchableRegion touchRegion : control.touchableRegions)
+			{
+				fail();
+			}
+		}
 	}
 }
