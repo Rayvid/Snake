@@ -165,11 +165,29 @@ public class TestRuntimeParamsIsolated
 		systemParamsService.newResolutionWereSet(480, 315);
 		SystemParams systemParams = systemParamsService.getSystemParams();
 		
+		assertTrue(runtimeParams.layoutParams.controls.size() > 0);
+		
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
 			for (TouchableRegion touchRegion : control.touchableRegions)
 			{
-				fail();
+				assertTrue(
+						touchRegion.x >= 0
+						&& touchRegion.y >= 0
+						&& touchRegion.x + touchRegion.width <= control.width
+						&& touchRegion.y + touchRegion.height <= control.height);
+				
+				assertTrue(
+						control.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
+						|| control.y - control.height == 0
+						|| control.y - touchRegion.y - touchRegion.height >= runtimeParams.layoutParams.gameBoxPaddingTop
+						|| control.y == systemParams.height - 1);
+				
+				assertTrue(
+						control.x + touchRegion.x + touchRegion.width <= runtimeParams.layoutParams.gameBoxPaddingLeft
+						|| control.x == 0
+						|| control.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
+						|| control.x + control.width == systemParams.width);
 			}
 		}
 		
@@ -180,7 +198,23 @@ public class TestRuntimeParamsIsolated
 		{
 			for (TouchableRegion touchRegion : control.touchableRegions)
 			{
-				fail();
+				assertTrue(
+						touchRegion.x >= 0
+						&& touchRegion.y >= 0
+						&& touchRegion.x + touchRegion.width <= control.width
+						&& touchRegion.y + touchRegion.height <= control.height);
+				
+				assertTrue(
+						control.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
+						|| control.y - control.height == 0
+						|| control.y - touchRegion.y - touchRegion.height >= runtimeParams.layoutParams.gameBoxPaddingTop
+						|| control.y == systemParams.height - 1);
+				
+				assertTrue(
+						control.x + touchRegion.x + touchRegion.width <= runtimeParams.layoutParams.gameBoxPaddingLeft
+						|| control.x == 0
+						|| control.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
+						|| control.x + control.width == systemParams.width);
 			}
 		}
 	}
