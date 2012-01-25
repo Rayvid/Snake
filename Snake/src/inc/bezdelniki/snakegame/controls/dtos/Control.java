@@ -1,10 +1,12 @@
 package inc.bezdelniki.snakegame.controls.dtos;
 
+import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
+
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Control
+public abstract class Control
 {
 	public int x;
 	public int y;
@@ -12,4 +14,6 @@ public class Control
 	public int height;
 	public TextureRegion noTouchImage;
 	public List<TouchableRegion> touchableRegions;
+	
+	abstract public void recalculateControlLayout(LayoutParams layoutParams);
 }

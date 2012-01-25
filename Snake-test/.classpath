@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="libs/objenesis-1.2.jar" sourcepath="libs/objenesis-1.2-sources.jar"/>
 	<classpathentry kind="lib" path="libs/cglib-2.2.2.jar"/>
 	<classpathentry kind="lib" path="libs/asm-3.3.1.jar"/>
+	<classpathentry kind="lib" path="libs/easymockclassextension-3.0.jar" sourcepath="libs/easymockclassextension-3.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

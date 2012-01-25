@@ -39,12 +39,13 @@ public class RuntimeParamsService implements IRuntimeParamsService
 	@Override
 	public void adjustLayoutParams(RuntimeParams runtimeParams)
 	{
-		LayoutParams zeroPaddingLayout = new LayoutParams();
-		runtimeParams.layoutParams = zeroPaddingLayout;
+		runtimeParams.layoutParams.gameBoxPaddingLeft = 0;
+		runtimeParams.layoutParams.gameBoxPaddingTop = 0;
+		runtimeParams.layoutParams.gameBoxPaddingRight = 0;
+		runtimeParams.layoutParams.gameBoxPaddingBottom = 0;
 
 		int tileSize = _deviceService.getTileSize();
 		
-		runtimeParams.layoutParams = new LayoutParams();
 		runtimeParams.layoutParams.gameBoxPaddingTop = tileSize * 2;
 		runtimeParams.layoutParams.gameBoxPaddingLeft = tileSize;
 		runtimeParams.layoutParams.gameBoxPaddingRight = tileSize;
