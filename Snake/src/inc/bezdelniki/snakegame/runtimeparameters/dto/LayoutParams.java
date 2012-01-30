@@ -3,7 +3,7 @@ package inc.bezdelniki.snakegame.runtimeparameters.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import inc.bezdelniki.snakegame.controls.dtos.Control;
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 
 public class LayoutParams

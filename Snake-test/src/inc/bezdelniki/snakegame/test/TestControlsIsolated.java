@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
-import inc.bezdelniki.snakegame.controls.IControlsService;
-import inc.bezdelniki.snakegame.controls.dtos.Control;
+import inc.bezdelniki.snakegame.control.IControlService;
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
@@ -21,16 +21,16 @@ import com.google.inject.Injector;
 public class TestControlsIsolated
 {
 	private Injector _testInjectorInstance;
-	private IControlsService _mockedControlsService;
+	private IControlService _mockedControlService;
 
 	public TestControlsIsolated()
 	{
-		_mockedControlsService = createMock(IControlsService.class);
+		_mockedControlService = createMock(IControlService.class);
 		_testInjectorInstance = Guice.createInjector(
 				BindingsConfigurationFactory.BuildDefaultBindingsConfiguration(
-						IControlsService.class,
-						_mockedControlsService,
-						IControlsService.class));
+						IControlService.class,
+						_mockedControlService,
+						IControlService.class));
 		
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		runtimeParams.layoutParams.controls.add(createMock(Control.class));

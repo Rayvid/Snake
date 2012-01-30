@@ -3,6 +3,8 @@ package inc.bezdelniki.snakegame;
 import java.util.ArrayList;
 
 import inc.bezdelniki.snakegame.appsettings.*;
+import inc.bezdelniki.snakegame.control.ControlService;
+import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.*;
@@ -17,6 +19,8 @@ import inc.bezdelniki.snakegame.resources.font.FontService;
 import inc.bezdelniki.snakegame.resources.font.IFontService;
 import inc.bezdelniki.snakegame.resources.font.configuration.FontConfiguration;
 import inc.bezdelniki.snakegame.resources.font.configuration.FontConfigurationItem;
+import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
+import inc.bezdelniki.snakegame.resources.sprite.SpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
@@ -68,5 +72,7 @@ public class BindingsConfiguration extends AbstractModule
 		bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
 		bind(ITimeService.class).to(TimeService.class).in(Singleton.class);
 		bind(IInputService.class).to(InputService.class).in(Singleton.class);
+		bind(IControlService.class).to(ControlService.class).in(Singleton.class);
+		bind(ISpriteService.class).to(SpriteService.class);
 	}
 }

@@ -6,8 +6,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
-import inc.bezdelniki.snakegame.controls.dtos.Control;
-import inc.bezdelniki.snakegame.controls.dtos.TouchableRegion;
+import inc.bezdelniki.snakegame.control.dtos.Control;
+import inc.bezdelniki.snakegame.control.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
@@ -161,11 +161,12 @@ public class TestRuntimeParamsIsolated
 		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
 		expectLastCall().andDelegateTo(runtimeParamsService).anyTimes();
 		replay(_mockedRuntimeParamsService);
+		
+		runtimeParams.layoutParams.controls.add(createMock(Control.class));
+		runtimeParams.layoutParams.controls.add(createMock(Control.class));
 	
 		systemParamsService.newResolutionWereSet(480, 315);
 		SystemParams systemParams = systemParamsService.getSystemParams();
-		
-		assertTrue(runtimeParams.layoutParams.controls.size() > 0);
 		
 		for (Control control : runtimeParams.layoutParams.controls)
 		{

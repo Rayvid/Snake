@@ -80,12 +80,6 @@ public class GameWorldService implements IGameWorldService
 	}
 
 	@Override
-	public void applyLyingItem(LyingItem lyingItem)
-	{
-		_gameWorld.lyingItems.add(lyingItem);
-	}
-
-	@Override
 	public LyingItem createAndApplyLyingItemSomewhere(ItemType itemType) throws LyingItemNowhereToPlaceException
 	{
 		Random random = new Random();
@@ -118,7 +112,7 @@ public class GameWorldService implements IGameWorldService
 		}
 
 		LyingItem result = _lyingItemService.createLyingItem(itemType, position);
-		applyLyingItem(result);
+		_gameWorld.lyingItems.add(result);
 
 		return result;
 	}

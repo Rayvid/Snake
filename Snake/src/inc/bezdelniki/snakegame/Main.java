@@ -111,7 +111,7 @@ public class Main implements ApplicationListener
 		systemParametersService.newResolutionWereSet(width, height);
 
 		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
-		presentationService.graphicContextCanBeLostResolutionCanBeChanged();
+		presentationService.adjustToLostContextOrChangedResolution();
 	}
 
 	@Override

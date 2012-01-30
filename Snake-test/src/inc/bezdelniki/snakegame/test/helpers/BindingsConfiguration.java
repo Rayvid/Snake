@@ -2,6 +2,8 @@ package inc.bezdelniki.snakegame.test.helpers;
 
 import inc.bezdelniki.snakegame.appsettings.AppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.control.ControlService;
+import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
@@ -12,6 +14,8 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.presentation.PresentationService;
 import inc.bezdelniki.snakegame.resources.font.FontService;
 import inc.bezdelniki.snakegame.resources.font.IFontService;
+import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
+import inc.bezdelniki.snakegame.resources.sprite.SpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
@@ -76,6 +80,8 @@ public class BindingsConfiguration<T> extends AbstractModule
 		if (!_doNotBindList.contains(IFontService.class)) bind(IFontService.class).to(FontService.class).in(Singleton.class);
 		if (!_doNotBindList.contains(IPresentationService.class)) bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
 		if (!_doNotBindList.contains(ITimeService.class)) bind(ITimeService.class).to(TimeService.class);
+		if (!_doNotBindList.contains(IControlService.class)) bind(IControlService.class).to(ControlService.class);
+		if (!_doNotBindList.contains(ISpriteService.class)) bind(ISpriteService.class).to(SpriteService.class);
 		
 		if (_bindClass != null)	bind(_bindClass).toInstance(_toInstance);
 	}	

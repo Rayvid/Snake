@@ -1,4 +1,4 @@
-package inc.bezdelniki.snakegame.controls.dtos;
+package inc.bezdelniki.snakegame.control.dtos;
 
 import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 
@@ -15,5 +15,6 @@ public abstract class Control
 	public TextureRegion noTouchImage;
 	public List<TouchableRegion> touchableRegions;
 	
+	abstract public void adjustToLostContextOrChangedResolution();
 	abstract public void recalculateControlLayout(LayoutParams layoutParams);
 }

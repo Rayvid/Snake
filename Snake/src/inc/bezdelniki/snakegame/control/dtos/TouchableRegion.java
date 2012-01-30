@@ -1,4 +1,4 @@
-package inc.bezdelniki.snakegame.controls.dtos;
+package inc.bezdelniki.snakegame.control.dtos;
 
 public class TouchableRegion
 {

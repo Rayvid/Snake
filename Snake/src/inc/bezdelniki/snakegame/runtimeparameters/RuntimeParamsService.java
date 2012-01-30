@@ -4,9 +4,9 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
@@ -86,5 +86,9 @@ public class RuntimeParamsService implements IRuntimeParamsService
 
 		runtimeParams.layoutParams.scoreCoords = new DeviceCoords(2, systemParams.height - 2);
 		runtimeParams.layoutParams.fpsCoords = new DeviceCoords(2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			control.recalculateControlLayout(runtimeParams.layoutParams);
+		}
 	}
 }

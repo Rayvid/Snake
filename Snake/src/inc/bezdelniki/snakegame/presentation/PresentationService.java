@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,6 +15,7 @@ import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.resources.background.dtos.Background;
 import inc.bezdelniki.snakegame.resources.font.IFontService;
+import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
@@ -25,11 +25,11 @@ public class PresentationService implements IPresentationService
 	private IDeviceService _deviceService;
 	private IFontService _fontService;
 	private ISystemParamsService _systemParamsService;
+	private ISpriteService _spriteService;
 	private RuntimeParams _runtimeParams;
 
 	private BitmapFont _smallFont = null;
 	private BitmapFont _regularInfoFont = null;
-	private Texture _mainObjectsTexture = null;
 	private TextureRegion _snakesHeadSprite = null;
 	private TextureRegion _snakesBodySprite = null;
 	private TextureRegion _appleSprite = null;
@@ -39,11 +39,13 @@ public class PresentationService implements IPresentationService
 			ISystemParamsService systemParamsService,
 			IDeviceService deviceService,
 			IFontService fontService,
+			ISpriteService spriteService,
 			RuntimeParams runtimeParams)
 	{
 		_systemParamsService = systemParamsService;
 		_deviceService = deviceService;
 		_fontService = fontService;
+		_spriteService = spriteService;
 		_runtimeParams = runtimeParams;
 	}
 
@@ -58,32 +60,25 @@ public class PresentationService implements IPresentationService
 			_regularInfoFont = _fontService.getRegularInfoFont();
 		}
 
-		if (_mainObjectsTexture == null)
-		{
-			_mainObjectsTexture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
-		}
-
 		if (_snakesHeadSprite == null)
 		{
-			_snakesHeadSprite = new TextureRegion(_mainObjectsTexture, 0, 0, 16, 16);
+			_snakesHeadSprite = _spriteService.getSnakesHead();
 		}
 		if (_snakesBodySprite == null)
 		{
-			_snakesBodySprite = new TextureRegion(_mainObjectsTexture, 16, 0, 16, 16);
+			_snakesBodySprite = _spriteService.getSnakesBody();
 		}
 		if (_appleSprite == null)
 		{
-			_appleSprite = new TextureRegion(_mainObjectsTexture, 32, 0, 16, 16);
+			_appleSprite = _spriteService.getApple();
 		}
 	}
 	
 	@Override
-	public void graphicContextCanBeLostResolutionCanBeChanged()
+	public void adjustToLostContextOrChangedResolution()
 	{
 		_smallFont = null;
 		_regularInfoFont = null;
-
-		_mainObjectsTexture = null;
 
 		_snakesHeadSprite = null;
 		_snakesBodySprite = null;

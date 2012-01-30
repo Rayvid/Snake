@@ -15,7 +15,6 @@ public interface IGameWorldService
 	void initGameWorld();
 	GameWorld getGameWorld();
 	void applySnakeMovementChange(SnakeMovementChange movementChange);
-    void applyLyingItem(LyingItem lyingItem);
 	LyingItem createAndApplyLyingItemSomewhere(ItemType itemType) throws LyingItemNowhereToPlaceException;
 	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException;
 	void moveSnake() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException;
