@@ -9,4 +9,8 @@ public interface ISpriteService
 	public TextureRegion getApple();
 	public TextureRegion getPauseButtonUnpressed();
 	public TextureRegion getPauseButtonPressed();
+	public TextureRegion getArrowPadPressedLeft();
+	public TextureRegion getArrowPadPressedUp();
+	public TextureRegion getArrowPadPressedRight();
+	public TextureRegion getArrowPadPressedDown();
 }

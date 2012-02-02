@@ -7,12 +7,15 @@ import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.control.IControlService;
+import inc.bezdelniki.snakegame.control.dtos.ArrowPadControl;
 import inc.bezdelniki.snakegame.control.dtos.Control;
+import inc.bezdelniki.snakegame.control.dtos.PauseControl;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 
 import com.google.inject.Guice;
@@ -33,8 +36,12 @@ public class TestControlsIsolated
 						IControlService.class));
 		
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
-		runtimeParams.layoutParams.controls.add(createMock(Control.class));
-		runtimeParams.layoutParams.controls.add(createMock(Control.class));
+		
+		Control control1 = createMock(PauseControl.class);
+		runtimeParams.layoutParams.controls.add(control1);
+		
+		Control control2 = createMock(ArrowPadControl.class);
+		runtimeParams.layoutParams.controls.add(control2);
 	}
 
 	@Test
@@ -47,11 +54,31 @@ public class TestControlsIsolated
 		
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			control.recalculateControlLayout(runtimeParams.layoutParams);
+			control.recalculateControlLayout();
 			replay(control);
 		}
 		
 		runtimeParamsService.adjustLayoutParams(runtimeParams);
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			verify(control);
+		}
+	}
+	
+	@Test
+	public void testIfScreenResolutionChangeInvokesAdjustToLostContextOrChangedResolution()
+	{
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			control.adjustToLostContextOrChangedResolution();
+			replay(control);
+		}
+		
+		SystemParams systemParams = systemParamsService.getSystemParams();
+		systemParamsService.newResolutionWereSet(systemParams.height, systemParams.width);
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
 			verify(control);

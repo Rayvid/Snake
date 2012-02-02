@@ -38,4 +38,19 @@ public class TestSpriteIsolated
 		controlService.CreatePauseControl();
 		verify(_mockedSpriteService);
 	}
+	
+	@Test
+	public void testIfCreateArrowPadControlGetsArrowPadUnpressedArrowPadPressedLeftArrowPadPressedUpArrowPadPressedRightArrowPadPressedDownSprites()
+	{
+		IControlService controlService = _testInjectorInstance.getInstance(IControlService.class);
+		
+		expect(_mockedSpriteService.getArrowPadPressedLeft()).andReturn(null);
+		expect(_mockedSpriteService.getArrowPadPressedUp()).andReturn(null);
+		expect(_mockedSpriteService.getArrowPadPressedRight()).andReturn(null);
+		expect(_mockedSpriteService.getArrowPadPressedDown()).andReturn(null);
+		replay(_mockedSpriteService);
+		
+		controlService.CreateArrowPadControl();
+		verify(_mockedSpriteService);
+	}
 }

@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.control.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
@@ -157,13 +158,14 @@ public class TestRuntimeParamsIsolated
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
 		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+		IControlService controlService = _testInjectorInstance.getInstance(IControlService.class);
 		
 		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
 		expectLastCall().andDelegateTo(runtimeParamsService).anyTimes();
 		replay(_mockedRuntimeParamsService);
 		
-		runtimeParams.layoutParams.controls.add(createMock(Control.class));
-		runtimeParams.layoutParams.controls.add(createMock(Control.class));
+		runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
+		runtimeParams.layoutParams.controls.add(controlService.CreateArrowPadControl());
 	
 		systemParamsService.newResolutionWereSet(480, 315);
 		SystemParams systemParams = systemParamsService.getSystemParams();
@@ -189,6 +191,19 @@ public class TestRuntimeParamsIsolated
 						|| control.x == 0
 						|| control.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
 						|| control.x + control.width == systemParams.width);
+			}
+			
+			for (Control controlToCompare : runtimeParams.layoutParams.controls)
+			{
+				if (controlToCompare != control)
+				{
+					assertTrue(
+							(control.x + control.width <= controlToCompare.x
+									|| control.x >= controlToCompare.x + controlToCompare.width)
+							&& (control.y + control.height <= controlToCompare.y
+									|| control.y >= controlToCompare.y + controlToCompare.height)
+							);
+				}
 			}
 		}
 		
@@ -216,6 +231,19 @@ public class TestRuntimeParamsIsolated
 						|| control.x == 0
 						|| control.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
 						|| control.x + control.width == systemParams.width);
+			}
+			
+			for (Control controlToCompare : runtimeParams.layoutParams.controls)
+			{
+				if (controlToCompare != control)
+				{
+					assertTrue(
+							(control.x + control.width <= controlToCompare.x
+									|| control.x >= controlToCompare.x + controlToCompare.width)
+							&& (control.y + control.height <= controlToCompare.y
+									|| control.y >= controlToCompare.y + controlToCompare.height)
+							);
+				}
 			}
 		}
 	}

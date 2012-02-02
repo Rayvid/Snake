@@ -1,7 +1,5 @@
 package inc.bezdelniki.snakegame.control.dtos;
 
-import inc.bezdelniki.snakegame.runtimeparameters.dto.LayoutParams;
-
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,5 +14,5 @@ public abstract class Control
 	public List<TouchableRegion> touchableRegions;
 	
 	abstract public void adjustToLostContextOrChangedResolution();
-	abstract public void recalculateControlLayout(LayoutParams layoutParams);
+	abstract public void recalculateControlLayout();
 }

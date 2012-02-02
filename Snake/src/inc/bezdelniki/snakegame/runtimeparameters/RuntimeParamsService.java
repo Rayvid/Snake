@@ -88,7 +88,7 @@ public class RuntimeParamsService implements IRuntimeParamsService
 		runtimeParams.layoutParams.fpsCoords = new DeviceCoords(2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			control.recalculateControlLayout(runtimeParams.layoutParams);
+			control.recalculateControlLayout();
 		}
 	}
 }

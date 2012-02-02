@@ -30,14 +30,40 @@ public class SpriteService implements ISpriteService
 	@Override
 	public TextureRegion getPauseButtonUnpressed()
 	{
-		Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
 		return null;
 	}
 
 	@Override
 	public TextureRegion getPauseButtonPressed()
 	{
-		Texture texture = new Texture(Gdx.files.classpath("inc/bezdelniki/snakegame/resources/16.png"));
+		return null;
+	}
+
+	@Override
+	public TextureRegion getArrowPadPressedLeft()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TextureRegion getArrowPadPressedUp()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TextureRegion getArrowPadPressedRight()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TextureRegion getArrowPadPressedDown()
+	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 
