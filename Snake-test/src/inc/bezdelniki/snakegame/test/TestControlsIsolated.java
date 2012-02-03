@@ -3,6 +3,8 @@ package inc.bezdelniki.snakegame.test;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.Random;
+
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
@@ -10,13 +12,17 @@ import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.control.dtos.ArrowPadControl;
 import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.control.dtos.PauseControl;
+import inc.bezdelniki.snakegame.control.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
+import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
+import inc.bezdelniki.snakegame.useraction.dtos.NoAction;
+import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -37,10 +43,10 @@ public class TestControlsIsolated
 		
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		
-		Control control1 = createMock(PauseControl.class);
+		Control control1 = createNiceMock(PauseControl.class);
 		runtimeParams.layoutParams.controls.add(control1);
 		
-		Control control2 = createMock(ArrowPadControl.class);
+		Control control2 = createNiceMock(ArrowPadControl.class);
 		runtimeParams.layoutParams.controls.add(control2);
 	}
 
@@ -88,6 +94,20 @@ public class TestControlsIsolated
 	@Test
 	public void testIfControlsProducesUserActionIfTouchedInTouchableZone()
 	{
-		fail();
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		
+		for (int i = 0; i < 10; i++)
+		{
+			Random random = new Random(i);
+		
+			for (Control control : runtimeParams.layoutParams.controls)
+			{	
+				for (TouchableRegion touchableRegion : control.touchableRegions)
+				{
+					UserAction userAction = control.translateTouchToUserAction(new TouchCoords(random.nextInt(), random.nextInt()));
+					assertTrue(userAction != null && userAction.getClass() != NoAction.class);
+				}
+			}
+		}
 	}
 }

@@ -89,6 +89,7 @@ public class RuntimeParamsService implements IRuntimeParamsService
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
 			control.recalculateControlLayout();
+			control.adjustToLostContextOrChangedResolution();
 		}
 	}
 }

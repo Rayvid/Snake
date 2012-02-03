@@ -14,6 +14,8 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
+import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
@@ -92,6 +94,19 @@ public class TestPresentationIsolated
 		replay(_mockedPresentationService);
 
 		scoreService.presentScore(batch, score);
+		verify(_mockedPresentationService);
+	}
+	
+	@Test
+	public void testIfScreenResolutionChangeInvokesAdjustToLostContextOrChangedResolution()
+	{
+		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
+
+		_mockedPresentationService.adjustToLostContextOrChangedResolution();
+		replay(_mockedPresentationService);
+		
+		SystemParams systemParams = systemParamsService.getSystemParams();
+		systemParamsService.newResolutionWereSet(systemParams.height, systemParams.width);
 		verify(_mockedPresentationService);
 	}
 }

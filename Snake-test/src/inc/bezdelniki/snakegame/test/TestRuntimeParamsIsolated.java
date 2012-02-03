@@ -181,16 +181,16 @@ public class TestRuntimeParamsIsolated
 						&& touchRegion.y + touchRegion.height <= control.height);
 				
 				assertTrue(
-						control.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
-						|| control.y - control.height == 0
-						|| control.y - touchRegion.y - touchRegion.height >= runtimeParams.layoutParams.gameBoxPaddingTop
-						|| control.y == systemParams.height - 1);
+						control.coords.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
+						|| control.coords.y - control.height == 0
+						|| control.coords.y - touchRegion.y - touchRegion.height >= runtimeParams.layoutParams.gameBoxPaddingTop
+						|| control.coords.y == systemParams.height - 1);
 				
 				assertTrue(
-						control.x + touchRegion.x + touchRegion.width <= runtimeParams.layoutParams.gameBoxPaddingLeft
-						|| control.x == 0
-						|| control.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
-						|| control.x + control.width == systemParams.width);
+						control.coords.x + touchRegion.x + touchRegion.width <= runtimeParams.layoutParams.gameBoxPaddingLeft
+						|| control.coords.x == 0
+						|| control.coords.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
+						|| control.coords.x + control.width == systemParams.width);
 			}
 			
 			for (Control controlToCompare : runtimeParams.layoutParams.controls)
@@ -198,10 +198,10 @@ public class TestRuntimeParamsIsolated
 				if (controlToCompare != control)
 				{
 					assertTrue(
-							(control.x + control.width <= controlToCompare.x
-									|| control.x >= controlToCompare.x + controlToCompare.width)
-							&& (control.y + control.height <= controlToCompare.y
-									|| control.y >= controlToCompare.y + controlToCompare.height)
+							(control.coords.x + control.width <= controlToCompare.coords.x
+									|| control.coords.x >= controlToCompare.coords.x + controlToCompare.width)
+							&& (control.coords.y + control.height <= controlToCompare.coords.y
+									|| control.coords.y >= controlToCompare.coords.y + controlToCompare.height)
 							);
 				}
 			}
@@ -221,16 +221,16 @@ public class TestRuntimeParamsIsolated
 						&& touchRegion.y + touchRegion.height <= control.height);
 				
 				assertTrue(
-						control.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
-						|| control.y - control.height == 0
-						|| control.y - touchRegion.y - touchRegion.height >= runtimeParams.layoutParams.gameBoxPaddingTop
-						|| control.y == systemParams.height - 1);
+						control.coords.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
+						|| control.coords.y - control.height == 0
+						|| control.coords.y - touchRegion.y - touchRegion.height >= runtimeParams.layoutParams.gameBoxPaddingTop
+						|| control.coords.y == systemParams.height - 1);
 				
 				assertTrue(
-						control.x + touchRegion.x + touchRegion.width <= runtimeParams.layoutParams.gameBoxPaddingLeft
-						|| control.x == 0
-						|| control.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
-						|| control.x + control.width == systemParams.width);
+						control.coords.x + touchRegion.x + touchRegion.width <= runtimeParams.layoutParams.gameBoxPaddingLeft
+						|| control.coords.x == 0
+						|| control.coords.x + touchRegion.x >= runtimeParams.layoutParams.gameBoxPaddingRight
+						|| control.coords.x + control.width == systemParams.width);
 			}
 			
 			for (Control controlToCompare : runtimeParams.layoutParams.controls)
@@ -238,10 +238,10 @@ public class TestRuntimeParamsIsolated
 				if (controlToCompare != control)
 				{
 					assertTrue(
-							(control.x + control.width <= controlToCompare.x
-									|| control.x >= controlToCompare.x + controlToCompare.width)
-							&& (control.y + control.height <= controlToCompare.y
-									|| control.y >= controlToCompare.y + controlToCompare.height)
+							(control.coords.x + control.width <= controlToCompare.coords.x
+									|| control.coords.x >= controlToCompare.coords.x + controlToCompare.width)
+							&& (control.coords.y + control.height <= controlToCompare.coords.y
+									|| control.coords.y >= controlToCompare.coords.y + controlToCompare.height)
 							);
 				}
 			}
