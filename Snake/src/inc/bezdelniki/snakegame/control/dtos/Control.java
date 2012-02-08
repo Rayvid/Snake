@@ -16,6 +16,7 @@ public abstract class Control
 	public TextureRegion noTouchImage;
 	public List<TouchableRegion> touchableRegions;
 	
+	abstract public TextureRegion getPresentationSprite();
 	abstract public void adjustToLostContextOrChangedResolution();
 	abstract public void recalculateControlLayout();
 	abstract public UserAction translateTouchToUserAction(TouchCoords touchCoords);

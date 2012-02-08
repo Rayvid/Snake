@@ -52,7 +52,7 @@ public class TestDeviceIsolated
 		expectLastCall().andDelegateTo(deviceService).anyTimes();
 		replay(_mockedDeviceService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		WorldPosition toTheRight = (WorldPosition) snake.headPosition.clone();
 		toTheRight.tileX++;
 		WorldPosition toTheLeft = (WorldPosition) snake.headPosition.clone();
@@ -158,7 +158,7 @@ public class TestDeviceIsolated
 		expectLastCall().andDelegateTo(deviceService).anyTimes();
 		replay(_mockedDeviceService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		WorldPosition toTheRight = (WorldPosition) snake.headPosition.clone();
 		toTheRight.tileX++;
 		WorldPosition toTheLeft = (WorldPosition) snake.headPosition.clone();

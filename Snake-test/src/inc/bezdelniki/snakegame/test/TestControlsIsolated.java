@@ -16,6 +16,7 @@ import inc.bezdelniki.snakegame.control.dtos.PauseControl;
 import inc.bezdelniki.snakegame.control.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
+import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
@@ -103,8 +104,10 @@ public class TestControlsIsolated
 	{
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		ControlService controlService = new ControlService(
+				_testInjectorInstance.getInstance(ISystemParamsService.class),
 				_testInjectorInstance.getInstance(IDeviceService.class),
-				_testInjectorInstance.getInstance(ISpriteService.class));
+				_testInjectorInstance.getInstance(ISpriteService.class),
+				_testInjectorInstance.getInstance(IPresentationService.class));
 		
 		runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
 		runtimeParams.layoutParams.controls.add(controlService.CreateArrowPadControl());

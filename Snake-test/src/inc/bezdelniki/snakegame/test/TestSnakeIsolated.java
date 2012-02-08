@@ -49,7 +49,7 @@ public class TestSnakeIsolated
 
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		assertTrue(snake != null);
 		assertEquals(snake.headPosition, new WorldPosition(appSettings.initialHeadPositionX, appSettings.initialHeadPositionY));
 	}
@@ -61,7 +61,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 
 		int length = snake.newLength;
 		snakeService.growSnake(snake);
@@ -75,7 +75,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 
 		int length = snake.currLength;
 		snakeService.growSnake(snake);
@@ -90,7 +90,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 
 		WorldPosition oldPos = (WorldPosition) snake.headPosition.clone();
 		snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
@@ -103,7 +103,7 @@ public class TestSnakeIsolated
 	{
 		Snake snake = new Snake();
 		snake.headPosition = new WorldPosition(0, 0);
-		expect(_mockedSnakeService.createSnake()).andReturn(snake);	
+		expect(_mockedSnakeService.create()).andReturn(snake);	
 		replay(_mockedSnakeService);
 		
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(IGameWorldService.class);
@@ -125,7 +125,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
@@ -143,7 +143,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		try
@@ -166,7 +166,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		try
@@ -201,7 +201,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		try
@@ -237,7 +237,7 @@ public class TestSnakeIsolated
 		IPresentationService presentationService = _testInjectorInstance.getInstance(IPresentationService.class);
 		ISnakeService snakeService = new SnakeService(appSettingsService, presentationService);
 
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 		AppSettings appSettings = appSettingsService.getAppSettings();
 
 		try

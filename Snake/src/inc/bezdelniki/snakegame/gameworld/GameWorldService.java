@@ -64,7 +64,7 @@ public class GameWorldService implements IGameWorldService
 		_gameWorld = new GameWorld();
 
 		_gameWorld.lyingItems = new ArrayList<LyingItem>();
-		_gameWorld.snake = _snakeService.createSnake();
+		_gameWorld.snake = _snakeService.create();
 		_gameWorld.movementChangesInEffect = new ArrayList<SnakeMovementChange>();
 		
 		_lastSnakesMovementNanoTimestamp = _timeService.getNanoStamp();

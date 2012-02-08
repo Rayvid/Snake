@@ -28,7 +28,7 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public Snake createSnake()
+	public Snake create()
 	{
 		AppSettings settings = _appSettingsService.getAppSettings();
 

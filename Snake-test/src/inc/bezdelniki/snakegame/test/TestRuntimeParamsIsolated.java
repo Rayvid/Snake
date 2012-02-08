@@ -177,8 +177,8 @@ public class TestRuntimeParamsIsolated
 				assertTrue(
 						touchRegion.x >= 0
 						&& touchRegion.y >= 0
-						&& touchRegion.x + touchRegion.width <= control.width
-						&& touchRegion.y + touchRegion.height <= control.height);
+						&& touchRegion.x + touchRegion.width <= control.width + 2
+						&& touchRegion.y + touchRegion.height <= control.height + 2);
 				
 				assertTrue(
 						control.coords.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom
@@ -217,8 +217,8 @@ public class TestRuntimeParamsIsolated
 				assertTrue(
 						touchRegion.x >= 0
 						&& touchRegion.y >= 0
-						&& touchRegion.x + touchRegion.width <= control.width
-						&& touchRegion.y + touchRegion.height <= control.height);
+						&& touchRegion.x + touchRegion.width <= control.width + 2
+						&& touchRegion.y + touchRegion.height <= control.height + 2);
 				
 				assertTrue(
 						control.coords.y - touchRegion.y <= runtimeParams.layoutParams.gameBoxPaddingBottom

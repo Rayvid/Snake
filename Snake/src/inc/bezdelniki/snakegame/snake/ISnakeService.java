@@ -11,7 +11,7 @@ import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
 
 public interface ISnakeService
 {
-	Snake createSnake();
+	Snake create();
 	void growSnake(Snake snake);
 	void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException;
 	void presentSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch);

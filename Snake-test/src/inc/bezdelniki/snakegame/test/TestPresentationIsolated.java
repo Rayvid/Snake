@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import inc.bezdelniki.snakegame.control.IControlService;
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.lyingitem.ILyingItemService;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
@@ -42,7 +44,7 @@ public class TestPresentationIsolated
 	public void testIfPresentSnakeCallsPresentHeadMethod()
 	{
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 
 		SpriteBatch batch = null;
 		_mockedPresentationService.presentSnakesHead(batch, snake.headPosition);
@@ -57,7 +59,7 @@ public class TestPresentationIsolated
 	public void testIfPresentSnakeCallsPresentBodyMethod()
 	{
 		ISnakeService snakeService = _testInjectorInstance.getInstance(ISnakeService.class);
-		Snake snake = snakeService.createSnake();
+		Snake snake = snakeService.create();
 
 		SpriteBatch batch = null;
 		_mockedPresentationService.presentSnakesBody(eq(batch), isA(List.class), eq(snake.headPosition));
@@ -94,6 +96,21 @@ public class TestPresentationIsolated
 		replay(_mockedPresentationService);
 
 		scoreService.presentScore(batch, score);
+		verify(_mockedPresentationService);
+	}
+	
+	@Test
+	public void testIfPauseControlPresentCallsPresentControl()
+	{
+		IControlService controlService = _testInjectorInstance.getInstance(IControlService.class);
+		
+		Control control = controlService.CreatePauseControl();
+		
+		SpriteBatch batch = null;
+		_mockedPresentationService.presentControl(batch, control);
+		replay(_mockedPresentationService);
+		
+		controlService.Present(batch, control);
 		verify(_mockedPresentationService);
 	}
 	

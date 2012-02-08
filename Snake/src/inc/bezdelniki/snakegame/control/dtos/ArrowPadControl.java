@@ -2,6 +2,8 @@ package inc.bezdelniki.snakegame.control.dtos;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
@@ -21,7 +23,13 @@ public class ArrowPadControl extends Control
 	public void adjustToLostContextOrChangedResolution()
 	{
 		// TODO Auto-generated method stub
-
+	}
+	
+	@Override
+	public TextureRegion getPresentationSprite()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -45,5 +53,4 @@ public class ArrowPadControl extends Control
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

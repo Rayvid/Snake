@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.google.inject.Inject;
 
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
@@ -197,5 +198,11 @@ public class PresentationService implements IPresentationService
 		
 		_smallFont.setColor(new Color(1.0f, 1.0f, 1.0f, .5f));
 		_smallFont.draw(batch, (new Integer(Gdx.graphics.getFramesPerSecond())).toString(), _runtimeParams.layoutParams.fpsCoords.x, _runtimeParams.layoutParams.fpsCoords.y);
+	}
+
+	@Override
+	public void presentControl(SpriteBatch batch, Control control)
+	{
+		batch.draw(control.getPresentationSprite(), control.coords.x, control.coords.y, control.width, control.height);
 	}
 }

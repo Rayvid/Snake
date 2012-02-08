@@ -1,5 +1,7 @@
 package inc.bezdelniki.snakegame;
 
+import inc.bezdelniki.snakegame.control.IControlService;
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.gameworld.IGameWorldService;
 import inc.bezdelniki.snakegame.gameworld.dtos.GameWorld;
 import inc.bezdelniki.snakegame.gameworld.exceptions.LyingItemNowhereToPlaceException;
@@ -9,6 +11,7 @@ import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.background.IBackgroundService;
 import inc.bezdelniki.snakegame.resources.background.dtos.Background;
+import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
@@ -31,7 +34,12 @@ public class Main implements ApplicationListener
 	public void create()
 	{
 		if (_batch == null)
+		{
 			_batch = new SpriteBatch();
+			IControlService controlService = SnakeInjector.getInjectorInstance().getInstance(IControlService.class);
+			RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
+			runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
+		}
 		
 		IBackgroundService backgroundService = SnakeInjector.getInjectorInstance().getInstance(IBackgroundService.class);
 		_background = backgroundService.GetBackground();
@@ -101,6 +109,14 @@ public class Main implements ApplicationListener
 		snakeService.presentSnake(snake, gameWorld.movementChangesInEffect, _batch);
 		gameWorldService.presentAllLyingItems(_batch);
 		scoreService.presentScore(_batch, gameWorldService.getScore());
+		
+		IControlService controlService = SnakeInjector.getInjectorInstance().getInstance(IControlService.class);
+		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			controlService.Present(_batch, control);
+		}
+		
 		_batch.end();
 	}
 

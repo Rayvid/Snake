@@ -2,6 +2,7 @@ package inc.bezdelniki.snakegame.presentation;
 
 import java.util.List;
 
+import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.resources.background.dtos.Background;
@@ -17,4 +18,5 @@ public interface IPresentationService
 	void presentScore(SpriteBatch batch, int score);
 	void presentBackground(SpriteBatch batch, Background background);
 	void presentFps(SpriteBatch batch);
+	void presentControl(SpriteBatch batch, Control control);
 }
