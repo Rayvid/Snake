@@ -2,26 +2,37 @@ package inc.bezdelniki.snakegame.control.dtos;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
+import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
 
 public class PauseControl extends Control
 {
 	private IDeviceService _deviceService;
+	private ISpriteService _spriteService;
+	private TextureRegion _pauseUnpressed;
+	private TextureRegion _pausePressed;
 	
-	public PauseControl(IDeviceService deviceService)
+	public PauseControl(
+			IDeviceService deviceService,
+			ISpriteService spriteService)
 	{
 		_deviceService = deviceService;
-		recalculateControlLayout();
+		_spriteService = spriteService;
+		adjustToLostContextOrChangedResolution();
 	}
 	
 	@Override
 	public void adjustToLostContextOrChangedResolution()
 	{
-		// TODO Auto-generated method stub
+		_pauseUnpressed = _spriteService.getPauseButtonUnpressed();
+		_pausePressed = _spriteService.getPauseButtonPressed();
 		
+		recalculateControlLayout();
 	}
 	
 	@Override

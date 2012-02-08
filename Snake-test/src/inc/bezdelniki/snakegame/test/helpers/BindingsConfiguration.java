@@ -36,6 +36,8 @@ import java.util.List;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
+import static org.easymock.EasyMock.*;
+
 public class BindingsConfiguration<T> extends AbstractModule
 {
 	private List<Class<?>> _doNotBindList;
@@ -81,7 +83,12 @@ public class BindingsConfiguration<T> extends AbstractModule
 		if (!_doNotBindList.contains(IPresentationService.class)) bind(IPresentationService.class).to(PresentationService.class).in(Singleton.class);
 		if (!_doNotBindList.contains(ITimeService.class)) bind(ITimeService.class).to(TimeService.class);
 		if (!_doNotBindList.contains(IControlService.class)) bind(IControlService.class).to(ControlService.class);
-		if (!_doNotBindList.contains(ISpriteService.class)) bind(ISpriteService.class).to(SpriteService.class);
+		if (!_doNotBindList.contains(ISpriteService.class))
+		{
+			ISpriteService spriteService = createNiceMock(ISpriteService.class);
+			replay(spriteService);
+			bind(ISpriteService.class).toInstance(spriteService);
+		}
 		
 		if (_bindClass != null)	bind(_bindClass).toInstance(_toInstance);
 	}	

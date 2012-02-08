@@ -8,6 +8,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
+import inc.bezdelniki.snakegame.control.ControlService;
 import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.control.dtos.ArrowPadControl;
 import inc.bezdelniki.snakegame.control.dtos.Control;
@@ -15,6 +16,7 @@ import inc.bezdelniki.snakegame.control.dtos.PauseControl;
 import inc.bezdelniki.snakegame.control.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
+import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
@@ -41,13 +43,6 @@ public class TestControlsIsolated
 						_mockedControlService,
 						IControlService.class));
 		
-		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
-		
-		Control control1 = createNiceMock(PauseControl.class);
-		runtimeParams.layoutParams.controls.add(control1);
-		
-		Control control2 = createNiceMock(ArrowPadControl.class);
-		runtimeParams.layoutParams.controls.add(control2);
 	}
 
 	@Test
@@ -57,6 +52,12 @@ public class TestControlsIsolated
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
 		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		
+		Control control1 = createNiceMock(PauseControl.class);
+		runtimeParams.layoutParams.controls.add(control1);
+		
+		Control control2 = createNiceMock(ArrowPadControl.class);
+		runtimeParams.layoutParams.controls.add(control2);
 		
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
@@ -77,6 +78,12 @@ public class TestControlsIsolated
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		
+		Control control1 = createNiceMock(PauseControl.class);
+		runtimeParams.layoutParams.controls.add(control1);
+		
+		Control control2 = createNiceMock(ArrowPadControl.class);
+		runtimeParams.layoutParams.controls.add(control2);
+		
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
 			control.adjustToLostContextOrChangedResolution();
@@ -95,6 +102,12 @@ public class TestControlsIsolated
 	public void testIfControlsProducesUserActionIfTouchedInTouchableZone()
 	{
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		ControlService controlService = new ControlService(
+				_testInjectorInstance.getInstance(IDeviceService.class),
+				_testInjectorInstance.getInstance(ISpriteService.class));
+		
+		runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
+		runtimeParams.layoutParams.controls.add(controlService.CreateArrowPadControl());
 		
 		for (int i = 0; i < 10; i++)
 		{
