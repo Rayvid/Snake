@@ -45,14 +45,28 @@ public class TestControlsIsolated
 						IControlService.class));
 		
 	}
+	
+	@Test
+	public void testIfControlServiceProducesFullyFunctionalPauseControl()
+	{
+		// TODO check current sprite and touchable regions
+		fail();
+	}
+	
+	@Test
+	public void testIfControlServiceProducesFullyFunctionalArrowPadControl()
+	{
+		// TODO check current sprite and touchable regions
+		fail();
+	}
 
 	@Test
 	public void testIfAdjustLayoutParamsCallsAllControlsRecalculateControlLayout()
 	{
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
-		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
-		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
+		
+		runtimeParamsService.initParamsForNewGame(runtimeParams);
 		
 		Control control1 = createNiceMock(PauseControl.class);
 		runtimeParams.layoutParams.controls.add(control1);
@@ -60,24 +74,25 @@ public class TestControlsIsolated
 		Control control2 = createNiceMock(ArrowPadControl.class);
 		runtimeParams.layoutParams.controls.add(control2);
 		
+		Random random = new Random();
+		TouchCoords touchCoords = new TouchCoords(random.nextInt(), random.nextInt());
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			control.recalculateControlLayout();
-			replay(control);
+			_mockedControlService.adjustLayoutParams(control, runtimeParams);
 		}
+		replay(_mockedControlService);
 		
 		runtimeParamsService.adjustLayoutParams(runtimeParams);
-		for (Control control : runtimeParams.layoutParams.controls)
-		{
-			verify(control);
-		}
+		verify(_mockedControlService);
 	}
 	
 	@Test
 	public void testIfScreenResolutionChangeInvokesAdjustToLostContextOrChangedResolution()
 	{
-		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
+		
+		runtimeParamsService.initParamsForNewGame(runtimeParams);
 		
 		Control control1 = createNiceMock(PauseControl.class);
 		runtimeParams.layoutParams.controls.add(control1);
@@ -85,18 +100,68 @@ public class TestControlsIsolated
 		Control control2 = createNiceMock(ArrowPadControl.class);
 		runtimeParams.layoutParams.controls.add(control2);
 		
+		Random random = new Random();
+		TouchCoords touchCoords = new TouchCoords(random.nextInt(), random.nextInt());
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			control.adjustToLostContextOrChangedResolution();
-			replay(control);
+			_mockedControlService.adjustToLostContextOrChangedResolution(control);
 		}
+		replay(_mockedControlService);
 		
-		SystemParams systemParams = systemParamsService.getSystemParams();
-		systemParamsService.newResolutionWereSet(systemParams.height, systemParams.width);
+		runtimeParamsService.adjustLayoutParams(runtimeParams);
+		verify(_mockedControlService);
+	}
+	
+	@Test
+	public void testIfAdjustControlsOnTouchCallsControlServiceAsMuchTimesAsThereIsControls()
+	{
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
+		
+		runtimeParamsService.initParamsForNewGame(runtimeParams);
+		
+		Control control1 = createNiceMock(PauseControl.class);
+		runtimeParams.layoutParams.controls.add(control1);
+		
+		Control control2 = createNiceMock(ArrowPadControl.class);
+		runtimeParams.layoutParams.controls.add(control2);
+		
+		Random random = new Random();
+		TouchCoords touchCoords = new TouchCoords(random.nextInt(), random.nextInt());
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			verify(control);
+			expect(_mockedControlService.GetUserActionIfTouched(control, touchCoords)).andReturn(null);
 		}
+		replay(_mockedControlService);
+		
+		runtimeParamsService.adjustControlsOnTouch(runtimeParams, touchCoords);
+		verify(_mockedControlService);
+	}
+	
+	@Test
+	public void testIfAdjustControlsOnReleaseCallsControlServiceAsMuchTimesAsThereIsControls()
+	{
+		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
+		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
+		
+		runtimeParamsService.initParamsForNewGame(runtimeParams);
+		
+		Control control1 = createNiceMock(PauseControl.class);
+		runtimeParams.layoutParams.controls.add(control1);
+		
+		Control control2 = createNiceMock(ArrowPadControl.class);
+		runtimeParams.layoutParams.controls.add(control2);
+		
+		Random random = new Random();
+		TouchCoords touchCoords = new TouchCoords(random.nextInt(), random.nextInt());
+		for (Control control : runtimeParams.layoutParams.controls)
+		{
+			_mockedControlService.ReleaseTouch(control);
+		}
+		replay(_mockedControlService);
+		
+		runtimeParamsService.adjustControlsOnTouch(runtimeParams, touchCoords);
+		verify(_mockedControlService);
 	}
 	
 	@Test
@@ -120,7 +185,7 @@ public class TestControlsIsolated
 			{	
 				for (TouchableRegion touchableRegion : control.touchableRegions)
 				{
-					UserAction userAction = control.translateTouchToUserAction(new TouchCoords(random.nextInt(), random.nextInt()));
+					UserAction userAction = controlService.GetUserActionIfTouched(control, new TouchCoords(random.nextInt(), random.nextInt()));
 					assertTrue(userAction != null && userAction.getClass() != NoAction.class);
 				}
 			}

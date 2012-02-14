@@ -7,6 +7,7 @@ import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
 import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
+import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
@@ -88,8 +89,21 @@ public class RuntimeParamsService implements IRuntimeParamsService
 		runtimeParams.layoutParams.fpsCoords = new DeviceCoords(2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			control.recalculateControlLayout();
-			control.adjustToLostContextOrChangedResolution();
+			// TODO
 		}
+	}
+
+	@Override
+	public void adjustControlsOnTouch(RuntimeParams runtimeParams, TouchCoords touchCoords)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void adjustControlsOnRelease(RuntimeParams runtimeParams)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

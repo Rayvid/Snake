@@ -203,6 +203,6 @@ public class PresentationService implements IPresentationService
 	@Override
 	public void presentControl(SpriteBatch batch, Control control)
 	{
-		batch.draw(control.getPresentationSprite(), control.coords.x, control.coords.y, control.width, control.height);
+		batch.draw(control.currentSprite, control.coords.x, control.coords.y, control.width, control.height);
 	}
 }
