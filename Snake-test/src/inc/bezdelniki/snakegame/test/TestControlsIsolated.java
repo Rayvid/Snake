@@ -74,11 +74,9 @@ public class TestControlsIsolated
 		Control control2 = createNiceMock(ArrowPadControl.class);
 		runtimeParams.layoutParams.controls.add(control2);
 		
-		Random random = new Random();
-		TouchCoords touchCoords = new TouchCoords(random.nextInt(), random.nextInt());
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			_mockedControlService.adjustLayoutParams(control, runtimeParams);
+			_mockedControlService.adjustLayoutParams(control);
 		}
 		replay(_mockedControlService);
 		
@@ -100,8 +98,6 @@ public class TestControlsIsolated
 		Control control2 = createNiceMock(ArrowPadControl.class);
 		runtimeParams.layoutParams.controls.add(control2);
 		
-		Random random = new Random();
-		TouchCoords touchCoords = new TouchCoords(random.nextInt(), random.nextInt());
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
 			_mockedControlService.adjustToLostContextOrChangedResolution(control);

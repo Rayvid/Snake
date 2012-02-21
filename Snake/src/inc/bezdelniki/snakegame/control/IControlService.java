@@ -16,6 +16,6 @@ public interface IControlService
 	public void Present(SpriteBatch batch, Control control);
 	public UserAction GetUserActionIfTouched(Control control, TouchCoords touchCoords);
 	public void ReleaseTouch(Control control);
-	public void adjustLayoutParams(Control control, RuntimeParams runtimeParams);
+	public void adjustLayoutParams(Control control);
 	public void adjustToLostContextOrChangedResolution(Control control);
 }

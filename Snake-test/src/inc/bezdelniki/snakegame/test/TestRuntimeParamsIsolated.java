@@ -68,7 +68,7 @@ public class TestRuntimeParamsIsolated
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService, _testInjectorInstance.getInstance(IControlService.class));
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		
 		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
@@ -96,7 +96,7 @@ public class TestRuntimeParamsIsolated
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService, _testInjectorInstance.getInstance(IControlService.class));
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		
 		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
@@ -126,7 +126,7 @@ public class TestRuntimeParamsIsolated
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService, _testInjectorInstance.getInstance(IControlService.class));
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		
 		_mockedRuntimeParamsService.adjustLayoutParams(runtimeParams);
@@ -156,7 +156,7 @@ public class TestRuntimeParamsIsolated
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IAppSettingsService appSettingsService = _testInjectorInstance.getInstance(IAppSettingsService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(IDeviceService.class);
-		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService);
+		IRuntimeParamsService runtimeParamsService = new RuntimeParamsService(_testInjectorInstance.getInstance(ISystemParamsService.class), appSettingsService, deviceService, _testInjectorInstance.getInstance(IControlService.class));
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 		IControlService controlService = _testInjectorInstance.getInstance(IControlService.class);
 		

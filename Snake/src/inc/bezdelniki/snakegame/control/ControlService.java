@@ -12,6 +12,7 @@ import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
+import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
 
 public class ControlService implements IControlService
@@ -67,15 +68,17 @@ public class ControlService implements IControlService
 	}
 
 	@Override
-	public void adjustLayoutParams(Control control, RuntimeParams runtimeParams)
+	public void adjustLayoutParams(Control control)
 	{
-		// TODO Auto-generated method stub
+		SystemParams systemParams = _systemParamsService.getSystemParams();
+		int tileSize = _deviceService.getTileSize();
 		
+		control.recalculateControlLayout(systemParams, tileSize);
 	}
 
 	@Override
 	public void adjustToLostContextOrChangedResolution(Control control)
 	{
-		// TODO Auto-generated method stub
+		control.adjustToLostContextOrChangedResolution();
 	}
 }

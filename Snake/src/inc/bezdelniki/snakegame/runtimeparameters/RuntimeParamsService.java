@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.appsettings.dtos.AppSettings;
+import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
@@ -17,16 +18,19 @@ public class RuntimeParamsService implements IRuntimeParamsService
 	private IDeviceService _deviceService;
 	private ISystemParamsService _systemParamsService;
 	private IAppSettingsService _appSettingsService;
+	private IControlService _controlService;
 
 	@Inject
 	public RuntimeParamsService(
 			ISystemParamsService systemParamsService,
 			IAppSettingsService appSettingsService,
-			IDeviceService deviceService)
+			IDeviceService deviceService,
+			IControlService controlService)
 	{
 		_systemParamsService = systemParamsService;
 		_appSettingsService = appSettingsService;
 		_deviceService = deviceService;
+		_controlService = controlService;
 	}
 
 	@Override
@@ -89,7 +93,7 @@ public class RuntimeParamsService implements IRuntimeParamsService
 		runtimeParams.layoutParams.fpsCoords = new DeviceCoords(2, runtimeParams.layoutParams.gameBoxPaddingBottom - 2);
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
-			// TODO
+			_controlService.adjustToLostContextOrChangedResolution(control);
 		}
 	}
 
