@@ -119,7 +119,7 @@ public class TestPresentationIsolated
 	{
 		ISystemParamsService systemParamsService = _testInjectorInstance.getInstance(ISystemParamsService.class);
 
-		_mockedPresentationService.adjustToLostContextOrChangedResolution();
+		_mockedPresentationService.adjustToChangedResolution();
 		replay(_mockedPresentationService);
 		
 		SystemParams systemParams = systemParamsService.getSystemParams();

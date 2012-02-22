@@ -76,7 +76,18 @@ public class PresentationService implements IPresentationService
 	}
 	
 	@Override
-	public void adjustToLostContextOrChangedResolution()
+	public void adjustToLostContext()
+	{
+		_smallFont = null;
+		_regularInfoFont = null;
+
+		_snakesHeadSprite = null;
+		_snakesBodySprite = null;
+		_appleSprite = null;
+	}
+	
+	@Override
+	public void adjustToChangedResolution()
 	{
 		_smallFont = null;
 		_regularInfoFont = null;
@@ -203,6 +214,6 @@ public class PresentationService implements IPresentationService
 	@Override
 	public void presentControl(SpriteBatch batch, Control control)
 	{
-		batch.draw(control.currentSprite, control.coords.x, control.coords.y, control.width, control.height);
+		//batch.draw(control.currentSprite, control.coords.x, control.coords.y, control.width, control.height);
 	}
 }

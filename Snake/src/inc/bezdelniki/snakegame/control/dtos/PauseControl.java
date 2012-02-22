@@ -2,21 +2,11 @@ package inc.bezdelniki.snakegame.control.dtos;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
-import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
-import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public class PauseControl extends Control
 {
-	@Override
-	public void adjustToLostContextOrChangedResolution()
-	{
-	}
-	
 	@Override
 	public void recalculateControlLayout(SystemParams systemParams, int tileSize)
 	{

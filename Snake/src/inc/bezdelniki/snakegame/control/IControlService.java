@@ -6,7 +6,6 @@ import inc.bezdelniki.snakegame.control.dtos.ArrowPadControl;
 import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.control.dtos.PauseControl;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
 
 public interface IControlService
@@ -17,5 +16,4 @@ public interface IControlService
 	public UserAction GetUserActionIfTouched(Control control, TouchCoords touchCoords);
 	public void ReleaseTouch(Control control);
 	public void adjustLayoutParams(Control control);
-	public void adjustToLostContextOrChangedResolution(Control control);
 }

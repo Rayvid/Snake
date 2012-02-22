@@ -35,11 +35,16 @@ public class Main implements ApplicationListener
 	{
 		if (_batch == null)
 		{
-			_batch = new SpriteBatch();
-			IControlService controlService = SnakeInjector.getInjectorInstance().getInstance(IControlService.class);
-			RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
-			runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
+			_batch = new SpriteBatch();		
 		}
+		
+		IPresentationService presentationService = SnakeInjector.getInjectorInstance().getInstance(IPresentationService.class);
+		presentationService.adjustToLostContext();
+		
+		IControlService controlService = SnakeInjector.getInjectorInstance().getInstance(IControlService.class);
+		RuntimeParams runtimeParams = SnakeInjector.getInjectorInstance().getInstance(RuntimeParams.class);
+		runtimeParams.layoutParams.controls.clear();
+		runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
 		
 		IBackgroundService backgroundService = SnakeInjector.getInjectorInstance().getInstance(IBackgroundService.class);
 		_background = backgroundService.GetBackground();

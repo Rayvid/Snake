@@ -10,7 +10,6 @@ import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
@@ -19,7 +18,6 @@ public class ControlService implements IControlService
 {
 	private ISystemParamsService _systemParamsService;
 	private IDeviceService _deviceService;
-	private ISpriteService _spriteService;
 	private IPresentationService _presentationService;
 	
 	@Inject
@@ -74,11 +72,5 @@ public class ControlService implements IControlService
 		int tileSize = _deviceService.getTileSize();
 		
 		control.recalculateControlLayout(systemParams, tileSize);
-	}
-
-	@Override
-	public void adjustToLostContextOrChangedResolution(Control control)
-	{
-		control.adjustToLostContextOrChangedResolution();
 	}
 }

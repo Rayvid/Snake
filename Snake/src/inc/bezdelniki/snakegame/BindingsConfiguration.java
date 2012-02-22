@@ -65,7 +65,7 @@ public class BindingsConfiguration extends AbstractModule
 		bind(ILyingItemService.class).to(LyingItemService.class).in(Singleton.class);
 		bind(ISnakeService.class).to(SnakeService.class).in(Singleton.class);
 		bind(IUserActionService.class).to(UserActionService.class).in(Singleton.class);
-		bind(IScoreService.class).to(ScoreService.class);
+		bind(IScoreService.class).to(ScoreService.class).in(Singleton.class);
 		bind(IGameWorldService.class).to(GameWorldService.class).in(Singleton.class);
 		bind(IFontService.class).to(FontService.class).in(Singleton.class);
 		bind(IBackgroundService.class).to(BackgroundService.class).in(Singleton.class);
@@ -73,6 +73,6 @@ public class BindingsConfiguration extends AbstractModule
 		bind(ITimeService.class).to(TimeService.class).in(Singleton.class);
 		bind(IInputService.class).to(InputService.class).in(Singleton.class);
 		bind(IControlService.class).to(ControlService.class).in(Singleton.class);
-		bind(ISpriteService.class).to(SpriteService.class);
+		bind(ISpriteService.class).to(SpriteService.class).in(Singleton.class);
 	}
 }

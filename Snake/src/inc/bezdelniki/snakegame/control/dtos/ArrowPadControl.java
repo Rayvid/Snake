@@ -3,16 +3,10 @@ package inc.bezdelniki.snakegame.control.dtos;
 import java.util.ArrayList;
 
 import inc.bezdelniki.snakegame.device.dtos.DeviceCoords;
-import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 
 public class ArrowPadControl extends Control
 {
-	@Override
-	public void adjustToLostContextOrChangedResolution()
-	{
-	}
-
 	@Override
 	public void recalculateControlLayout(SystemParams systemParams, int tileSize)
 	{

@@ -54,6 +54,6 @@ public class SystemParamsService implements ISystemParamsService
 		_height = height;
 		
 		_runtimeParamsService.adjustLayoutParams(_runtimeParams);
-		_presentationService.adjustToLostContextOrChangedResolution();
+		_presentationService.adjustToChangedResolution();
 	}
 }

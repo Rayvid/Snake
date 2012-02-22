@@ -7,7 +7,6 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import inc.bezdelniki.snakegame.appsettings.IAppSettingsService;
 import inc.bezdelniki.snakegame.control.ControlService;
 import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.control.dtos.ArrowPadControl;
@@ -19,10 +18,8 @@ import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
-import inc.bezdelniki.snakegame.runtimeparameters.RuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
-import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 import inc.bezdelniki.snakegame.useraction.dtos.NoAction;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
@@ -59,9 +56,9 @@ public class TestControlsIsolated
 		// TODO check current sprite and touchable regions
 		fail();
 	}
-
+	
 	@Test
-	public void testIfAdjustLayoutParamsCallsAllControlsRecalculateControlLayout()
+	public void testIfScreenResolutionChangeInvokesRecalculateControlLayout()
 	{
 		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
 		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
@@ -77,30 +74,6 @@ public class TestControlsIsolated
 		for (Control control : runtimeParams.layoutParams.controls)
 		{
 			_mockedControlService.adjustLayoutParams(control);
-		}
-		replay(_mockedControlService);
-		
-		runtimeParamsService.adjustLayoutParams(runtimeParams);
-		verify(_mockedControlService);
-	}
-	
-	@Test
-	public void testIfScreenResolutionChangeInvokesAdjustToLostContextOrChangedResolution()
-	{
-		RuntimeParams runtimeParams = _testInjectorInstance.getInstance(RuntimeParams.class);
-		IRuntimeParamsService runtimeParamsService = _testInjectorInstance.getInstance(IRuntimeParamsService.class);
-		
-		runtimeParamsService.initParamsForNewGame(runtimeParams);
-		
-		Control control1 = createNiceMock(PauseControl.class);
-		runtimeParams.layoutParams.controls.add(control1);
-		
-		Control control2 = createNiceMock(ArrowPadControl.class);
-		runtimeParams.layoutParams.controls.add(control2);
-		
-		for (Control control : runtimeParams.layoutParams.controls)
-		{
-			_mockedControlService.adjustToLostContextOrChangedResolution(control);
 		}
 		replay(_mockedControlService);
 		
