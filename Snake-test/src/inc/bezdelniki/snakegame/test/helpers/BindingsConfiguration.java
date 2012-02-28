@@ -32,6 +32,7 @@ import inc.bezdelniki.snakegame.useraction.UserActionService;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
@@ -85,6 +86,7 @@ public class BindingsConfiguration<T> extends AbstractModule
 		if (!_doNotBindList.contains(ISpriteService.class))
 		{
 			ISpriteService spriteService = createNiceMock(ISpriteService.class);
+			expect(spriteService.getPauseButtonUnpressed()).andReturn(new TextureRegion()).anyTimes();
 			replay(spriteService);
 			bind(ISpriteService.class).toInstance(spriteService);
 		}

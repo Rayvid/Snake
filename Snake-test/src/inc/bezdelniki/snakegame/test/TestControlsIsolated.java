@@ -46,15 +46,37 @@ public class TestControlsIsolated
 	@Test
 	public void testIfControlServiceProducesFullyFunctionalPauseControl()
 	{
-		// TODO check current sprite and touchable regions
-		fail();
+		ControlService controlService = new ControlService(
+				_testInjectorInstance.getInstance(ISystemParamsService.class),
+				_testInjectorInstance.getInstance(IDeviceService.class),
+				_testInjectorInstance.getInstance(ISpriteService.class),
+				_testInjectorInstance.getInstance(IPresentationService.class));
+		PauseControl pauseControl = controlService.CreatePauseControl();
+		
+		assertTrue(pauseControl.coords != null);
+		assertTrue(pauseControl.width > 0);
+		assertTrue(pauseControl.height > 0);
+		assertTrue(pauseControl.noTouchImage != null);
+		assertTrue(pauseControl.touchableRegions.size() > 0);
+		assertTrue(pauseControl.regionCurrentlyTouched == null);
 	}
 	
 	@Test
 	public void testIfControlServiceProducesFullyFunctionalArrowPadControl()
 	{
-		// TODO check current sprite and touchable regions
-		fail();
+		ControlService controlService = new ControlService(
+				_testInjectorInstance.getInstance(ISystemParamsService.class),
+				_testInjectorInstance.getInstance(IDeviceService.class),
+				_testInjectorInstance.getInstance(ISpriteService.class),
+				_testInjectorInstance.getInstance(IPresentationService.class));
+		PauseControl arrowPadControl = controlService.CreatePauseControl();
+		
+		assertTrue(arrowPadControl.coords != null);
+		assertTrue(arrowPadControl.width > 0);
+		assertTrue(arrowPadControl.height > 0);
+		assertTrue(arrowPadControl.noTouchImage != null);
+		assertTrue(arrowPadControl.touchableRegions.size() > 0);
+		assertTrue(arrowPadControl.regionCurrentlyTouched == null);
 	}
 	
 	@Test

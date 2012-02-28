@@ -15,9 +15,9 @@ public class ArrowPadControl extends Control
 		height = tileSize * 4;
 		
 		touchableRegions = new ArrayList<TouchableRegion>(); 
-		touchableRegions.add(new TouchableRegion(0, (int) (tileSize * 1.5) + 1, (int) (tileSize * 1.5) + 1, tileSize));
-		touchableRegions.add(new TouchableRegion((int) (tileSize * 1.5) + 1, 0, tileSize, (int) (tileSize * 1.5) + 1));
-		touchableRegions.add(new TouchableRegion((int) (tileSize * 2.5) + 1, (int) (tileSize * 1.5) + 1, (int) (tileSize * 1.5) + 1, tileSize));
-		touchableRegions.add(new TouchableRegion((int) (tileSize * 1.5) + 1, (int) (tileSize * 2.5) + 1, tileSize, (int) (tileSize * 1.5) + 1));
+		//touchableRegions.add(new TouchableRegion(0, (int) (tileSize * 1.5) + 1, (int) (tileSize * 1.5) + 1, tileSize));
+		//touchableRegions.add(new TouchableRegion((int) (tileSize * 1.5) + 1, 0, tileSize, (int) (tileSize * 1.5) + 1));
+		//touchableRegions.add(new TouchableRegion((int) (tileSize * 2.5) + 1, (int) (tileSize * 1.5) + 1, (int) (tileSize * 1.5) + 1, tileSize));
+		//touchableRegions.add(new TouchableRegion((int) (tileSize * 1.5) + 1, (int) (tileSize * 2.5) + 1, tileSize, (int) (tileSize * 1.5) + 1));
 	}
 }
