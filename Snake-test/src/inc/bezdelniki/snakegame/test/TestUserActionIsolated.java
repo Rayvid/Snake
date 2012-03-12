@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import inc.bezdelniki.snakegame.control.IControlService;
 import inc.bezdelniki.snakegame.device.DeviceService;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.gameworld.GameWorldService;
@@ -19,7 +20,7 @@ import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameE
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.UserActionService;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 import org.junit.Test;
 
@@ -84,7 +85,7 @@ public class TestUserActionIsolated
 		for (int i = 0; i < snake.newLength; i++)
 			gameWorldService.moveSnake();
 
-		List<SnakeMovementChange> movementChangesInEffect = gameWorldService.getGameWorld().movementChangesInEffect;
+		List<SnakeMovementChangeAction> movementChangesInEffect = gameWorldService.getGameWorld().movementChangesInEffect;
 		// this triggers cleanup when needed
 		snakeService.getSnakesTrail(snake, movementChangesInEffect);
 		//
@@ -241,14 +242,14 @@ public class TestUserActionIsolated
 		IGameWorldService gameWorldService = _testInjectorInstance.getInstance(GameWorldService.class);
 		IDeviceService deviceService = _testInjectorInstance.getInstance(DeviceService.class);
 		IUserActionService userActionService = new UserActionService(deviceService);
-		
+
 		gameWorldService.initGameWorld();
 		Snake snake = gameWorldService.getGameWorld().snake;
-		
+
 		gameWorldService.applySnakeMovementChange(userActionService.createSnakeMovementChange(snake, Direction.LEFT));
 		WorldPosition prevHeadPosition = (WorldPosition) snake.headPosition.clone();
 		gameWorldService.moveSnake();
-		
+
 		assertTrue(prevHeadPosition.tileX + 1 == snake.headPosition.tileX);
 		assertTrue(snake.direction == Direction.RIGHT);
 	}
@@ -295,5 +296,32 @@ public class TestUserActionIsolated
 			assertTrue(trail1.get(i).equals(trail2.get(i + 1)));
 		}
 		assertTrue(trail2.get(0).tileX == trail1.get(0).tileX - 1);
+	}
+
+	@Test
+	public void testIfCreatePauseControlCreatesPauseAction()
+	{
+		IControlService controlService = _testInjectorInstance.getInstance(IControlService.class);
+
+		expect(_mockedUserActionService.createPauseAction()).andReturn(null);
+		replay(_mockedUserActionService);
+
+		controlService.CreatePauseControl();
+		verify(_mockedUserActionService);
+	}
+
+	@Test
+	public void testIfCreateArrowPadControlCreatesFourSnakeMovementChangeActions()
+	{
+		IControlService controlService = _testInjectorInstance.getInstance(IControlService.class);
+		
+		expect(_mockedUserActionService.createSnakeMovementChange(isA(Snake.class), isA(Direction.class))).andReturn(null);
+		expect(_mockedUserActionService.createSnakeMovementChange(isA(Snake.class), isA(Direction.class))).andReturn(null);
+		expect(_mockedUserActionService.createSnakeMovementChange(isA(Snake.class), isA(Direction.class))).andReturn(null);
+		expect(_mockedUserActionService.createSnakeMovementChange(isA(Snake.class), isA(Direction.class))).andReturn(null);
+		replay(_mockedUserActionService);
+		
+		controlService.CreateArrowPadControl();
+		verify(_mockedUserActionService);
 	}
 }

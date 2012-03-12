@@ -23,7 +23,7 @@ import inc.bezdelniki.snakegame.score.IScoreService;
 import inc.bezdelniki.snakegame.snake.ISnakeService;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.time.ITimeService;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 public class GameWorldService implements IGameWorldService
 {
@@ -65,7 +65,7 @@ public class GameWorldService implements IGameWorldService
 
 		_gameWorld.lyingItems = new ArrayList<LyingItem>();
 		_gameWorld.snake = _snakeService.create();
-		_gameWorld.movementChangesInEffect = new ArrayList<SnakeMovementChange>();
+		_gameWorld.movementChangesInEffect = new ArrayList<SnakeMovementChangeAction>();
 		
 		_lastSnakesMovementNanoTimestamp = _timeService.getNanoStamp();
 		_score = 0;
@@ -118,7 +118,7 @@ public class GameWorldService implements IGameWorldService
 	}
 
 	@Override
-	public void applySnakeMovementChange(SnakeMovementChange movementChange)
+	public void applySnakeMovementChange(SnakeMovementChangeAction movementChange)
 	{
 		if ((movementChange.previousDirection == Direction.LEFT
 				|| movementChange.previousDirection == Direction.RIGHT

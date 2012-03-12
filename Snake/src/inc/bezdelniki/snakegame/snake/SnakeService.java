@@ -13,7 +13,7 @@ import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 public class SnakeService implements ISnakeService
 {
@@ -52,7 +52,7 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public void moveSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException
+	public void moveSnake(Snake snake, List<SnakeMovementChangeAction> snakeMovementChangesInEffect) throws SnakeMovementResultedEndOfGameException
 	{
 		AppSettings settings = _appSettingsService.getAppSettings();
 
@@ -98,14 +98,14 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public void presentSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, SpriteBatch batch)
+	public void presentSnake(Snake snake, List<SnakeMovementChangeAction> snakeMovementChangesInEffect, SpriteBatch batch)
 	{
 		_presentationService.presentSnakesHead(batch, snake.headPosition);
 		_presentationService.presentSnakesBody(batch, getSnakesTrail(snake, snakeMovementChangesInEffect), snake.headPosition);
 	}
 
 	@Override
-	public boolean doesTileBelongToSnake(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect, WorldPosition tile, boolean doIncludeHead)
+	public boolean doesTileBelongToSnake(Snake snake, List<SnakeMovementChangeAction> snakeMovementChangesInEffect, WorldPosition tile, boolean doIncludeHead)
 	{
 
 		List<WorldPosition> snakesTrail = getSnakesTrail(snake, snakeMovementChangesInEffect);
@@ -148,7 +148,7 @@ public class SnakeService implements ISnakeService
 	}
 
 	@Override
-	public List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChange> snakeMovementChangesInEffect)
+	public List<WorldPosition> getSnakesTrail(Snake snake, List<SnakeMovementChangeAction> snakeMovementChangesInEffect)
 	{
 		List<WorldPosition> snakesTrailList = new ArrayList<WorldPosition>();
 

@@ -7,7 +7,8 @@ import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.gameworld.dtos.WorldPosition;
 import inc.bezdelniki.snakegame.model.enums.Direction;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.PauseAction;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 public class UserActionService implements IUserActionService
 {
@@ -20,9 +21,9 @@ public class UserActionService implements IUserActionService
 	}
 
 	@Override
-	public SnakeMovementChange createSnakeMovementChange(Snake snake, Direction direction)
+	public SnakeMovementChangeAction createSnakeMovementChange(Snake snake, Direction direction)
 	{
-		SnakeMovementChange userAction = new SnakeMovementChange();
+		SnakeMovementChangeAction userAction = new SnakeMovementChangeAction();
 		userAction.previousDirection = snake.direction;
 		userAction.newDirection = direction;
 		userAction.headPositionWhenChangeWereMade = (WorldPosition) snake.headPosition.clone();
@@ -31,7 +32,7 @@ public class UserActionService implements IUserActionService
 	}
 
 	@Override
-	public SnakeMovementChange createSnakeMovementChangeAccordingTouch(Snake snake, TouchCoords touchCoords)
+	public SnakeMovementChangeAction createSnakeMovementChangeAccordingTouch(Snake snake, TouchCoords touchCoords)
 	{
 		WorldPosition touchPosition = _deviceService.DeviceCoordsToWorldPosition(_deviceService.TouchCoordsToDeviceCoords(touchCoords));
 
@@ -53,7 +54,7 @@ public class UserActionService implements IUserActionService
 		return null;
 	}
 
-	private SnakeMovementChange generateHorizontalChange(Snake snake, WorldPosition touchPosition)
+	private SnakeMovementChangeAction generateHorizontalChange(Snake snake, WorldPosition touchPosition)
 	{
 		if (touchPosition.tileX - snake.headPosition.tileX > 0)
 		{
@@ -65,7 +66,7 @@ public class UserActionService implements IUserActionService
 		}
 	}
 
-	private SnakeMovementChange generateVerticalChange(Snake snake, WorldPosition touchPosition)
+	private SnakeMovementChangeAction generateVerticalChange(Snake snake, WorldPosition touchPosition)
 	{
 		if (touchPosition.tileY - snake.headPosition.tileY > 0)
 		{
@@ -75,5 +76,11 @@ public class UserActionService implements IUserActionService
 		{
 			return createSnakeMovementChange(snake, Direction.UP);
 		}
+	}
+
+	@Override
+	public PauseAction createPauseAction()
+	{
+		return new PauseAction();
 	}
 }

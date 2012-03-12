@@ -18,7 +18,7 @@ import inc.bezdelniki.snakegame.snake.SnakeService;
 import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 import org.junit.Test;
 
@@ -79,7 +79,7 @@ public class TestSnakeIsolated
 
 		int length = snake.currLength;
 		snakeService.growSnake(snake);
-		snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+		snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 		assertTrue(length < snake.currLength);
 	}
 
@@ -93,7 +93,7 @@ public class TestSnakeIsolated
 		Snake snake = snakeService.create();
 
 		WorldPosition oldPos = (WorldPosition) snake.headPosition.clone();
-		snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+		snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 
 		assertTrue(!snake.headPosition.equals(oldPos));
 	}
@@ -130,7 +130,7 @@ public class TestSnakeIsolated
 
 		for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
 		{
-			snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+			snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 		}
 
 		fail("Should not happen");
@@ -150,8 +150,8 @@ public class TestSnakeIsolated
 		{
 			for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
 			{
-				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
-				assertTrue(snake.currLength == snakeService.getSnakesTrail(snake, new ArrayList<SnakeMovementChange>()).size());
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
+				assertTrue(snake.currLength == snakeService.getSnakesTrail(snake, new ArrayList<SnakeMovementChangeAction>()).size());
 			}
 		}
 		catch (SnakeMovementResultedEndOfGameException e)
@@ -173,7 +173,7 @@ public class TestSnakeIsolated
 		{
 			for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
 			{
-				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 			}
 		}
 		catch (SnakeMovementResultedEndOfGameException e)
@@ -182,7 +182,7 @@ public class TestSnakeIsolated
 
 			try
 			{
-				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 			}
 			catch (SnakeMovementResultedEndOfGameException ex)
 			{
@@ -208,7 +208,7 @@ public class TestSnakeIsolated
 		{
 			for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
 			{
-				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 			}
 		}
 		catch (SnakeMovementResultedEndOfGameException e)
@@ -218,7 +218,7 @@ public class TestSnakeIsolated
 			try
 			{
 				snakeService.growSnake(snake);
-				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 			}
 			catch (SnakeMovementResultedEndOfGameException ex)
 			{
@@ -245,7 +245,7 @@ public class TestSnakeIsolated
 			snake.direction = Direction.UP;
 			for (int i = 0; i < Math.max(appSettings.tilesHorizontally, appSettings.tilesVertically); i++)
 			{
-				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChange>());
+				snakeService.moveSnake(snake, new ArrayList<SnakeMovementChangeAction>());
 			}
 		}
 		catch (SnakeMovementResultedEndOfGameException e)

@@ -1,20 +1,18 @@
 package inc.bezdelniki.snakegame.control;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Inject;
 
 import inc.bezdelniki.snakegame.control.dtos.ArrowPadControl;
 import inc.bezdelniki.snakegame.control.dtos.Control;
 import inc.bezdelniki.snakegame.control.dtos.PauseControl;
-import inc.bezdelniki.snakegame.control.dtos.TouchableRegion;
 import inc.bezdelniki.snakegame.device.IDeviceService;
 import inc.bezdelniki.snakegame.device.dtos.TouchCoords;
 import inc.bezdelniki.snakegame.presentation.IPresentationService;
 import inc.bezdelniki.snakegame.resources.sprite.ISpriteService;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
+import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
 
 public class ControlService implements IControlService
@@ -23,25 +21,27 @@ public class ControlService implements IControlService
 	private IDeviceService _deviceService;
 	private ISpriteService _spriteService;
 	private IPresentationService _presentationService;
+	private IUserActionService _userActionService;
 	
 	@Inject
 	public ControlService(
 			ISystemParamsService systemParamsService,
 			IDeviceService deviceService,
 			ISpriteService spriteService,
-			IPresentationService presentationService)
+			IPresentationService presentationService,
+			IUserActionService userActionService)
 	{
 		_systemParamsService = systemParamsService;
 		_deviceService = deviceService;
 		_spriteService = spriteService;
 		_presentationService = presentationService;
+		_userActionService = userActionService;
 	}
 	
 	@Override
 	public PauseControl CreatePauseControl()
 	{
-		PauseControl control = new PauseControl();
-		control.noTouchImage = _spriteService.getPauseButtonUnpressed();
+		PauseControl control = new PauseControl(_spriteService.getPauseButtonUnpressed(), _spriteService.getPauseButtonPressed(), _userActionService.createPauseAction());
 		adjustLayoutParams(control);
 		
 		return control;

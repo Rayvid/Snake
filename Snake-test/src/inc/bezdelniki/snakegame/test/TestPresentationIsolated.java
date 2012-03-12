@@ -19,7 +19,7 @@ import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.systemparameters.dtos.SystemParams;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.google.inject.Guice;
@@ -50,7 +50,7 @@ public class TestPresentationIsolated
 		_mockedPresentationService.presentSnakesHead(batch, snake.headPosition);
 		replay(_mockedPresentationService);
 
-		snakeService.presentSnake(snake, new ArrayList<SnakeMovementChange>(), batch);
+		snakeService.presentSnake(snake, new ArrayList<SnakeMovementChangeAction>(), batch);
 		verify(_mockedPresentationService);
 	}
 
@@ -65,7 +65,7 @@ public class TestPresentationIsolated
 		_mockedPresentationService.presentSnakesBody(eq(batch), isA(List.class), eq(snake.headPosition));
 		replay(_mockedPresentationService);
 
-		snakeService.presentSnake(snake, new ArrayList<SnakeMovementChange>(), batch);
+		snakeService.presentSnake(snake, new ArrayList<SnakeMovementChangeAction>(), batch);
 		verify(_mockedPresentationService);
 	}
 

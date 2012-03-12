@@ -8,13 +8,13 @@ import inc.bezdelniki.snakegame.gameworld.exceptions.UnknownLyingItemTypeExcepti
 import inc.bezdelniki.snakegame.lyingitem.dtos.LyingItem;
 import inc.bezdelniki.snakegame.lyingitem.enums.ItemType;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 public interface IGameWorldService
 {
 	void initGameWorld();
 	GameWorld getGameWorld();
-	void applySnakeMovementChange(SnakeMovementChange movementChange);
+	void applySnakeMovementChange(SnakeMovementChangeAction movementChange);
 	LyingItem createAndApplyLyingItemSomewhere(ItemType itemType) throws LyingItemNowhereToPlaceException;
 	void moveSnakeIfItsTime() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException;
 	void moveSnake() throws SnakeMovementResultedEndOfGameException, UnknownLyingItemTypeException;

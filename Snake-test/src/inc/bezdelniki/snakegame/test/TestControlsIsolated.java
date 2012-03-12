@@ -21,6 +21,7 @@ import inc.bezdelniki.snakegame.runtimeparameters.IRuntimeParamsService;
 import inc.bezdelniki.snakegame.runtimeparameters.dto.RuntimeParams;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
+import inc.bezdelniki.snakegame.useraction.IUserActionService;
 import inc.bezdelniki.snakegame.useraction.dtos.NoAction;
 import inc.bezdelniki.snakegame.useraction.dtos.UserAction;
 
@@ -50,7 +51,8 @@ public class TestControlsIsolated
 				_testInjectorInstance.getInstance(ISystemParamsService.class),
 				_testInjectorInstance.getInstance(IDeviceService.class),
 				_testInjectorInstance.getInstance(ISpriteService.class),
-				_testInjectorInstance.getInstance(IPresentationService.class));
+				_testInjectorInstance.getInstance(IPresentationService.class),
+				_testInjectorInstance.getInstance(IUserActionService.class));
 		PauseControl pauseControl = controlService.CreatePauseControl();
 		
 		assertTrue(pauseControl.coords != null);
@@ -58,6 +60,11 @@ public class TestControlsIsolated
 		assertTrue(pauseControl.height > 0);
 		assertTrue(pauseControl.noTouchImage != null);
 		assertTrue(pauseControl.touchableRegions.size() > 0);
+		for (TouchableRegion touchableRegion : pauseControl.touchableRegions)
+		{
+			assertTrue(touchableRegion.imageWhenTouched != null);
+			assertTrue(touchableRegion.userActionWhenTouched != null);
+		}
 		assertTrue(pauseControl.regionCurrentlyTouched == null);
 	}
 	
@@ -68,7 +75,8 @@ public class TestControlsIsolated
 				_testInjectorInstance.getInstance(ISystemParamsService.class),
 				_testInjectorInstance.getInstance(IDeviceService.class),
 				_testInjectorInstance.getInstance(ISpriteService.class),
-				_testInjectorInstance.getInstance(IPresentationService.class));
+				_testInjectorInstance.getInstance(IPresentationService.class),
+				_testInjectorInstance.getInstance(IUserActionService.class));
 		PauseControl arrowPadControl = controlService.CreatePauseControl();
 		
 		assertTrue(arrowPadControl.coords != null);
@@ -76,6 +84,11 @@ public class TestControlsIsolated
 		assertTrue(arrowPadControl.height > 0);
 		assertTrue(arrowPadControl.noTouchImage != null);
 		assertTrue(arrowPadControl.touchableRegions.size() > 0);
+		for (TouchableRegion touchableRegion : arrowPadControl.touchableRegions)
+		{
+			assertTrue(touchableRegion.imageWhenTouched != null);
+			assertTrue(touchableRegion.userActionWhenTouched != null);
+		}
 		assertTrue(arrowPadControl.regionCurrentlyTouched == null);
 	}
 	
@@ -163,7 +176,8 @@ public class TestControlsIsolated
 				_testInjectorInstance.getInstance(ISystemParamsService.class),
 				_testInjectorInstance.getInstance(IDeviceService.class),
 				_testInjectorInstance.getInstance(ISpriteService.class),
-				_testInjectorInstance.getInstance(IPresentationService.class));
+				_testInjectorInstance.getInstance(IPresentationService.class),
+				_testInjectorInstance.getInstance(IUserActionService.class));
 		
 		runtimeParams.layoutParams.controls.add(controlService.CreatePauseControl());
 		runtimeParams.layoutParams.controls.add(controlService.CreateArrowPadControl());

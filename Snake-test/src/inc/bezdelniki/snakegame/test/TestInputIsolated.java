@@ -15,7 +15,7 @@ import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.test.helpers.BindingsConfigurationFactory;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -81,7 +81,7 @@ public class TestInputIsolated
 		replay(_mockedInputService);
 
 		IUserActionService userActionService = _testInjectorInstance.getInstance(IUserActionService.class);
-		SnakeMovementChange movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
+		SnakeMovementChangeAction movementChange = userActionService.createSnakeMovementChangeAccordingTouch(snake, _mockedInputService.GetTouchCoords());
 		assertTrue(movementChange.newDirection == Direction.UP);
 		gameWorldService.applySnakeMovementChange(movementChange);
 		gameWorldService.moveSnake();

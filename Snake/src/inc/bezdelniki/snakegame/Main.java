@@ -18,7 +18,7 @@ import inc.bezdelniki.snakegame.snake.dtos.Snake;
 import inc.bezdelniki.snakegame.snake.exceptions.SnakeMovementResultedEndOfGameException;
 import inc.bezdelniki.snakegame.systemparameters.ISystemParamsService;
 import inc.bezdelniki.snakegame.useraction.IUserActionService;
-import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChange;
+import inc.bezdelniki.snakegame.useraction.dtos.SnakeMovementChangeAction;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -81,7 +81,7 @@ public class Main implements ApplicationListener
 
 		if (inputService.isThereTouchInEffect())
 		{
-			SnakeMovementChange movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
+			SnakeMovementChangeAction movementChange = userActionsService.createSnakeMovementChangeAccordingTouch(snake, inputService.GetTouchCoords());
 
 			if (movementChange != null)
 			{
